@@ -4,8 +4,9 @@ import logoColor from "/public/static/images/logo/logo-color.svg";
 import logoWhite from "/public/static/images/logo/logo-white.svg";
 import Link from "next/link";
 import Image from "next/image";
-import SignUpForm from "../(dashboard)/_components/forms/sign-up-form";
-import RightSide from "../(dashboard)/_components/signin/RightSide";
+import SignUpForm from "@/components/dashboard/forms/sign-up-form";
+import RightSide from "@/components/dashboard/signin/RightSide";
+
 
 function SignUp() {
   return (

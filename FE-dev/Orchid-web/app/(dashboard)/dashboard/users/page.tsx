@@ -1,138 +1,36 @@
 import React from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DataTable } from "@/components/ui/data-table";
 import RightSidebar from "@/components/dashboard/user/RightSidebar";
 import { Customer, customerColumns } from "./_components/customer-column";
 import { User, staffColumns } from "./_components/staff-columns";
+import { DataTable } from "@/components/data-table/data-table";
+import { statuses } from "@/components/data-table/filter-type";
 
-async function getData(): Promise<User[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "1",
-      name: "vinh",
-      location: "USSA",
-      email: "m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "2",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "3",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "4",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "5",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "6",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "7",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "8",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "9",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "10",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "11",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
-    {
-      id: "12",
-      name: "fuzzy",
-      location: "USSA",
-      email: "112m@example.com",
-      role: "staff",
-      spent: 200,
-    },
+// fake data
+import { DataTableFilterableColumn } from "@/types/table";
+import { getData, getDataCustomer } from "./_components/fake-data-cal-api";
 
-  ];
-}
 
-async function getDataCustomer(): Promise<Customer[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "1",
-      name: " customer_1",
-      location: "USSA",
-      email: "m@example.com",
-      spent: 200,
-    },
-    {
-      id: "2",
-      name: "customer_2",
-      location: "USSA",
-      email: "112m@example.com",
-      spent: 200,
-    },
-
-  ];
-}
 
 const UsersPage = async () => {
   const data = await getData();
-  const customerData = await getDataCustomer()
+  const customerData = await getDataCustomer();
+
+  const filterableColumns: DataTableFilterableColumn<Customer>[] = [
+    {
+      id: "status",
+      title: "Status",
+      // options: ["done", "todo"].map((status) => ({
+      //   label: status,
+      //   value: status,
+      // })),,
+      options: statuses.map((status) => ({
+        label: status.label,
+        value: status.value,
+      })),
+    },
+  ];
 
   return (
     <>
@@ -144,15 +42,16 @@ const UsersPage = async () => {
           </TabsList>
           <TabsContent value="staff">
             Nhân viên here
-            <DataTable
-              columns={staffColumns}
-              data={data}
-              searchKey="email"
-            />
+            <DataTable columns={staffColumns} data={data} searchKey="email" />
           </TabsContent>
           <TabsContent value="user">
             Khách hàng here.
-            <DataTable columns={customerColumns} data={customerData} searchKey="email" />
+            <DataTable
+              columns={customerColumns}
+              data={customerData}
+              searchKey="email"
+              filterableColumns={filterableColumns}
+            />
           </TabsContent>
         </Tabs>
       </div>

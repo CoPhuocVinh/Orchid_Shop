@@ -1,7 +1,8 @@
 
-import LeftSide from "../(dashboard)/_components/signin/LeftSide";
-import RightSide from "../(dashboard)/_components/signin/RightSide";
+
+import LeftSide from "@/components/dashboard/signin/LeftSide";
 import signinImg from "/public/static/images/illustration/signin.svg";
+import RightSide from "@/components/dashboard/signin/RightSide";
 
 function SignIn() {
   return (

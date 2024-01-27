@@ -1,5 +1,5 @@
 import UserData from "./UserData";
-import { authors } from "../../../../data/user";
+import { authors } from "@/data/user";
 
 function UsersList() {
   return (

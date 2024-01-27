@@ -1,0 +1,100 @@
+{
+  "customer": [
+    {
+      "id": "1",
+      "name": "Customer_1",
+      "location": "USSA",
+      "email": "customer1@example.com",
+      "spent": 150,
+      "status": "todo"
+    },
+    {
+      "id": "2",
+      "name": "Customer_2",
+      "location": "USSA",
+      "email": "customer2@example.com",
+      "spent": 350,
+      "status": "done"
+    },
+    {
+      "id": "3",
+      "name": "Customer_3",
+      "location": "VN",
+      "email": "customer3@example.com",
+      "spent": 200,
+      "status": "canceled"
+    },
+    {
+      "id": "4",
+      "name": "Customer_4",
+      "location": "USA",
+      "email": "customer4@example.com",
+      "spent": 180,
+      "status": "todo"
+    },
+    {
+      "id": "5",
+      "name": "Customer_5",
+      "location": "Canada",
+      "email": "customer5@example.com",
+      "spent": 250,
+      "status": "done"
+    },
+    {
+      "id": "6",
+      "name": "Customer_6",
+      "location": "UK",
+      "email": "customer6@example.com",
+      "spent": 320,
+      "status": "done"
+    },
+    {
+      "id": "7",
+      "name": "Customer_7",
+      "location": "Germany",
+      "email": "customer7@example.com",
+      "spent": 300,
+      "status": "todo"
+    },
+    {
+      "id": "8",
+      "name": "Customer_8",
+      "location": "France",
+      "email": "customer8@example.com",
+      "spent": 400,
+      "status": "done"
+    },
+    {
+      "id": "9",
+      "name": "Customer_9",
+      "location": "Italy",
+      "email": "customer9@example.com",
+      "spent": 280,
+      "status": "canceled"
+    },
+    {
+      "id": "10",
+      "name": "Customer_10",
+      "location": "Spain",
+      "email": "customer10@example.com",
+      "spent": 220,
+      "status": "canceled"
+    },
+    {
+      "id": "11",
+      "name": "Customer_11",
+      "location": "France",
+      "email": "customer11@example.com",
+      "spent": 190,
+      "status": "canceled"
+    },
+    {
+      "id": "12",
+      "name": "Customer_12",
+      "location": "Brazil",
+      "email": "customer12@example.com",
+      "spent": 370,
+      "status": "todo"
+    }
+  ]
+}
