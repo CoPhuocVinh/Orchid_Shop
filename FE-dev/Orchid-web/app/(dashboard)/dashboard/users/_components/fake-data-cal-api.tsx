@@ -114,7 +114,6 @@ export async function getData(): Promise<User[]> {
       const res = await axios.get("http://localhost:3001/customer")
       const data = await res.data;
 
-      console.log("test oke")
       return data as Customer[]
     } catch (error) {
       console.log(error)
