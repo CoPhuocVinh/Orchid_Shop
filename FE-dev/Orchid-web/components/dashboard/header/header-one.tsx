@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import SearchBar from "../forms/search-bar";
-import ModeToggler from "./mode-toggler";
 import ToggleBtn from "./toggle-btn";
 import Author from "./author";
 import NotificationPopup from "./notification-popup";

@@ -13,13 +13,22 @@ const config = {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+    },
+    screens: {
+      xs: '500px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1400px',
+      '3xl': '1500px',
+      '4xl': '1780px',
     },
     extend: {
       fontFamily: {
         urbanist: ["Urbanist", "sans-serif"],
+        lato: ['var(--font-lato)'],
+        satisfy: ['var(--font-satisfy)'],
         poppins: ["Poppins", "sans-serif"],
       },
       width: {
@@ -36,6 +45,49 @@ const config = {
         "2xl": "24px",
         "3xl": "28px",
         "5xl": "48px",
+        h1: [
+          '2.25rem',
+          {
+            lineHeight: '2.75rem',
+          },
+        ],
+        h2: [
+          '1.875rem',
+          {
+            lineHeight: '2.375rem',
+          },
+        ],
+        h3: [
+          '1.5rem',
+          {
+            lineHeight: '2rem',
+          },
+        ],
+        h4: [
+          '1.25rem',
+          {
+            lineHeight: '1.75rem',
+          },
+        ],
+        h5: [
+          '1.125rem',
+          {
+            lineHeight: '1.625rem',
+          },
+        ],
+        h6: [
+          '1rem',
+          {
+            lineHeight: '1.5rem',
+          },
+        ],
+        quote: [
+          '1.125rem',
+          {
+            lineHeight: '1.75rem',
+            fontWeight: '600',
+          },
+        ],
       },
       colors: {
         darkblack: {
@@ -75,11 +127,37 @@ const config = {
           800: "#2D3748",
           900: "#1A202C",
         },
-        orange: "#FF784B",
+        // orange: "#FF784B",
+        red: {
+          light: 'rgb(var(--red-light) / <alpha-value>)',
+          lighter: 'rgb(var(--red-lighter) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--red-default) / <alpha-value>)',
+          dark: 'rgb(var(--red-dark) / <alpha-value>)',
+        },
+        orange: {
+          light: 'rgb(var(--orange-light) / <alpha-value>)',
+          lighter: 'rgb(var(--orange-lighter) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--orange-default) / <alpha-value>)',
+          dark: 'rgb(var(--orange-dark) / <alpha-value>)',
+        },
+        green: {
+          light: 'rgb(var(--green-light) / <alpha-value>)',
+          lighter: 'rgb(var(--green-lighter) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--green-default) / <alpha-value>)',
+          dark: 'rgb(var(--green-dark) / <alpha-value>)',
+        },
         bamber: {
           50: "#FFFBEB",
           100: "#FFC837",
           500: "#F6A723",
+        },
+        gray: {
+          light: 'rgb(var(--gray-light) / <alpha-value>)',
+          lighter: 'rgb(var(--gray-lighter) / <alpha-value>)',
+          lightest: 'rgb(var(--gray-lightest) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--gray-default) / <alpha-value>)',
+          dark: 'rgb(var(--gray-dark) / <alpha-value>)',
+          1000: 'rgb(var(--gray-1000) / <alpha-value>)',
         },
         purple: "#936DFF",
         border: "hsl(var(--border))",
@@ -131,13 +209,36 @@ const config = {
           to: { height: "0" },
         },
       },
+      textColor: {
+        skin: {
+          base: 'rgb(var(--gray-light) / <alpha-value>)',
+        },
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // keyframes: {
+      //   blink: {
+      //     '0%': { opacity: 0.2 },
+      //     '20%': { opacity: 1 },
+      //     '100%': { opacity: 0.2 },
+      //   },
+      //   scaleUp: {
+      //     '0%': { transform: 'scale(0)' },
+      //     '100%': { transform: 'scale(1)' },
+      //   },
+      // },
+      boxShadow: {
+        card: '0px 0px 0px 1px rgba(35, 38, 59, 0.05), 0px 2px 4px rgba(35, 38, 59, 0.1)',
+        'card-hover':
+          '0px 0px 0px 1px rgba(35, 38, 59, 0.05), 0px 3px 4px rgba(35, 38, 59, 0.1)',
+        'card-two': '0px 8px 12px rgba(0, 0, 0, 0.08)',
+        'menu-shadow': '0px 0px 8px rgba(0, 0, 0, 0.12)',
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),require('@tailwindcss/typography'), require('@tailwindcss/forms')],
 } satisfies Config
 
 export default config
