@@ -1,12 +1,4 @@
-interface DataTableSkeletonProps {
-  columnCount: number;
-  rowCount?: number;
-  searchableColumnCount?: number;
-  filterableColumnCount?: number;
-}
-
-import React from "react";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -14,34 +6,38 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 
-const DataTableSkeleton = ({
+interface DataTableSkeletonProps {
+  columnCount: number
+  rowCount?: number
+  searchableColumnCount?: number
+  filterableColumnCount?: number
+}
+
+export function DataTableSkeleton({
   columnCount,
   rowCount = 10,
   searchableColumnCount = 1,
-  filterableColumnCount = 2,
-}: DataTableSkeletonProps) => {
+  filterableColumnCount = 1,
+}: DataTableSkeletonProps) {
   return (
     <div className="w-full space-y-3 overflow-auto">
-      <div className="flex w-full items-center  justify-between space-x-2 overflow-auto p-1">
+      <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
         <div className="flex flex-1 items-center space-x-2">
           {searchableColumnCount > 0
             ? Array.from({ length: searchableColumnCount }).map((_, i) => (
                 <Skeleton key={i} className="h-7 w-[150px] lg:w-[250px]" />
               ))
             : null}
-
           {filterableColumnCount > 0
             ? Array.from({ length: filterableColumnCount }).map((_, i) => (
                 <Skeleton key={i} className="h-7 w-[70px] border-dashed" />
               ))
             : null}
-
-          <Skeleton className="ml-auto h-7 hidden w-[70px] lg:flex" />
         </div>
+        <Skeleton className="ml-auto hidden h-7 w-[70px] lg:flex" />
       </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -55,7 +51,6 @@ const DataTableSkeleton = ({
               </TableRow>
             ))}
           </TableHeader>
-
           <TableBody>
             {Array.from({ length: rowCount }).map((_, i) => (
               <TableRow key={i} className="hover:bg-transparent">
@@ -90,7 +85,5 @@ const DataTableSkeleton = ({
         </div>
       </div>
     </div>
-  );
-};
-
-export default DataTableSkeleton;
+  )
+}
