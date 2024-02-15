@@ -1,100 +1,192 @@
 {
-  "customer": [
+  "customer": 
+  [
     {
       "id": "1",
-      "name": "Customer_1",
-      "location": "USSA",
-      "email": "customer1@example.com",
-      "spent": 150,
-      "status": "todo"
+      "code": "T001",
+      "title": "Complete report",
+      "status": "done",
+      "label": "Report",
+      "priority": "high"
     },
     {
       "id": "2",
-      "name": "Customer_2",
-      "location": "USSA",
-      "email": "customer2@example.com",
-      "spent": 350,
-      "status": "done"
+      "code": "T002",
+      "title": "Review presentation",
+      "status": "in-progress",
+      "label": "Presentation",
+      "priority": "medium"
     },
     {
       "id": "3",
-      "name": "Customer_3",
-      "location": "VN",
-      "email": "customer3@example.com",
-      "spent": 200,
-      "status": "canceled"
+      "code": "T003",
+      "title": "Prepare meeting agenda",
+      "status": "todo",
+      "label": "Meeting",
+      "priority": "low"
     },
     {
       "id": "4",
-      "name": "Customer_4",
-      "location": "USA",
-      "email": "customer4@example.com",
-      "spent": 180,
-      "status": "todo"
+      "code": "T004",
+      "title": "Research new technologies",
+      "status": "in-progress",
+      "label": "Research",
+      "priority": "medium"
     },
     {
       "id": "5",
-      "name": "Customer_5",
-      "location": "Canada",
-      "email": "customer5@example.com",
-      "spent": 250,
-      "status": "done"
+      "code": "T005",
+      "title": "Write documentation",
+      "status": "todo",
+      "label": "Documentation",
+      "priority": "low"
     },
     {
       "id": "6",
-      "name": "Customer_6",
-      "location": "UK",
-      "email": "customer6@example.com",
-      "spent": 320,
-      "status": "done"
+      "code": "T006",
+      "title": "Fix bugs in application",
+      "status": "in-progress",
+      "label": "Bugs",
+      "priority": "high"
     },
     {
       "id": "7",
-      "name": "Customer_7",
-      "location": "Germany",
-      "email": "customer7@example.com",
-      "spent": 300,
-      "status": "todo"
+      "code": "T007",
+      "title": "Organize team meeting",
+      "status": "done",
+      "label": "Meeting",
+      "priority": "medium"
     },
     {
       "id": "8",
-      "name": "Customer_8",
-      "location": "France",
-      "email": "customer8@example.com",
-      "spent": 400,
-      "status": "done"
+      "code": "T008",
+      "title": "Create user interface mockups",
+      "status": "todo",
+      "label": "Design",
+      "priority": "high"
+    }
+  ],
+  "products": [
+    {
+      "id": "f1",
+      "name": "Rose Bouquet",
+      "description": "A beautiful bouquet of fresh red roses.",
+      "quantity": 20,
+      "version": 1,
+      "code": "FLW-001"
     },
     {
-      "id": "9",
-      "name": "Customer_9",
-      "location": "Italy",
-      "email": "customer9@example.com",
-      "spent": 280,
-      "status": "canceled"
+      "id": "f2",
+      "name": "Tulip Arrangement",
+      "description": "A colorful arrangement of tulips in a vase.",
+      "quantity": 15,
+      "version": 1,
+      "code": "FLW-002"
     },
     {
-      "id": "10",
-      "name": "Customer_10",
-      "location": "Spain",
-      "email": "customer10@example.com",
-      "spent": 220,
-      "status": "canceled"
+      "id": "f3",
+      "name": "Daisy Bouquet",
+      "description": "A cheerful bouquet of daisies.",
+      "quantity": 18,
+      "version": 1,
+      "code": "FLW-003"
     },
     {
-      "id": "11",
-      "name": "Customer_11",
-      "location": "France",
-      "email": "customer11@example.com",
-      "spent": 190,
-      "status": "canceled"
+      "id": "f4",
+      "name": "Lily Bouquet",
+      "description": "An elegant bouquet of lilies.",
+      "quantity": 12,
+      "version": 1,
+      "code": "FLW-004"
     },
     {
-      "id": "12",
-      "name": "Customer_12",
-      "location": "Brazil",
-      "email": "customer12@example.com",
-      "spent": 370,
-      "status": "todo"
+      "id": "f5",
+      "name": "Sunflower Bouquet",
+      "description": "A vibrant bouquet of sunflowers.",
+      "quantity": 25,
+      "version": 1,
+      "code": "FLW-005"
+    },
+    {
+      "id": "f6",
+      "name": "Orchid Plant",
+      "description": "A potted orchid plant.",
+      "quantity": 10,
+      "version": 1,
+      "code": "FLW-006"
+    },
+    {
+      "id": "f7",
+      "name": "Carnation Bouquet",
+      "description": "A classic bouquet of carnations.",
+      "quantity": 22,
+      "version": 1,
+      "code": "FLW-007"
+    },
+    {
+      "id": "f8",
+      "name": "Hydrangea Arrangement",
+      "description": "A lovely arrangement of hydrangeas.",
+      "quantity": 14,
+      "version": 1,
+      "code": "FLW-008"
+    },
+    {
+      "id": "f9",
+      "name": "Peony Bouquet",
+      "description": "A stunning bouquet of peonies.",
+      "quantity": 17,
+      "version": 1,
+      "code": "FLW-009"
+    },
+    {
+      "id": "f10",
+      "name": "Cactus Plant",
+      "description": "A small potted cactus.",
+      "quantity": 30,
+      "version": 1,
+      "code": "FLW-010"
+    },
+    {
+      "id": "f11",
+      "name": "Daffodil Bouquet",
+      "description": "A bouquet of bright daffodils.",
+      "quantity": 16,
+      "version": 1,
+      "code": "FLW-011"
+    },
+    {
+      "id": "f12",
+      "name": "Chrysanthemum Arrangement",
+      "description": "An arrangement of colorful chrysanthemums.",
+      "quantity": 19,
+      "version": 1,
+      "code": "FLW-012"
+    },
+    {
+      "id": "f13",
+      "name": "Gerbera Daisy Bouquet",
+      "description": "A vibrant bouquet of gerbera daisies.",
+      "quantity": 21,
+      "version": 1,
+      "code": "FLW-013"
+    },
+    {
+      "id": "f14",
+      "name": "Bird of Paradise Bouquet",
+      "description": "A tropical bouquet of bird of paradise flowers.",
+      "quantity": 11,
+      "version": 1,
+      "code": "FLW-014"
+    },
+    {
+      "id": "f15",
+      "name": "Anemone Bouquet",
+      "description": "A delicate bouquet of anemone flowers.",
+      "quantity": 13,
+      "version": 1,
+      "code": "FLW-015"
     }
   ]
+  
 }
