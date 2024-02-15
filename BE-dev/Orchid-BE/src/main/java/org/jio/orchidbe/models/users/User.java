@@ -36,7 +36,7 @@ public class User extends BaseEntity {
     @Column(name = "token", length = 255)
     private String token;
 
-    @Column(name = "gender", nullable = false)
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
     @Column(name = "is_Banned", nullable = false)
@@ -44,6 +44,7 @@ public class User extends BaseEntity {
 
     @Column(name = "dob", nullable = false)
     private Date dob;
+
     @Column(name = "gender", nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;

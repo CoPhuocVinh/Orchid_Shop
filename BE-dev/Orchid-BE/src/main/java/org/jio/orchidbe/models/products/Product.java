@@ -15,7 +15,7 @@ import lombok.*;
 import org.jio.orchidbe.models.BaseEntity;
 
 @Entity
-@Table(name = "products")
+@Table(name = "tbl_products")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,6 +27,9 @@ public class Product extends BaseEntity {
 
     @Column(name = "code", nullable = false, length = 350)
     private String code;
+
+    @Column(name = "quantity")
+    private int quantity;
 
     @Column(name = "description")
     private String description;

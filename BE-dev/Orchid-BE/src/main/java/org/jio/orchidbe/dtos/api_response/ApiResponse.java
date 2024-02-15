@@ -1,6 +1,7 @@
 package org.jio.orchidbe.dtos.api_response;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.jio.orchidbe.dtos.dto_enum.StatusEnum;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 @Setter
 @Getter
-
+@Builder
 public class ApiResponse<T> {
     private StatusEnum status;
     private T payload;
