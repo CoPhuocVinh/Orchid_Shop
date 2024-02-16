@@ -1,10 +1,13 @@
-package org.jio.orchidbe.models;
+package org.jio.orchidbe.models.feedbacks;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.Status;
+import org.jio.orchidbe.models.feedbacks.Feedbacks;
 import org.jio.orchidbe.models.users.User;
 
 @AllArgsConstructor
@@ -13,7 +16,7 @@ import org.jio.orchidbe.models.users.User;
 @NoArgsConstructor
 @Entity
 @Table(name="tbl_replys")
-public class Replys extends BaseEntity {
+public class    Replys extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedback_id")

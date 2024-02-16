@@ -19,14 +19,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="tbl_orders")
 public class Order extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
 
-    @JoinColumn(name = "auction_id")
-    @OneToOne
-    private Auction auction;
 
 
     @Column(name = "total")
@@ -72,6 +66,16 @@ public class Order extends BaseEntity {
     @Column(name = "note", nullable = true)
     private String note;
 
+
+    //
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+    @JoinColumn(name = "auction_id")
+    @OneToOne
+    private Auction auction;
 
 
 }

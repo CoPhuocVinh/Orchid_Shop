@@ -20,9 +20,6 @@ import java.time.LocalDateTime;
 @Table(name="tbl_aucitons")
 public class Auction extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
 
 
     @Column(name = "end_date")
@@ -47,7 +44,7 @@ public class Auction extends BaseEntity {
     @Column(name = "reject-reason")
     private String rejectReason;
 
-    @JoinColumn(name = "product_name")
+    @Column(name = "product_name")
     private String productName;
 
     @Column(name = "product_code")
@@ -74,5 +71,11 @@ public class Auction extends BaseEntity {
 
    @Column(name = "bidding_price")
    private Float biddingPrice;
+
+    //
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
 
 }

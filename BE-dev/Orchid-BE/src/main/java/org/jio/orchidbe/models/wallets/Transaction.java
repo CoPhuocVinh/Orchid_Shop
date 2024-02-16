@@ -1,13 +1,14 @@
-package org.jio.orchidbe.models;
+package org.jio.orchidbe.models.wallets;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
-import org.jio.orchidbe.models.users.User;
 
 @AllArgsConstructor
 @Builder
@@ -15,7 +16,7 @@ import org.jio.orchidbe.models.users.User;
 @NoArgsConstructor
 @Entity
 @Table(name="tbl_transaction")
-public class Transaction extends BaseEntity{
+public class Transaction extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wallet_id")

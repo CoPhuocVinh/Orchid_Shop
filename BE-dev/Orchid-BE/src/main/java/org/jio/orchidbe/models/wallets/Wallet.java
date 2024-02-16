@@ -1,10 +1,11 @@
-package org.jio.orchidbe.models;
+package org.jio.orchidbe.models.wallets;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.users.User;
 
 @AllArgsConstructor
@@ -13,7 +14,7 @@ import org.jio.orchidbe.models.users.User;
 @NoArgsConstructor
 @Entity
 @Table(name="tbl_wallets")
-public class Wallet extends BaseEntity{
+public class Wallet extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "user_id")
