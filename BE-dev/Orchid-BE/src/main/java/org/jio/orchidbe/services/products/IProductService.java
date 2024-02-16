@@ -7,5 +7,9 @@ package org.jio.orchidbe.services.products;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import org.jio.orchidbe.dtos.products.ProductDTORequest;
+import org.jio.orchidbe.dtos.products.ProductDTOResponse;
+
 public interface IProductService {
+    ProductDTOResponse createProduct(ProductDTORequest productDTORequest);
 }
