@@ -10,6 +10,7 @@ package org.jio.orchidbe.models.users;/*  Welcome to Jio word
 import jakarta.persistence.*;
 import lombok.*;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.Wallet;
 import org.jio.orchidbe.models.users.user_enum.Gender;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
 import java.time.LocalDateTime;
@@ -65,7 +66,6 @@ public class User extends BaseEntity {
     private LocalDateTime expirationBannedAt;
 
     // --- relationship----
-
 
 
 

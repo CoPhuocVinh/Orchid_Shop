@@ -1,0 +1,29 @@
+package org.jio.orchidbe.models;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.jio.orchidbe.models.users.User;
+
+@AllArgsConstructor
+@Builder
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name="tbl_wallets")
+public class Wallet extends BaseEntity{
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+    @Column(name = "balance")
+    private Float balance;
+
+    @Version
+    @Column(name = "version", nullable = true)
+    private  Integer version = 0;
+}
