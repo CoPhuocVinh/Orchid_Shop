@@ -8,11 +8,11 @@ package org.jio.orchidbe.models.products;/*  Welcome to Jio word
 */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.users.User;
+
 @Entity
 @Table(name = "tbl_product_img")
 @Getter
@@ -21,6 +21,11 @@ import org.jio.orchidbe.models.BaseEntity;
 @NoArgsConstructor
 @Builder
 public class ProductImage extends BaseEntity {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
 
     @Column(name = "image_url", length = 300)
     @JsonProperty("image_url")
