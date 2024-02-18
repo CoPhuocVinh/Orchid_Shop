@@ -20,7 +20,9 @@ import java.time.LocalDateTime;
 @Table(name="tbl_aucitons")
 public class Auction extends BaseEntity {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "end_date")
     private LocalDateTime endDate;

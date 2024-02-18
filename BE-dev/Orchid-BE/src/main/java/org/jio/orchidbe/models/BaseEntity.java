@@ -9,6 +9,7 @@ package org.jio.orchidbe.models;/*  Welcome to Jio word
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
 
 import java.time.LocalDateTime;
 
@@ -18,11 +19,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
+@FieldNameConstants
 public class BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

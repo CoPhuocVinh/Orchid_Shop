@@ -9,6 +9,7 @@ package org.jio.orchidbe.models.products;/*  Welcome to Jio word
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.users.User;
 
@@ -19,7 +20,12 @@ import org.jio.orchidbe.models.users.User;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@FieldNameConstants
 public class Product extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "product_name", nullable = false, length = 350)
     private String productName;
 

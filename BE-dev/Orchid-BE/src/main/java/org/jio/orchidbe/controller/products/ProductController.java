@@ -10,18 +10,17 @@ package org.jio.orchidbe.controller.products;/*  Welcome to Jio word
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.dtos.products.GetAllPoductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.services.products.IProductService;
 import org.jio.orchidbe.utils.ValidatorUtil;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
@@ -39,9 +38,19 @@ public class ProductController {
             apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
             return ResponseEntity.badRequest().body(apiResponse);
         }
+
         ProductDTOResponse newProduct = productService.createProduct(productDTORequest);
 
         apiResponse.ok(newProduct);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getProduct(@ModelAttribute GetAllPoductDTORequest getAllPoductDTORequest){
+        ApiResponse apiResponse = new ApiResponse();
+
+        Page<ProductDTOResponse> productPage = productService.getAllProduct(getAllPoductDTORequest);
+        apiResponse.ok(productPage);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

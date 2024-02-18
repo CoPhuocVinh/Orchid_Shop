@@ -19,6 +19,10 @@ public class UserInfo extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "address")
     private String address;
 

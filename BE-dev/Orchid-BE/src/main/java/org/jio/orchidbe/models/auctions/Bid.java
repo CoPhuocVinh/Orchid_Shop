@@ -26,6 +26,9 @@ public class Bid extends BaseEntity {
     @JoinColumn(name = "auction_id")
     private Auction auction;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "bidding_price")
     private Float biddingPrice;

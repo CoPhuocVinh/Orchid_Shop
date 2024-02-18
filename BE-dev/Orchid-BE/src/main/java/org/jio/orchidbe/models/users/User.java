@@ -23,6 +23,10 @@ import java.util.Date;
 @AllArgsConstructor
 public class User extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "name", nullable = false)
     private String name;
 

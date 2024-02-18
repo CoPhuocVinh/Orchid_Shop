@@ -20,7 +20,9 @@ public class Wallet extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(name = "balance")
     private Float balance;
 

@@ -21,7 +21,9 @@ import java.time.LocalDateTime;
 public class Order extends BaseEntity {
 
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "total")
     private Float total;

@@ -27,8 +27,8 @@ public class ProductDTOResponse {
     private Long id;
     @NotBlank(message = "name is required")
     @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters")
-    private String name;
-    private String code;
+    private String productName;
+    private String productCode;
     private int quantity;
     private String description;
     @JsonProperty("created_at")

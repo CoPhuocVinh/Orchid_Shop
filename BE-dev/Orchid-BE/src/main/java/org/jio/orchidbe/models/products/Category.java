@@ -7,10 +7,9 @@ package org.jio.orchidbe.models.products;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 @Entity
 @Table(name = "tbl_categories")
@@ -19,12 +18,15 @@ import org.jio.orchidbe.models.BaseEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@FieldNameConstants
 public class Category extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "type")
     private String type;
-
 
     @Column(name = "color")
     private String color;

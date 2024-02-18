@@ -8,11 +8,13 @@ package org.jio.orchidbe.services.products;/*  Welcome to Jio word
 */
 
 import lombok.RequiredArgsConstructor;
+import org.jio.orchidbe.dtos.products.GetAllPoductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.mappers.products.ProductMapper;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,5 +31,11 @@ public class ProductService implements IProductService{
         productRepository.save(product);
         //response
         return productMapper.toResponse(product);
+    }
+
+    @Override
+    public Page<ProductDTOResponse> getAllProduct(GetAllPoductDTORequest request) {
+
+        return productRepository.findAll(request.getSpecification(),request.getPageable()).map(productMapper::toResponse);
     }
 }
