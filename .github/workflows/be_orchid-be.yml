@@ -20,7 +20,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '17'
-
+      - name: Move to BE directory
+        run: cd BE-dev/Orchid-BE
+        
       - name: Build with Maven
         run: mvn clean install
 
