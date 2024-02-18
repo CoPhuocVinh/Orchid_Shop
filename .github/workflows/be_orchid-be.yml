@@ -27,7 +27,7 @@ jobs:
       - name: show BE directory
         run: ls
       - name: Move to BE directory
-        run: cd BE-dev
+        run: cd ${{ github.workspace }}/BE-dev
       - name: show BE directory
         run: ls
       - name: Build with Maven
