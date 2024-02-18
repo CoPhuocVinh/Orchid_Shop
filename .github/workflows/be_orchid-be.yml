@@ -21,7 +21,7 @@ jobs:
         with:
           java-version: '17'
       - name: Move to BE directory
-        run: cd BE-dev/Orchid-BE
+        run: cd ${{ github.workspace }}/BE-dev/Orchid-BE
         
       - name: Build with Maven
         run: mvn clean install
