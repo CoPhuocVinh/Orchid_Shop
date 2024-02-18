@@ -23,6 +23,9 @@ jobs:
       - name: Move to BE directory
         run: cd ${{ github.workspace }}/BE-dev/Orchid-BE
         
+      - name: show BE directory
+        run: pwd
+
       - name: Build with Maven
         run: mvn clean install
 
