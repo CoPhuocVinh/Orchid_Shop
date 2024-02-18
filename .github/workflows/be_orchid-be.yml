@@ -32,7 +32,7 @@ jobs:
         run: ls
       - name: Build with Maven
         run: |
-          cd ${{ github.workspace }}BE-dev/Orchid-BE
+          cd ${{ github.workspace }}/BE-dev/Orchid-BE
           mvn clean install
 
       - name: Upload artifact for deployment job
