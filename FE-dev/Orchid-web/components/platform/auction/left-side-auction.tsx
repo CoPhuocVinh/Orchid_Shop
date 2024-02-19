@@ -1,24 +1,47 @@
-import Image from "next/image";
-import React from "react";
+"use client";
+
+import EmblaCarousel from "@/components/carousel/thumb-carousel";
+import React, { useEffect, useState } from "react";
+import { EmblaOptionsType } from "embla-carousel";
+import axios from "axios";
+import ContentLoader from "react-content-loader";
+import { useParams } from "next/navigation";
 
 const LeftSideAuction = () => {
+  const OPTIONS: EmblaOptionsType = {};
+  // const SLIDE_COUNT = 10;
+  // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
+  const params = useParams()
+
+  const [product, setProduct] = useState<any>({});
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const res = await axios.get(`https://dummyjson.com/products/${params.auctionId}`);
+
+        setProduct(res.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAPI();
+  }, [params.auctionId]);
+
+  if (loading) {
+    return <ContentLoader className="w-full md:w-2/3"/>;
+  }
+
   return (
     <div className="w-full md:w-2/3">
-      <div className="w-full h-[250px] md:h-[350px] mb-4 relative rounded-sm">
-        <Image src="/images/boats/1.jpg" alt="Big Image" fill />
-      </div>
-
-      <div className="flex relative space-x-4">
-        <div className="w-[30%] md:w-[20%] h-[100px] relative">
-          <Image src="/images/boats/1.jpg" alt="Small Image 1" fill />
-        </div>
-        <div className="w-[30%] md:w-[20%] h-[100px] relative">
-          <Image src="/images/boats/1.jpg" alt="Small Image 2" fill />
-        </div>
-        <div className="w-[30%] md:w-[20%] h-[100px] relative">
-          <Image src="/images/boats/1.jpg" alt="Small Image 3" fill />
-        </div>
-      </div>
+      <EmblaCarousel
+        slides={Array.from(Array(product.images.length).keys())}
+        options={OPTIONS}
+        product={product}
+      />
     </div>
   );
 };

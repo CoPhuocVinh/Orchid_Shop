@@ -1,6 +1,6 @@
 import * as React from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import type { DataTableFilterOption } from "@/types"
+import type { DataTableFilterOption } from "@/types/table"
 import { TrashIcon } from "@radix-ui/react-icons"
 import type { Table } from "@tanstack/react-table"
 

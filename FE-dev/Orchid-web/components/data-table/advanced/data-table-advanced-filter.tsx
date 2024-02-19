@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import type { DataTableFilterOption } from "@/types"
+import type { DataTableFilterOption } from "@/types/table"
 import {
   CaretSortIcon,
   ChevronDownIcon,

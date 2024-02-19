@@ -1,6 +1,6 @@
+import BreadCrumb from "@/components/platform/bread-crumb";
 import Footer from "@/components/platform/footer/footer";
 import AuctionHeader from "@/components/platform/header/auction-header";
-
 
 export default function ListingDetailsLayout({
   children,
@@ -8,9 +8,10 @@ export default function ListingDetailsLayout({
   return (
     <>
       {/* <ListingDetailsHeader /> */}
-      <AuctionHeader/>
+      <AuctionHeader />
+
       <main className="flex-grow">{children}</main>
-      <Footer className="pb-20 lg:pb-0 3xl:px-12 4xl:px-12" />
+      <Footer className="pb-0 3xl:px-12 4xl:px-12" />
       {/* <ReserveBottomMenu /> */}
     </>
   );

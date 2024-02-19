@@ -8,19 +8,21 @@ export interface IndexPageProps {
   searchParams: SearchParams;
 }
 
-const ProductsPage = async({ searchParams }: IndexPageProps) => {
+const ProductsPage = async ({ searchParams }: IndexPageProps) => {
   const products = productFakeData(searchParams);
   return (
     <>
-      <Shell>
-        <React.Suspense
-          fallback={
-            <DataTableSkeleton columnCount={4} filterableColumnCount={2} />
-          }
-        >
-          <ProductTable productPromise={products} />
-        </React.Suspense>
-      </Shell>
+      <div className="2xl:flex-1 w-full">
+        <Shell>
+          <React.Suspense
+            fallback={
+              <DataTableSkeleton columnCount={4} filterableColumnCount={2} />
+            }
+          >
+            <ProductTable productPromise={products} />
+          </React.Suspense>
+        </Shell>
+      </div>
     </>
   );
 };
