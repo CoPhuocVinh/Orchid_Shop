@@ -9,6 +9,7 @@ package org.jio.orchidbe.models.users;/*  Welcome to Jio word
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.users.user_enum.Gender;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
@@ -21,6 +22,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldNameConstants
 public class User extends BaseEntity {
 
     @Id

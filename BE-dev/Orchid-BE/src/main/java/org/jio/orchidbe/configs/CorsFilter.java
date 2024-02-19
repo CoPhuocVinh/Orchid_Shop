@@ -1,8 +1,9 @@
-package com.project.shopapp.components;
+package org.jio.orchidbe.configs;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
