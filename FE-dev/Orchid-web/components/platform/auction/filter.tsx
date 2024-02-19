@@ -27,17 +27,18 @@ export default function Filter({ className }: FilterTypes) {
 
   return (
     <div
-      className={clsx('h-full overflow-y-auto bg-white xl:px-0.5', className)}
+      className={clsx('h-full overflow-y-auto bg-white xl:px-0.5 mx-4', className)}
     >
       <div className="mb-4 flex items-center justify-between px-5 py-2 pt-3 uppercase md:px-7 xl:px-0 xl:pt-0">
-        <h5  className="leading-8">
+        <h5  className="leading-8 ">
           Filter
         </h5>
         {/* {state && ( */}
           <Button
             type="reset"
-            variant="default"
-            className="hidden !p-0 text-base text-gray focus:!ring-0 sm:block"
+            variant="outline"
+            className="hidden text-base text-gray focus:!ring-0 sm:block"
+            size="lg"
             // onClick={() => router.push(Routes.public.explore)}
           >
             Reset
@@ -57,7 +58,7 @@ export default function Filter({ className }: FilterTypes) {
           Close
         </Button> */}
       </div>
-      <div className="grid grid-cols-1 gap-8 px-5 pb-3 md:px-7 xl:p-0 xl:pb-0">
+      <div className="grid grid-cols-1 gap-8 px-20 pb-3 md:px-7 xl:p-0 xl:pb-0">
         {/* <LocationInputFilter />
         <TripdateFilter />
         <BoatTypeFilter />
@@ -69,7 +70,7 @@ export default function Filter({ className }: FilterTypes) {
         <WithCrewFilter />
         <FreeCancellation /> */}
 
-        something
+        Component filter
       </div>
       {/* <div className="sticky inset-x-0 bottom-0 z-10 mt-4 flex items-center justify-between bg-white px-5 py-3 uppercase shadow-card sm:hidden md:px-7 xl:px-0">
         <div>

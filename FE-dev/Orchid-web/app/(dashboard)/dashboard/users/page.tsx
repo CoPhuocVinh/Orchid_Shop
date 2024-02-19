@@ -2,35 +2,19 @@ import React from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RightSidebar from "@/components/dashboard/user/RightSidebar";
-import { Customer, customerColumns } from "./_components/customer-column";
-import { User, staffColumns } from "./_components/staff-columns";
-import { DataTable } from "@/components/data-table/data-table";
-import { statuses } from "@/components/data-table/filter-type";
 
 // fake data
-import { DataTableFilterableColumn } from "@/types/table";
-import { getData, getDataCustomer } from "./_components/fake-data-cal-api";
+import { SearchParams } from "@/types/table";
 import { Shell } from "@/components/shell";
-import DataTableSkeleton from "@/components/data-table/data-table-skeleton";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { getDataFake } from "./_components/fake-data";
+import { TasksTable } from "./_components/users-table";
+export interface IndexPageProps {
+  searchParams: SearchParams;
+}
 
-const UsersPage = async () => {
-  const data = await getData();
-  const customerData = await getDataCustomer();
-
-  const filterableColumns: DataTableFilterableColumn<Customer>[] = [
-    {
-      id: "status",
-      title: "Status",
-      // options: ["done", "todo"].map((status) => ({
-      //   label: status,
-      //   value: status,
-      // })),,
-      options: statuses.map((status) => ({
-        label: status.label,
-        value: status.value,
-      })),
-    },
-  ];
+const UsersPage = async ({ searchParams }: IndexPageProps) => {
+  const tasksPromise = getDataFake(searchParams);
 
   return (
     <>
@@ -40,10 +24,7 @@ const UsersPage = async () => {
             <TabsTrigger value="staff">Nhân viên</TabsTrigger>
             <TabsTrigger value="user">Khách hàng</TabsTrigger>
           </TabsList>
-          <TabsContent value="staff">
-            Nhân viên here
-            <DataTable columns={staffColumns} data={data} searchKey="email" />
-          </TabsContent>
+          <TabsContent value="staff">Nhân viên here</TabsContent>
           <TabsContent value="user">
             Khách hàng here.
             <Shell>
@@ -55,12 +36,7 @@ const UsersPage = async () => {
                   />
                 }
               >
-                <DataTable
-                  columns={customerColumns}
-                  data={customerData}
-                  searchKey="email"
-                  filterableColumns={filterableColumns}
-                />
+                <TasksTable tasksPromise={tasksPromise} />
               </React.Suspense>
             </Shell>
           </TabsContent>

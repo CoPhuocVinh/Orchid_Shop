@@ -1,22 +1,13 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import * as React from "react";
-import { Input } from "@/components/ui/input";
+import * as React from "react"
+import type {
+  DataTableFilterableColumn,
+  DataTableSearchableColumn,
+} from "@/types/table"
 import {
-  ColumnDef,
-  ColumnFiltersState,
   flexRender,
-  SortingState,
-  getCoreRowModel,
-  RowSelection,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useReactTable,
-  VisibilityState,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-} from "@tanstack/react-table";
+  type ColumnDef,
+  type Table as TanstackTable,
+} from "@tanstack/react-table"
 
 import {
   Table,
@@ -25,65 +16,97 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
-import { DataTableFilterableColumn } from "@/types/table";
+} from "@/components/ui/table"
+
+import { DataTableAdvancedToolbar } from "./advanced/data-table-advanced-toolbar"
+import { DataTableFloatingBar } from "./data-table-floating-bar"
+import { DataTablePagination } from "./data-table-pagination"
+import { DataTableToolbar } from "./data-table-toolbar"
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  searchKey: string;
-  filterKey?: string;
-  filterableColumns?: DataTableFilterableColumn<TData>[];
-  data: TData[];
+  /**
+   * The table instance returned from useDataTable hook with pagination, sorting, filtering, etc.
+   * @type TanstackTable<TData>
+   */
+  dataTable: TanstackTable<TData>
+
+  /**
+   * The columns of the table
+   * @default []
+   * @type ColumnDef<TData, TValue>[]
+   */
+  columns: ColumnDef<TData, TValue>[]
+
+  /**
+   * The searchable columns of the table
+   * @default []
+   * @type {id: keyof TData, title: string}[]
+   * @example searchableColumns={[{ id: "title", title: "titles" }]}
+   */
+  searchableColumns?: DataTableSearchableColumn<TData>[]
+
+  /**
+   * The filterable columns of the table. When provided, renders dynamic faceted filters, and the advancedFilter prop is ignored.
+   * @default []
+   * @type {id: keyof TData, title: string, options: { label: string, value: string, icon?: React.ComponentType<{ className?: string }> }[]
+   * @example filterableColumns={[{ id: "status", title: "Status", options: ["todo", "in-progress", "done", "canceled"]}]}
+   */
+  filterableColumns?: DataTableFilterableColumn<TData>[]
+
+  /**
+   * Show notion like filters when enabled
+   * @default false
+   * @type boolean
+   */
+  advancedFilter?: boolean
+
+  /**
+   * The content to render in the floating bar on row selection, at the bottom of the table. When null, the floating bar is not rendered.
+   * The datTable instance is passed as a prop to the floating bar content.
+   * @default null
+   * @type React.ReactNode | null
+   * @example floatingBarContent={TasksTableFloatingBarContent(dataTable)}
+   */
+  floatingBarContent?: React.ReactNode | null
+
+  /**
+   * The action to delete rows
+   * @default undefined
+   * @type React.MouseEventHandler<HTMLButtonElement> | undefined
+   * @example deleteRowsAction={(event) => deleteSelectedRows(dataTable, event)}
+   */
+  deleteRowsAction?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export function DataTable<TData, TValue>({
+  dataTable,
   columns,
-  searchKey,
+  searchableColumns = [],
   filterableColumns = [],
-  data,
+  advancedFilter = false,
+  floatingBarContent,
+  deleteRowsAction,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    getFilteredRowModel: getFilteredRowModel(),
-    onRowSelectionChange: setRowSelection,
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    state: {
-      sorting,
-      columnFilters,
-      rowSelection,
-      columnVisibility,
-    },
-  });
-
   return (
     <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        searchKey={searchKey}
-        filterableColumns={filterableColumns}
-      />
+      {advancedFilter ? (
+        <DataTableAdvancedToolbar
+          dataTable={dataTable}
+          filterableColumns={filterableColumns}
+          searchableColumns={searchableColumns}
+        />
+      ) : (
+        <DataTableToolbar
+          table={dataTable}
+          filterableColumns={filterableColumns}
+          searchableColumns={searchableColumns}
+          deleteRowsAction={deleteRowsAction}
+        />
+      )}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {dataTable.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
@@ -95,14 +118,14 @@ export function DataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+            {dataTable.getRowModel().rows?.length ? (
+              dataTable.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
@@ -130,8 +153,14 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-
-      <DataTablePagination table={table} />
+      <div className="space-y-2.5">
+        <DataTablePagination table={dataTable} />
+        {floatingBarContent ? (
+          <DataTableFloatingBar table={dataTable}>
+            {floatingBarContent}
+          </DataTableFloatingBar>
+        ) : null}
+      </div>
     </div>
-  );
+  )
 }

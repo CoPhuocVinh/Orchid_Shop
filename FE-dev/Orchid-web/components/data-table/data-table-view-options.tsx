@@ -1,17 +1,20 @@
-import { Icons } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+"use client"
+
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
+import { MixerHorizontalIcon } from "@radix-ui/react-icons"
+import { type Table } from "@tanstack/react-table"
+
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Table } from "@tanstack/react-table";
+} from "@/components/ui/dropdown-menu"
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTableViewOptions<TData>({
@@ -21,11 +24,12 @@ export function DataTableViewOptions<TData>({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
+          aria-label="Toggle columns"
           variant="outline"
           size="sm"
           className="ml-auto hidden h-8 lg:flex"
         >
-          <Icons.options className="mr-2 h-4 w-4" />
+          <MixerHorizontalIcon className="mr-2 size-4" />
           View
         </Button>
       </DropdownMenuTrigger>
@@ -48,9 +52,9 @@ export function DataTableViewOptions<TData>({
               >
                 {column.id}
               </DropdownMenuCheckboxItem>
-            );
+            )
           })}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
