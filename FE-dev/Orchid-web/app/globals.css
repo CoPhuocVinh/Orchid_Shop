@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Poppins&family=Roboto:wght@700&display=swap');
  
 html,
 body,
@@ -662,4 +663,89 @@ th.rc-table-cell {
 /* listing details month  */
 .month {
 	@apply [&:nth-child(2)]:hidden sm:[&:nth-child(2)]:block [&:nth-child(3)]:hidden 3xl:[&:nth-child(3)]:block
+}
+
+/*
+  Based on TailwindCSS recommendations,
+  consider using classes instead of the `@apply` directive
+  @see https://tailwindcss.com/docs/reusing-styles#avoiding-premature-abstraction
+*/
+.embla {
+	@apply p-[1.6rem];
+	--slide-spacing: 1rem;
+	--slide-size: 100%;
+	--slide-height: 19rem;
+  }
+  .embla__viewport {
+	@apply overflow-hidden;
+  }
+  .embla__container {
+	@apply flex touch-pan-y ml-[calc(var(--slide-spacing)_*_-1)];
+	backface-visibility: hidden;
+  }
+  .embla__slide {
+	@apply flex-[0_0_var(--slide-size)] min-w-0 pl-[var(--slide-spacing)] relative;
+  }
+  .embla__slide__img {
+	@apply block h-[var(--slide-height)] w-full object-cover;
+  }
+  .embla__slide__number {
+	@apply w-[4.6rem] h-[4.6rem] z-[1] absolute bg-[rgba(var(--background-site-rgb-value),0.85)] leading-[4.6rem] font-black text-center pointer-events-none rounded-[50%] right-[0.6rem] top-[0.6rem];
+  }
+  .embla__slide__number > span {
+	@apply text-[color:var(--brand-primary)] bg-[linear-gradient(_45deg,var(--brand-primary),var(--brand-secondary)_)] bg-clip-text text-[1.6rem] block absolute inset-0;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+  }
+  .embla-thumbs {
+	@apply mt-[var(--thumbs-slide-spacing)];
+	--thumbs-slide-spacing: 0.8rem;
+	--thumbs-slide-height: 9rem;
+  }
+  .embla-thumbs__viewport {
+	@apply overflow-hidden;
+  }
+  .embla-thumbs__container {
+	@apply flex flex-row ml-[calc(var(--thumbs-slide-spacing)_*_-1)];
+  }
+  .embla-thumbs__slide {
+	@apply flex-[0_0_28%] min-w-0 pl-[var(--thumbs-slide-spacing)] relative;
+  }
+  @media (min-width: 576px) {
+	.embla-thumbs__slide {
+	  @apply flex-[0_0_18%];
+	}
+  }
+  .embla-thumbs__slide__button {
+	@apply bg-transparent touch-manipulation block no-underline cursor-pointer w-full opacity-20 transition-opacity  m-0 p-0 border-0;
+	-webkit-appearance: none;
+  }
+  .embla-thumbs__slide--selected .embla-thumbs__slide__button {
+	@apply opacity-100;
+  }
+  .embla-thumbs__slide__img {
+	@apply block h-[var(--thumbs-slide-height)] w-full object-cover;
+  }
+  .embla-thumbs__slide__number {
+	@apply w-12 h-12 z-[1] absolute bg-[rgba(var(--background-site-rgb-value),0.85)] leading-[3rem] font-black text-center pointer-events-none rounded-[50%] right-[0.3rem] top-[0.3rem];
+  }
+  .embla-thumbs__slide__number > span {
+	@apply text-[color:var(--brand-primary)] bg-[linear-gradient(_45deg,var(--brand-primary),var(--brand-secondary)_)] bg-clip-text text-[1.4rem] block absolute inset-0;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+  }
+  
+
+.bg .head h1 {
+  font-family: Roboto;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 60px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.linkUnderline {
+  color: #292B2C;
+  text-decoration: none;
 }

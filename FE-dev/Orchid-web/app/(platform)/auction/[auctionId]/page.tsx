@@ -5,10 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LeftSideAuction from "@/components/platform/auction/left-side-auction";
 import ListingDetails from "@/components/platform/auction/listing-details-block";
 import RelatedListingBlock from "@/components/platform/auction/related-listings-block";
+import BreadCrumb from "@/components/platform/bread-crumb";
 const AuctionIdPage = ({ params }: { params: { auctionId: string } }) => {
   return (
     <>
+      <BreadCrumb descriptionTitle="Auction Detail"  middlePath="Buổi đấu giá" title="Sản phẩm" routeUrl= "auction"/>
+
       <div className="container-fluid w-full 3xl:!px-12 mt-10 mb-4">
+        
         <div className="flex flex-col md:flex-row">
           <LeftSideAuction />
 
