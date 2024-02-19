@@ -1,5 +1,5 @@
 <configuration>
-    <property name="LOG_FILE" value="src/main/resources/logs/application.log" />
+   <!-- <property name="LOG_FILE" value="src/main/resources/logs/application.log" />
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOG_FILE}</file>
         <encoder>
@@ -14,5 +14,5 @@
     <root level="info">
         <appender-ref ref="FILE"/>
         <appender-ref ref="CONSOLE"/>
-    </root>
+    </root>-->
 </configuration>

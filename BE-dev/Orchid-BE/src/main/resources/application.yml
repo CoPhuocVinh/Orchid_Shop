@@ -4,9 +4,11 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://swd.cp0mgw20o90d.ap-southeast-1.rds.amazonaws.com/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
+#    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://swd.cp0mgw20o90d.ap-southeast-1.rds.amazonaws.com/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
+
     username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:root1234}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
