@@ -13,6 +13,7 @@ import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.products.GetAllPoductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
+import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.services.products.IProductService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -32,7 +33,7 @@ public class ProductController {
     public ResponseEntity<?> createProduct(
             @Valid @RequestBody ProductDTORequest productDTORequest,
             BindingResult result
-    ){
+    ) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
         if (result.hasErrors()) {
             apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));

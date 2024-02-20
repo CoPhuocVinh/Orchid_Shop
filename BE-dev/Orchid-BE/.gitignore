@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#custom #
+/src/main/resources/logback.xml
+/src/main/resources/logs/application.log

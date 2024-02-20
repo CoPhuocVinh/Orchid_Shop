@@ -10,10 +10,11 @@ package org.jio.orchidbe.services.products;/*  Welcome to Jio word
 import org.jio.orchidbe.dtos.products.GetAllPoductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
+import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.springframework.data.domain.Page;
 
 public interface IProductService {
-    ProductDTOResponse createProduct(ProductDTORequest productDTORequest);
+    ProductDTOResponse createProduct(ProductDTORequest productDTORequest) throws DataNotFoundException;
 
     Page<ProductDTOResponse> getAllProduct(GetAllPoductDTORequest getAllPoductDTORequest);
 }
