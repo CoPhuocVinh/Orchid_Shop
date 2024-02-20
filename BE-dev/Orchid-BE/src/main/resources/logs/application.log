@@ -193,3 +193,264 @@ Caused by: org.hibernate.HibernateException: Unable to determine Dialect without
 2024-02-19 08:04:39.793 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 2024-02-19 08:04:39.794 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2024-02-19 08:04:42.153 [http-nio-8088-exec-7] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 242 ms
+2024-02-19 19:50:15.050 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Starting OrchidBeApplication using Java 17.0.7 with PID 4476 (E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE\target\classes started by MSI GF63 in E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE)
+2024-02-19 19:50:15.054 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-19 19:50:15.094 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-02-19 19:50:15.094 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-02-19 19:50:15.825 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-19 19:50:15.894 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 63 ms. Found 2 JPA repository interfaces.
+2024-02-19 19:50:16.347 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8088 (http)
+2024-02-19 19:50:16.347 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [2.0.3] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-02-19 19:50:16.347 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.3] using APR version [1.7.2].
+2024-02-19 19:50:16.378 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.8 7 Feb 2023]
+2024-02-19 19:50:16.378 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8088"]
+2024-02-19 19:50:16.378 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-19 19:50:16.378 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-02-19 19:50:16.441 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-19 19:50:16.441 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1347 ms
+2024-02-19 19:50:16.881 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-19 19:50:16.912 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-19 19:50:27.841 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@357e059a
+2024-02-19 19:50:27.843 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-19 19:50:28.943 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 19:50:29.264 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-19 19:50:29.608 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-02-19 19:50:29.624 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8088"]
+2024-02-19 19:50:29.640 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8088 (http) with context path ''
+2024-02-19 19:50:29.648 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Started OrchidBeApplication in 14.973 seconds (process running for 15.959)
+2024-02-19 19:50:32.330 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 19:50:32.332 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-02-19 19:50:32.352 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-02-19 19:51:20.147 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Starting OrchidBeApplication using Java 17.0.7 with PID 2772 (E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE\target\classes started by MSI GF63 in E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE)
+2024-02-19 19:51:20.149 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-19 19:51:20.189 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-02-19 19:51:20.189 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-02-19 19:51:20.802 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-19 19:51:20.866 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 57 ms. Found 2 JPA repository interfaces.
+2024-02-19 19:51:21.271 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8088 (http)
+2024-02-19 19:51:21.273 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [2.0.3] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-02-19 19:51:21.274 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.3] using APR version [1.7.2].
+2024-02-19 19:51:21.277 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.8 7 Feb 2023]
+2024-02-19 19:51:21.281 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8088"]
+2024-02-19 19:51:21.283 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-19 19:51:21.283 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-02-19 19:51:21.327 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-19 19:51:21.327 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1137 ms
+2024-02-19 19:51:21.670 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-19 19:51:21.688 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-19 19:51:21.800 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@42f872db
+2024-02-19 19:51:21.802 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-19 19:51:22.708 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 19:51:23.008 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-19 19:51:23.287 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-02-19 19:51:23.305 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8088"]
+2024-02-19 19:51:23.322 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8088 (http) with context path ''
+2024-02-19 19:51:23.332 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Started OrchidBeApplication in 3.508 seconds (process running for 4.203)
+2024-02-19 19:54:14.397 [http-nio-8088-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-19 19:54:14.398 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-19 19:54:14.399 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-02-19 19:54:14.478 [http-nio-8088-exec-1] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource swagger-ui.html.]
+2024-02-19 19:54:15.681 [http-nio-8088-exec-2] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico.]
+2024-02-19 19:54:20.703 [http-nio-8088-exec-2] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 208 ms
+2024-02-19 19:56:26.021 [http-nio-8088-exec-6] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.time.format.DateTimeParseException: Text '2002/11/11' could not be parsed at index 4]
+2024-02-19 19:57:54.644 [http-nio-8088-exec-1] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource $%7Bapi.prefix%7D/auctions.]
+2024-02-19 19:58:30.465 [http-nio-8088-exec-2] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource pi/v1/auctions.]
+2024-02-19 19:59:53.663 [http-nio-8088-exec-8] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.time.format.DateTimeParseException: Text '2002/11/11' could not be parsed at index 4]
+2024-02-19 20:00:16.805 [http-nio-8088-exec-7] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.time.format.DateTimeParseException: Text '2002' could not be parsed at index 4]
+2024-02-19 20:01:09.971 [http-nio-8088-exec-9] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'db_orchid.tbl_products' doesn't exist
+2024-02-19 20:01:09.971 [http-nio-8088-exec-9] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [select p1_0.id,p1_0.category_id,p1_0.created_at,p1_0.created_by,p1_0.description,p1_0.is_deleted,p1_0.modified_by,p1_0.product_code,p1_0.product_name,p1_0.quantity,p1_0.updated_at,p1_0.modified_version from tbl_products p1_0 join tbl_categories c1_0 on c1_0.id=p1_0.category_id where c1_0.id=? order by p1_0.created_at desc limit ?,?] [Table 'db_orchid.tbl_products' doesn't exist] [n/a]; SQL [n/a]]
+2024-02-19 20:01:24.003 [http-nio-8088-exec-6] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'db_orchid.tbl_products' doesn't exist
+2024-02-19 20:01:24.007 [http-nio-8088-exec-6] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [select p1_0.id,p1_0.category_id,p1_0.created_at,p1_0.created_by,p1_0.description,p1_0.is_deleted,p1_0.modified_by,p1_0.product_code,p1_0.product_name,p1_0.quantity,p1_0.updated_at,p1_0.modified_version from tbl_products p1_0 join tbl_categories c1_0 on c1_0.id=p1_0.category_id where c1_0.id=? order by p1_0.created_at desc limit ?,?] [Table 'db_orchid.tbl_products' doesn't exist] [n/a]; SQL [n/a]]
+2024-02-19 20:03:11.162 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 20:03:11.165 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-02-19 20:03:11.172 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-02-19 20:03:15.794 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Starting OrchidBeApplication using Java 17.0.7 with PID 4808 (E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE\target\classes started by MSI GF63 in E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE)
+2024-02-19 20:03:15.797 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-19 20:03:15.839 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-02-19 20:03:15.839 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-02-19 20:03:16.566 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-19 20:03:16.639 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 65 ms. Found 2 JPA repository interfaces.
+2024-02-19 20:03:17.110 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8088 (http)
+2024-02-19 20:03:17.112 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [2.0.3] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-02-19 20:03:17.112 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.3] using APR version [1.7.2].
+2024-02-19 20:03:17.115 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.8 7 Feb 2023]
+2024-02-19 20:03:17.120 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8088"]
+2024-02-19 20:03:17.122 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-19 20:03:17.122 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-02-19 20:03:17.170 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-19 20:03:17.171 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1331 ms
+2024-02-19 20:03:17.584 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-19 20:03:17.604 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-19 20:03:17.718 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6af267b0
+2024-02-19 20:03:17.720 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-19 20:03:18.794 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 20:03:19.169 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-19 20:03:19.535 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-02-19 20:03:19.554 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8088"]
+2024-02-19 20:03:19.570 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8088 (http) with context path ''
+2024-02-19 20:03:19.580 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Started OrchidBeApplication in 4.155 seconds (process running for 5.027)
+2024-02-19 20:03:26.035 [http-nio-8088-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-19 20:03:26.036 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-19 20:03:26.037 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-02-19 20:03:27.830 [http-nio-8088-exec-4] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 299 ms
+2024-02-19 20:03:58.821 [http-nio-8088-exec-5] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.time.format.DateTimeParseException: Text '2022/11/11' could not be parsed at index 4]
+2024-02-19 20:04:46.282 [http-nio-8088-exec-6] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.time.format.DateTimeParseException: Text '2022-11-11' could not be parsed at index 10]
+2024-02-19 20:06:40.713 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 20:06:40.718 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-02-19 20:06:40.729 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-02-19 20:06:43.733 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Starting OrchidBeApplication using Java 17.0.7 with PID 4944 (E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE\target\classes started by MSI GF63 in E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE)
+2024-02-19 20:06:43.736 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-19 20:06:43.785 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-02-19 20:06:43.785 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-02-19 20:06:44.711 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-19 20:06:44.801 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 81 ms. Found 2 JPA repository interfaces.
+2024-02-19 20:06:45.303 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8088 (http)
+2024-02-19 20:06:45.306 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [2.0.3] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-02-19 20:06:45.307 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.3] using APR version [1.7.2].
+2024-02-19 20:06:45.312 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.8 7 Feb 2023]
+2024-02-19 20:06:45.320 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8088"]
+2024-02-19 20:06:45.323 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-19 20:06:45.323 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-02-19 20:06:45.393 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-19 20:06:45.394 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1608 ms
+2024-02-19 20:06:45.866 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-19 20:06:45.886 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-19 20:06:46.015 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@42f6b78d
+2024-02-19 20:06:46.017 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-19 20:06:47.184 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 20:06:47.650 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-19 20:06:47.994 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-02-19 20:06:48.011 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8088"]
+2024-02-19 20:06:48.027 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8088 (http) with context path ''
+2024-02-19 20:06:48.036 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Started OrchidBeApplication in 4.71 seconds (process running for 5.617)
+2024-02-19 20:07:53.250 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 20:07:53.254 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-02-19 20:07:53.266 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-02-19 20:07:56.501 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Starting OrchidBeApplication using Java 17.0.7 with PID 6232 (E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE\target\classes started by MSI GF63 in E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE)
+2024-02-19 20:07:56.504 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-19 20:07:56.551 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-02-19 20:07:56.552 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-02-19 20:07:57.366 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-19 20:07:57.427 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 54 ms. Found 2 JPA repository interfaces.
+2024-02-19 20:07:57.893 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8088 (http)
+2024-02-19 20:07:57.895 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [2.0.3] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-02-19 20:07:57.895 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.3] using APR version [1.7.2].
+2024-02-19 20:07:57.899 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.8 7 Feb 2023]
+2024-02-19 20:07:57.904 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8088"]
+2024-02-19 20:07:57.906 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-19 20:07:57.906 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-02-19 20:07:57.955 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-19 20:07:57.955 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1403 ms
+2024-02-19 20:07:58.349 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-19 20:07:58.369 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-19 20:07:58.484 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@632a81ba
+2024-02-19 20:07:58.486 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-19 20:07:59.487 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 20:07:59.813 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-19 20:08:00.145 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-02-19 20:08:00.164 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8088"]
+2024-02-19 20:08:00.179 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8088 (http) with context path ''
+2024-02-19 20:08:00.189 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Started OrchidBeApplication in 4.071 seconds (process running for 4.921)
+2024-02-19 20:10:22.158 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 20:10:22.161 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-02-19 20:10:22.170 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-02-19 20:10:24.575 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Starting OrchidBeApplication using Java 17.0.7 with PID 22004 (E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE\target\classes started by MSI GF63 in E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE)
+2024-02-19 20:10:24.578 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-19 20:10:24.621 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-02-19 20:10:24.621 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-02-19 20:10:25.297 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-19 20:10:25.355 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 52 ms. Found 2 JPA repository interfaces.
+2024-02-19 20:10:25.785 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8088 (http)
+2024-02-19 20:10:25.787 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [2.0.3] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-02-19 20:10:25.787 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.3] using APR version [1.7.2].
+2024-02-19 20:10:25.791 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.8 7 Feb 2023]
+2024-02-19 20:10:25.795 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8088"]
+2024-02-19 20:10:25.797 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-19 20:10:25.797 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-02-19 20:10:25.845 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-19 20:10:25.845 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1223 ms
+2024-02-19 20:10:26.225 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-19 20:10:26.244 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-19 20:10:26.577 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@361b4573
+2024-02-19 20:10:26.579 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-19 20:10:27.654 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 20:10:28.002 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-19 20:10:28.368 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-02-19 20:10:28.387 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8088"]
+2024-02-19 20:10:28.404 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8088 (http) with context path ''
+2024-02-19 20:10:28.413 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Started OrchidBeApplication in 4.222 seconds (process running for 5.044)
+2024-02-19 20:26:56.467 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m29s772ms656µs400ns).
+2024-02-19 21:02:02.980 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=35m19s205ms303µs500ns).
+2024-02-19 21:41:14.904 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-19 21:41:14.920 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-02-19 21:41:14.920 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-02-20 11:19:12.867 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Starting OrchidBeApplication using Java 17.0.7 with PID 5784 (E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE\target\classes started by MSI GF63 in E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE)
+2024-02-20 11:19:12.872 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-20 11:19:12.926 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-02-20 11:19:12.926 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-02-20 11:19:13.963 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-20 11:19:14.037 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 64 ms. Found 2 JPA repository interfaces.
+2024-02-20 11:19:14.603 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8088 (http)
+2024-02-20 11:19:14.605 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [2.0.3] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-02-20 11:19:14.605 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.3] using APR version [1.7.2].
+2024-02-20 11:19:14.632 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.8 7 Feb 2023]
+2024-02-20 11:19:14.643 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8088"]
+2024-02-20 11:19:14.646 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-20 11:19:14.647 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-02-20 11:19:14.730 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-20 11:19:14.731 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1804 ms
+2024-02-20 11:19:15.331 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-20 11:19:15.360 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-20 11:19:15.799 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6ed5187f
+2024-02-20 11:19:15.800 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-20 11:19:17.495 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-20 11:19:17.907 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-20 11:19:18.313 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-02-20 11:19:18.334 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8088"]
+2024-02-20 11:19:18.354 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8088 (http) with context path ''
+2024-02-20 11:19:18.363 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Started OrchidBeApplication in 6.091 seconds (process running for 7.517)
+2024-02-20 11:32:47.095 [http-nio-8088-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-20 11:32:47.096 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-20 11:32:47.097 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-02-20 11:32:48.786 [http-nio-8088-exec-9] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 241 ms
+2024-02-20 11:33:40.968 [http-nio-8088-exec-1] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.jio.orchidbe.models.auctions.Auction.product -> org.jio.orchidbe.models.products.Product]
+2024-02-20 12:07:29.665 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-20 12:07:29.670 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-02-20 12:07:29.679 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-02-20 12:07:37.059 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Starting OrchidBeApplication using Java 17.0.7 with PID 25156 (E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE\target\classes started by MSI GF63 in E:\Kì 7\SWD392\Orchid_Shop\BE-dev\Orchid-BE)
+2024-02-20 12:07:37.061 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-20 12:07:37.098 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-02-20 12:07:37.100 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-02-20 12:07:37.771 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-20 12:07:37.837 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 57 ms. Found 2 JPA repository interfaces.
+2024-02-20 12:07:38.305 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8088 (http)
+2024-02-20 12:07:38.307 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - An older version [2.0.3] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-02-20 12:07:38.307 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.3] using APR version [1.7.2].
+2024-02-20 12:07:38.311 [restartedMain] INFO  o.a.c.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.8 7 Feb 2023]
+2024-02-20 12:07:38.318 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8088"]
+2024-02-20 12:07:38.319 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-20 12:07:38.320 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-02-20 12:07:38.377 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-20 12:07:38.378 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1278 ms
+2024-02-20 12:07:38.831 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-20 12:07:38.857 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-20 12:07:39.134 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5255f4f7
+2024-02-20 12:07:39.135 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-20 12:07:40.212 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-20 12:07:40.547 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-20 12:07:40.884 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-02-20 12:07:40.902 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8088"]
+2024-02-20 12:07:40.918 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8088 (http) with context path ''
+2024-02-20 12:07:40.927 [restartedMain] INFO  o.jio.orchidbe.OrchidBeApplication - Started OrchidBeApplication in 4.204 seconds (process running for 4.995)
+2024-02-20 12:07:58.146 [http-nio-8088-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-20 12:07:58.150 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-20 12:07:58.150 [http-nio-8088-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2024-02-20 12:07:59.600 [http-nio-8088-exec-6] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 257 ms
+2024-02-20 12:09:20.045 [http-nio-8088-exec-8] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.apache.coyote.BadRequestException: Unparseable date: "2024-02-20T05:08:27.401Z"]
+2024-02-20 12:09:47.843 [http-nio-8088-exec-9] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.apache.coyote.BadRequestException: Unparseable date: "2024-02-20"]
+2024-02-20 12:11:36.249 [http-nio-8088-exec-10] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Cannot add or update a child row: a foreign key constraint fails (`db_orchid`.`tbl_aucitons`, CONSTRAINT `FKi4jhhcbcvsikguhoh1s74f64u` FOREIGN KEY (`product_id`) REFERENCES `tbl_products` (`id`))
+2024-02-20 12:11:36.259 [http-nio-8088-exec-10] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.apache.coyote.BadRequestException: could not execute statement [Cannot add or update a child row: a foreign key constraint fails (`db_orchid`.`tbl_aucitons`, CONSTRAINT `FKi4jhhcbcvsikguhoh1s74f64u` FOREIGN KEY (`product_id`) REFERENCES `tbl_products` (`id`))] [insert into tbl_aucitons (bidding_price,created_at,created_by,deposit_price,end_date,end_price,is_deleted,is_reject,modified_by,product_id,product_code,product_name,quantity,`reject-reason`,remind_at,start_time,start_price,status,updated_at,version) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into tbl_aucitons (bidding_price,created_at,created_by,deposit_price,end_date,end_price,is_deleted,is_reject,modified_by,product_id,product_code,product_name,quantity,`reject-reason`,remind_at,start_time,start_price,status,updated_at,version) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [null]]
+2024-02-20 12:12:32.573 [SpringApplicationShutdownHook] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8088"]
+2024-02-20 12:12:32.824 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-20 12:12:32.830 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-02-20 12:12:32.943 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
