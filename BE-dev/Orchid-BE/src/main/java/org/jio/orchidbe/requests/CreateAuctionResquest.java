@@ -12,9 +12,11 @@ import org.jio.orchidbe.models.products.Product;
 @Data
 @Builder
 public class CreateAuctionResquest {
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
+
     private String endDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
+
     private String startDate;
     private Float depositPrice;
     private Integer quantity;
@@ -23,7 +25,8 @@ public class CreateAuctionResquest {
     private String createdBy;
     private String modifiedBy;
     private Float startPrice;
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
+
     private String remindAt;
-    private String product;
+    private Long product;
 }

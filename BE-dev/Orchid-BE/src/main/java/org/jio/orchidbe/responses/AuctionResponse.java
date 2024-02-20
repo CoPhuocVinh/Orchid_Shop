@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.dtos.api_response.BaseResponse;
+import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.products.Product;
@@ -24,7 +25,7 @@ public class AuctionResponse extends BaseResponse {
     private Status status;
     private Float depositPrice;
     private Integer quantity;
-    private Boolean isReject;
+    private boolean isReject;
     private String reasonReject;
     private String productName;
     private String productCode;
@@ -33,5 +34,5 @@ public class AuctionResponse extends BaseResponse {
     private Float endPrice;
     private LocalDateTime remindAt;
     private Float biddingPrice;
-    private String product;
+    private ProductDTOResponse product;
 }
