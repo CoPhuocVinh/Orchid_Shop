@@ -41,14 +41,16 @@ public class GetAllPoductDTORequest extends BaseFilterRequest<Product> {
                 predicates.add(cb.equal(root.join(Product.Fields.category).get(Category.Fields.id), categoryId));
             }*/
 
-            // Chuyển đổi chuỗi categoryId thành danh sách các id
-            List<Long> categoryIds = Arrays.stream(categoryId.split("\\."))
-                    .map(Long::parseLong)
-                    .collect(Collectors.toList());
+            if(categoryId != null && !categoryId.isBlank()){
+                // Chuyển đổi chuỗi categoryId thành danh sách các id
+                List<Long> categoryIds = Arrays.stream(categoryId.split("\\."))
+                        .map(Long::parseLong)
+                        .collect(Collectors.toList());
 
-            // Thêm điều kiện cho mỗi categoryId
-            if (categoryIds != null && !categoryIds.isEmpty()) {
-                predicates.add(root.join(Product.Fields.category).get(Category.Fields.id).in(categoryIds));
+                // Thêm điều kiện cho mỗi categoryId
+                if (categoryIds != null && !categoryIds.isEmpty()) {
+                    predicates.add(root.join(Product.Fields.category).get(Category.Fields.id).in(categoryIds));
+                }
             }
 
             if (search != null && !search.isBlank()) {
