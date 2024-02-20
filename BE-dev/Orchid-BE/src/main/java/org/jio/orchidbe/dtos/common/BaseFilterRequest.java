@@ -18,8 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 @NoArgsConstructor
 public abstract class BaseFilterRequest<T> {
 
-    private int pageNumber = BaseConstants.DEFAULT_PAGE_NUMBER;
-    private int pageSize = BaseConstants.DEFAULT_PAGE_SIZE;
+    private int page = BaseConstants.DEFAULT_PAGE_NUMBER;
+    private int per_page = BaseConstants.DEFAULT_PAGE_SIZE;
 
     private String sortBy = BaseConstants.DEFAULT_SORT_BY;
 
@@ -27,11 +27,11 @@ public abstract class BaseFilterRequest<T> {
 
     @JsonIgnore
     public Pageable getPageable() {
-        int pageNumber = this.pageNumber > 0
-                ? this.pageNumber
+        int pageNumber = this.page > 0
+                ? this.page
                 : BaseConstants.DEFAULT_PAGE_NUMBER;
-        int pageSize = this.pageSize > 0 && this.pageSize <= BaseConstants.DEFAULT_MAX_PAGE_SIZE
-                ? this.pageSize
+        int pageSize = this.per_page > 0 && this.per_page <= BaseConstants.DEFAULT_MAX_PAGE_SIZE
+                ? this.per_page
                 : BaseConstants.DEFAULT_PAGE_SIZE;
 
         return sortBy != null

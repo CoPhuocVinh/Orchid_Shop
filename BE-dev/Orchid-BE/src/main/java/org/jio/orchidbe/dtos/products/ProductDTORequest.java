@@ -24,7 +24,7 @@ public class ProductDTORequest {
     @NotBlank(message = "name is required")
     @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters")
     private String productName;
-    private String productCode;
+
     @Min(value = 0, message = "Quantity must be greater than or equal to 0")
     @Max(value = 1000, message = "Quantity must be less than or equal to 1000")
     private int quantity;
