@@ -1,6 +1,8 @@
 package org.jio.orchidbe.responses;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class AuctionResponse extends BaseResponse {
     private Integer quantity;
     private boolean isReject;
     private String reasonReject;
+    private String modifiedBy;
     private String productName;
     private String productCode;
     private Integer version;
@@ -35,4 +38,11 @@ public class AuctionResponse extends BaseResponse {
     private LocalDateTime remindAt;
     private Float biddingPrice;
     private ProductDTOResponse product;
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @JsonProperty("updated_at")
+    private LocalDateTime updatedAt;
 }

@@ -4,16 +4,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
-import org.jio.orchidbe.dtos.products.GetAllPoductDTORequest;
-import org.jio.orchidbe.dtos.products.ProductDTORequest;
-import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.requests.CreateAuctionResquest;
 import org.jio.orchidbe.requests.GetAllAuctionResquest;
+import org.jio.orchidbe.requests.StatusUpdateRequest;
 import org.jio.orchidbe.responses.AuctionResponse;
-import org.jio.orchidbe.responses.ResponseObject;
 import org.jio.orchidbe.services.products.IAuctionService;
-import org.jio.orchidbe.services.products.IProductService;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,11 +26,11 @@ public class AuctionController {
 
     private final IAuctionService auctionService;
     private final ValidatorUtil validatorUtil;
-    @PostMapping("")
+    @PostMapping("create")
     public ResponseEntity<?> createAuction(
             @Valid @RequestBody CreateAuctionResquest createAuctionResquest,
             BindingResult result
-    ) throws DataNotFoundException, ParseException {
+    ) throws DataNotFoundException, ParseException, BadRequestException {
         ApiResponse apiResponse = new ApiResponse();
         if (result.hasErrors()) {
             apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
@@ -47,7 +43,24 @@ public class AuctionController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @PostMapping("update")
+    public ResponseEntity<?> updateStatusAuction(
+            @Valid @RequestBody StatusUpdateRequest statusUpdateRequest,
+            BindingResult result
+    )  {
+        ApiResponse apiResponse = new ApiResponse();
+        if (result.hasErrors()) {
+            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        AuctionResponse newAuction = auctionService.UpdateStatus(statusUpdateRequest);
+
+        apiResponse.ok(newAuction);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("list")
     public ResponseEntity<?> getAuction(@ModelAttribute GetAllAuctionResquest getAllAuctionResquest){
         ApiResponse apiResponse = new ApiResponse();
 

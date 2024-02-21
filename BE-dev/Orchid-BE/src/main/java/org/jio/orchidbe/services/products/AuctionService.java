@@ -3,6 +3,7 @@ package org.jio.orchidbe.services.products;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.configs.AuctionConfig;
 
 
@@ -18,6 +19,7 @@ import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.requests.CreateAuctionResquest;
 import org.jio.orchidbe.requests.GetAllAuctionResquest;
+import org.jio.orchidbe.requests.StatusUpdateRequest;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -50,17 +52,15 @@ public class AuctionService implements IAuctionService {
 
 
 
-    public static LocalDateTime convertToLocalDateTime(Date dateToConvert) {
-        return Instant.ofEpochMilli(dateToConvert.getTime())
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-    }
-
-
     @Override
-    public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException {
+    public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
 
         Auction auction1 = auctionMapper.toEntity(createAuctionResquest);
+        validateBlank(createAuctionResquest);
+        SimpleDateFormat sdf = new SimpleDateFormat(properties.getProperty("date"));
+        Date startDate = sdf.parse(createAuctionResquest.getStartDate());
+        Date endDate = sdf.parse(createAuctionResquest.getEndDate());
+        validateDate(startDate,endDate);
         //map
 
         Product product = productRepository.findById(createAuctionResquest.getProduct())
@@ -75,10 +75,69 @@ public class AuctionService implements IAuctionService {
     }
 
 
+
     @Override
     public Page<AuctionResponse> getAllAuctions(GetAllAuctionResquest request) {
         return auctionRepository.findAll(request.getSpecification(), request.getPageable())
                 .map(auctionMapper::toResponse);
+    }
+
+
+    @Override
+    public AuctionResponse UpdateStatus(StatusUpdateRequest request) {
+        Optional<Auction> existingAuctionO = auctionRepository.findById(request.getId());
+        Auction existingAuction = existingAuctionO.get();
+
+
+        if (request.getStatus().equalsIgnoreCase(Status.COMING.name())) {
+            existingAuction.setStatus(Status.COMING);
+            existingAuction.setModifiedBy(request.getBy());
+            //existingAuction.setUpdatedAt(LocalDateTime.now());
+        } else if (request.getStatus().equalsIgnoreCase(Status.END.name())) {
+            existingAuction.setStatus(Status.END);
+            existingAuction.setModifiedBy(request.getBy());
+            //existingAuction.setUpdatedAt(LocalDateTime.now());
+        } else if (request.getStatus().equalsIgnoreCase(Status.LIVE.name())) {
+            existingAuction.setStatus(Status.LIVE);
+            existingAuction.setModifiedBy(request.getBy());
+            //existingAuction.setUpdatedAt(LocalDateTime.now());
+        }
+        auctionRepository.save(existingAuction);
+        return auctionMapper.toResponse(existingAuction);
+    }
+
+
+    public void validateDate(Date startDate, Date endDate) throws BadRequestException {
+        if (endDate.before(startDate)) {
+            throw new BadRequestException("Time Exception!!!");
+        }
+    }
+
+    public void validateBlank(CreateAuctionResquest request) {
+        if (request.getDepositPrice() == null || request.getDepositPrice() < 0) {
+            throw new IllegalArgumentException("Deposit error!!");
+        }
+        if (request.getProductCode() == null || request.getProductCode().isEmpty()) {
+            throw new IllegalArgumentException("Product Code cannot be blank");
+        }
+        if (request.getProductName() == null || request.getProductName().isEmpty()) {
+            throw new IllegalArgumentException("Product Name cannot be blank");
+        }
+        if (request.getStartPrice() == null || request.getStartPrice()< 0) {
+            throw new IllegalArgumentException("Start Price error");
+        }
+        if (request.getQuantity() == null || request.getQuantity()<= 0) {
+            throw new IllegalArgumentException("Quantity error");
+        }
+        if (request.getStartDate() == null || request.getStartDate().isEmpty()) {
+            throw new IllegalArgumentException("Start Date cannot be blank");
+        }
+        if (request.getEndDate() == null || request.getEndDate().isEmpty()) {
+            throw new IllegalArgumentException("End Date cannot be blank");
+        }
+        if (request.getRemindAt() == null || request.getRemindAt().isEmpty()) {
+            throw new IllegalArgumentException("RemindAt cannot be blank");
+        }
     }
 
 

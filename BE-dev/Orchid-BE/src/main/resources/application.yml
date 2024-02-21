@@ -50,4 +50,4 @@ springdoc:
     path: /api-docs
   show-actuator: true
 data:
-  format: "yyyy/MM/dd"
+  format: "yyyy-MM-dd'T'HH:mm:ss.SSS"
