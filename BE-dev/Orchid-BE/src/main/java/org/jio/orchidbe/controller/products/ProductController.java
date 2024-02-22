@@ -7,6 +7,8 @@ package org.jio.orchidbe.controller.products;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
@@ -30,6 +32,7 @@ public class ProductController {
     private final IProductService productService;
     private final ValidatorUtil validatorUtil;
     @PostMapping("")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<?> createProduct(
             @Valid @RequestBody ProductDTORequest productDTORequest,
             BindingResult result
@@ -47,6 +50,7 @@ public class ProductController {
     }
 
     @GetMapping("")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<?> getProduct(@ModelAttribute GetAllPoductDTORequest getAllPoductDTORequest){
         ApiResponse apiResponse = new ApiResponse();
 

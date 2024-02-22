@@ -29,7 +29,7 @@ public class Product extends BaseEntity {
     @Column(name = "product_name", nullable = false, length = 350)
     private String productName;
 
-    @Column(name = "product_code", nullable = false, length = 350)
+    @Column(name = "product_code",unique = true, nullable = false, length = 350)
     private String productCode;
 
     @Column(name = "quantity")

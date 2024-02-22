@@ -30,7 +30,8 @@ public class UserController {
     private final IUserService userService;
     private final ValidatorUtil validatorUtil;
     @GetMapping("")
-    public ResponseEntity<?> getStaff(@ModelAttribute GetAllUserDTORequest request){
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> getUsers(@ModelAttribute GetAllUserDTORequest request){
         ApiResponse apiResponse = new ApiResponse();
         //request.setRole(UserRole.STAFF);
         Page<UserDTOResponse> Page = userService.getAllUser(request);

@@ -61,6 +61,9 @@ public class GetAllPoductDTORequest extends BaseFilterRequest<Product> {
                 String searchTrim = "%" + code.trim().toLowerCase() + "%";
                 predicates.add(cb.like(cb.lower(root.get(Product.Fields.productCode)), searchTrim));
             }
+
+            // Thêm điều kiện deleted == false
+            predicates.add(cb.equal(root.get("deleted"), false));
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }

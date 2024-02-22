@@ -1,4 +1,3 @@
-/*
 package org.jio.orchidbe.components.aspects;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.net.InetAddress;
 import java.util.logging.Logger;
 
 @Component
@@ -20,12 +20,13 @@ public class UserActivityLogger {
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void controllerMethods() {}
 
-    @Around("controllerMethods() && execution(* org.jio.orchidbe.controller.users.UserController*(..))")
+    @Around("controllerMethods() && execution(* org.jio.orchidbe.controller.users.AuthController.*(..))")
     public Object logUserActivity(ProceedingJoinPoint joinPoint) throws Throwable {
         // Ghi log trước khi thực hiện method
         String methodName = joinPoint.getSignature().getName();
         String remoteAddress = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest().getRemoteAddr();
+        String computerName = InetAddress.getLocalHost().getHostName();
         logger.info("User activity started: " + methodName + ", IP address: " + remoteAddress);
         // Thực hiện method gốc
         Object result = joinPoint.proceed();
@@ -34,4 +35,3 @@ public class UserActivityLogger {
         return result;
     }
 }
-*/
