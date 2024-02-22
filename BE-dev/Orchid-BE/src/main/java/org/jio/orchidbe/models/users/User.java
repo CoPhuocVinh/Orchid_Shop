@@ -13,8 +13,16 @@ import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.users.user_enum.Gender;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+
 @Entity
 @Table(name = "tblUsers")
 @Getter
@@ -23,7 +31,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldNameConstants
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,9 +46,6 @@ public class User extends BaseEntity {
     private String password;
     @Column(name = "image_url", length = 255)
     private String img;
-
-    @Column(name = "token", length = 255)
-    private String token;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -67,8 +72,38 @@ public class User extends BaseEntity {
     @Column(name = "expiration_at")
     private LocalDateTime expirationAt;
 
-    @Column(name = "expiration_banned_at")
-    private LocalDateTime expirationBannedAt;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority("ROLE_"+getRole()));
+        return authorityList;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     // --- relationship----
 
