@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jio.orchidbe.dtos.common.BaseFilterRequest;
+import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.products.Product;
@@ -23,6 +24,7 @@ import java.util.List;
 public class GetAllAuctionResquest extends BaseFilterRequest<Auction> {
 
     private String search;
+
     private String productCode; // Assuming you want to search by product code as well
 
     @Override
@@ -39,6 +41,8 @@ public class GetAllAuctionResquest extends BaseFilterRequest<Auction> {
                 String codeTrim = "%" + productCode.trim().toLowerCase() + "%";
                 predicates.add(cb.like(cb.lower(root.get(Auction.Fields.product).get("productCode")), codeTrim));
             }
+            predicates.add(cb.equal(root.get(BaseEntity.Fields.deleted), false));
+
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };

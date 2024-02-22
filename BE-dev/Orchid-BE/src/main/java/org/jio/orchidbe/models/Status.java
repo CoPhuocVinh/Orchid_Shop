@@ -3,5 +3,8 @@ package org.jio.orchidbe.models;
 public enum Status {
     COMING,
     LIVE,
-    END
+    END,
+    REJECT,
+    APPROVE,
+    WAITING
 }

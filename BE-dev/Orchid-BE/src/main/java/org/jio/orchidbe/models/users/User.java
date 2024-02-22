@@ -43,8 +43,8 @@ public class User extends BaseEntity {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    @Column(name = "is_Banned", nullable = false)
-    private boolean isBaned = false;
+    @Column(name = "banned", nullable = false)
+    private boolean banned = false;
 
     @Column(name = "dob", nullable = false)
     private Date dob;

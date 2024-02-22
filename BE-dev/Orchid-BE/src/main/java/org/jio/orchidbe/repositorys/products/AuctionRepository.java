@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
     Page<Auction> findAll(Specification<Auction> specification, Pageable pageable);
 
+    boolean existsAuctionByProductName(String productName);
 }

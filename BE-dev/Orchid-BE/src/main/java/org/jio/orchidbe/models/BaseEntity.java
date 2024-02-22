@@ -42,6 +42,6 @@ public class BaseEntity{
         updatedAt = LocalDateTime.now();
     }
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = false;
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
 }

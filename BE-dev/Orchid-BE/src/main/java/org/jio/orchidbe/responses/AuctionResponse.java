@@ -27,14 +27,13 @@ public class AuctionResponse extends BaseResponse {
     private Status status;
     private Float depositPrice;
     private Integer quantity;
-    private boolean isReject;
-    private String reasonReject;
     private String modifiedBy;
     private String productName;
     private String productCode;
     private Integer version;
     private Float startPrice;
     private Float endPrice;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime remindAt;
     private Float biddingPrice;
     private ProductDTOResponse product;
@@ -45,4 +44,5 @@ public class AuctionResponse extends BaseResponse {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
+
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 @Component
 public interface AuctionMapper {
-
+    //@Mapping(source = "isReject", target = "isReject")
     AuctionResponse toResponse(Auction auction);
 
     @Mapping(target = "product", ignore = true)

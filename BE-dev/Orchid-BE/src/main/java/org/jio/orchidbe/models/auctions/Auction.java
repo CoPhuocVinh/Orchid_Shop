@@ -42,8 +42,8 @@ public class Auction extends BaseEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "is_reject", nullable = false)
-    private boolean isReject = false;
+    @Column(name = "rejected", nullable = false)
+    private boolean rejected = false;
 
     @Column(name = "reject-reason")
     private String rejectReason = "";
