@@ -1,4 +1,4 @@
-package org.jio.orchidbe.requests;
+package org.jio.orchidbe.requests.auctions;
 
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;

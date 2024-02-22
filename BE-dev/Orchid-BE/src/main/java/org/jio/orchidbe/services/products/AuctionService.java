@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.exceptions.OptimisticException;
+import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.jio.orchidbe.responses.AuctionResponse;
-import org.jio.orchidbe.requests.UpdateAuctionRequest;
 import org.jio.orchidbe.models.auctions.Auction;
 
 import org.jio.orchidbe.exceptions.DataNotFoundException;
@@ -27,7 +27,6 @@ import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
-import org.jio.orchidbe.requests.*;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -35,8 +34,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
 

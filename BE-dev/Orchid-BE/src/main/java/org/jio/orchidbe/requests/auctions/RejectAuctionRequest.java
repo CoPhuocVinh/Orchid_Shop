@@ -1,4 +1,4 @@
-package org.jio.orchidbe.requests;
+package org.jio.orchidbe.requests.auctions;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class AuctionRequest {
+public class RejectAuctionRequest {
     private Long id;
     private String By;
+    private String reason;
 }

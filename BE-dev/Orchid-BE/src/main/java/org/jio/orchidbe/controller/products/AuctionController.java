@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
-import org.jio.orchidbe.requests.*;
+import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.services.products.IAuctionService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -17,8 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("${api.prefix}/auctions")

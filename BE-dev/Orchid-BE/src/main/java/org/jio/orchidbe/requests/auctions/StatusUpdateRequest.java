@@ -1,4 +1,4 @@
-package org.jio.orchidbe.requests;
+package org.jio.orchidbe.requests.auctions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
