@@ -1,3 +1,4 @@
+
 package org.jio.orchidbe.exceptions;
 
 public class OptimisticException extends RuntimeException {
@@ -5,4 +6,5 @@ public class OptimisticException extends RuntimeException {
         super(message);
     }
 }
+
 

@@ -4,9 +4,11 @@ package org.jio.orchidbe.handlers;
 
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
+import org.jio.orchidbe.exceptions.OptimisticException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -38,6 +40,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.builder()
                         .error(error)
                         .build());
+    }
+
+    @ExceptionHandler(OptimisticException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public ApiResponse handleOptimisticException(OptimisticException ex) {
+        error.put("errorCode", "409");
+        error.put("errorStatus", "CONFLICT");
+        error.put("errorMessage", ex.getMessage());
+
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.error(error);
+        return apiResponse;
     }
 
 }

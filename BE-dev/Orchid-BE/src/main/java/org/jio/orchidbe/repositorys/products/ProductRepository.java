@@ -15,4 +15,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long>, JpaSpecificationExecutor<Product> {
 
+    long countByCategory_Id(long categoryId);
 }

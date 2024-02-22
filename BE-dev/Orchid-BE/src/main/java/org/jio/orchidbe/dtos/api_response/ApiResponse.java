@@ -1,6 +1,7 @@
 package org.jio.orchidbe.dtos.api_response;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.jio.orchidbe.dtos.dto_enum.StatusEnum;
 
@@ -17,7 +18,8 @@ public class ApiResponse<T> {
     private T payload;
     private Map<String, String> error;
     private Map<String, Object> metadata;
-
+    @JsonProperty("message")
+    private String message;
     public void ok() {
         this.status = StatusEnum.SUCCESS;
     }

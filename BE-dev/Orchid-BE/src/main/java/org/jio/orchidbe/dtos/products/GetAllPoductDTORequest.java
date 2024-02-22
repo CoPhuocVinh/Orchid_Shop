@@ -19,7 +19,10 @@ import org.jio.orchidbe.models.products.Product;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,14 +31,26 @@ import java.util.List;
 public class GetAllPoductDTORequest extends BaseFilterRequest<Product> {
     private String search;
     private String code;
-    private Long categoryId;
+    private String categoryId;
     @Override
     public Specification<Product> getSpecification() {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (categoryId != null) {
+            /*if (categoryId != null) {
                 predicates.add(cb.equal(root.join(Product.Fields.category).get(Category.Fields.id), categoryId));
+            }*/
+
+            if(categoryId != null && !categoryId.isBlank()){
+                // Chuyển đổi chuỗi categoryId thành danh sách các id
+                List<Long> categoryIds = Arrays.stream(categoryId.split("\\."))
+                        .map(Long::parseLong)
+                        .collect(Collectors.toList());
+
+                // Thêm điều kiện cho mỗi categoryId
+                if (categoryIds != null && !categoryIds.isEmpty()) {
+                    predicates.add(root.join(Product.Fields.category).get(Category.Fields.id).in(categoryIds));
+                }
             }
 
             if (search != null && !search.isBlank()) {
