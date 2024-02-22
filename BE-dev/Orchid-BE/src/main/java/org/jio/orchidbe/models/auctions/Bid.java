@@ -37,8 +37,8 @@ public class Bid extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "is_top1", nullable = false)
-    private boolean isTop1 = false;
+    @Column(name = "top1", nullable = false)
+    private boolean top1 = false;
 
     @Column(name = "ratings")
     private Integer ratings;

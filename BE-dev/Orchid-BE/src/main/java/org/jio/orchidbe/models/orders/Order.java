@@ -47,8 +47,8 @@ public class Order extends BaseEntity {
     @Column(name = "modified_by")
     private String modifiedBy = "";
 
-    @Column(name = "is_expired", nullable = false)
-    private boolean isExpired = false;
+    @Column(name = "expired", nullable = false)
+    private boolean expired = false;
 
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;

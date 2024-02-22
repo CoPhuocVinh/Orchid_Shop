@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.products.Product;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 @NoArgsConstructor
+@FieldNameConstants
 @Entity
 @Table(name="tbl_aucitons")
 public class Auction extends BaseEntity {
@@ -32,7 +34,7 @@ public class Auction extends BaseEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.COMING;
 
     @Column(name = "deposit_price")
     private Float depositPrice;
@@ -40,11 +42,11 @@ public class Auction extends BaseEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "is_reject", nullable = false)
-    private boolean isReject = false;
+    @Column(name = "rejected", nullable = false)
+    private boolean rejected = false;
 
     @Column(name = "reject-reason")
-    private String rejectReason;
+    private String rejectReason = "";
 
     @Column(name = "product_name")
     private String productName;
