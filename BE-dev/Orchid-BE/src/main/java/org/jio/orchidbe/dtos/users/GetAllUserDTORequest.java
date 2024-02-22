@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class GetAllUserDTORequest extends BaseFilterRequest<User> {
     private String email;
-    @JsonIgnore
+    //@JsonIgnore
     private UserRole role;
     @Override
     public Specification<User> getSpecification() {
