@@ -1,5 +1,7 @@
-package org.jio.orchidbe.controller.products;
+package org.jio.orchidbe.controller.auctions;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -28,6 +30,8 @@ public class AuctionController {
     private final IAuctionService auctionService;
     private final ValidatorUtil validatorUtil;
     @PostMapping("create")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+
     public ResponseEntity<?> createAuction(
             @Valid @RequestBody CreateAuctionResquest createAuctionResquest,
             BindingResult result
@@ -45,6 +49,8 @@ public class AuctionController {
     }
 
     @PostMapping("update-status")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+
     public ResponseEntity<?> updateStatusAuction(
             @Valid @RequestBody StatusUpdateRequest statusUpdateRequest,
             BindingResult result
@@ -62,6 +68,8 @@ public class AuctionController {
     }
 
     @PostMapping("reject-auction")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+
     public ResponseEntity<?> rejectStatusAuction(
             @Valid @RequestBody RejectAuctionRequest rejectAuctionRequest,
             BindingResult result
@@ -80,6 +88,8 @@ public class AuctionController {
 
 
     @PutMapping("update-auction/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+
     public ResponseEntity updateAuction(@PathVariable("id") Long id,
                                         @RequestBody UpdateAuctionRequest updateAuctionRequest,
                                         BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, BadRequestException {
@@ -88,6 +98,8 @@ public class AuctionController {
 
     }
     @PostMapping("delete-auction")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+
     public ResponseEntity<?> deleteAuction(
             @Valid @RequestBody AuctionRequest deleteAuctionRequest,
             BindingResult result
@@ -105,6 +117,8 @@ public class AuctionController {
     }
 
     @GetMapping("list")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+
     public ResponseEntity<?> getAuction(@ModelAttribute GetAllAuctionResquest getAllAuctionResquest){
         ApiResponse apiResponse = new ApiResponse();
 

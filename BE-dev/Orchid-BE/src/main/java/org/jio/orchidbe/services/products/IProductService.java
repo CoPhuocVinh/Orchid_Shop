@@ -12,9 +12,14 @@ import org.jio.orchidbe.dtos.products.ProductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.BindingResult;
 
 public interface IProductService {
     ProductDTOResponse createProduct(ProductDTORequest productDTORequest) throws DataNotFoundException;
 
     Page<ProductDTOResponse> getAllProduct(GetAllPoductDTORequest getAllPoductDTORequest);
+
+    ProductDTOResponse update(Long id, ProductDTORequest request, BindingResult result) throws DataNotFoundException;
+
+    ProductDTOResponse getById(Long id) throws DataNotFoundException;
 }

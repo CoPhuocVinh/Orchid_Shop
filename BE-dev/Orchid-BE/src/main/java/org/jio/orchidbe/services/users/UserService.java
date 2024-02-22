@@ -123,4 +123,13 @@ public class UserService implements IUserService{
         }
         return userDTOResponse;
     }
+
+    @Override
+    public UserDTOResponse getUser(Long id) throws DataNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found user_controller.")
+        );
+        UserDTOResponse userDTOResponse = userMapper.toResponse(user);
+        return userDTOResponse;
+    }
 }
