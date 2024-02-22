@@ -29,8 +29,8 @@ public class UserInfo extends BaseEntity {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "is_default", nullable = false)
-    private boolean isDefault = false;
+    @Column(name = "defaulted", nullable = false)
+    private boolean defaulted = false;
 
 
 

@@ -3,17 +3,25 @@ server:
   port: 8088
 
 spring:
-  datasource:
+#  datasource:
 #    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://swd.cp0mgw20o90d.ap-southeast-1.rds.amazonaws.com/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://swd.cp0mgw20o90d.ap-southeast-1.rds.amazonaws.com/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
-
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:root1234}
+#    username: ${SPRING_DATASOURCE_USERNAME:root}
+#    password: ${SPRING_DATASOURCE_PASSWORD:root1234}
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_orchid
+    username: root
+    password: 12345
+##    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://swd.cp0mgw20o90d.ap-southeast-1.rds.amazonaws.com/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
+#    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://swd.cp0mgw20o90d.ap-southeast-1.rds.amazonaws.com/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
+#
+#    username: ${SPRING_DATASOURCE_USERNAME:root}
+#    password: ${SPRING_DATASOURCE_PASSWORD:root1234}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
       dialect: org.hibernate.dialect.MySQL8Dialect
@@ -41,3 +49,5 @@ springdoc:
   api-docs:
     path: /api-docs
   show-actuator: true
+data:
+  format: "yyyy-MM-dd'T'HH:mm:ss.SSS"
