@@ -6,7 +6,7 @@ export async function productFakeData(
   searchParams: SearchParams
 ): Promise<{ data: IProduct[]; pageCount: number }> {
   try {
-    const { page, per_page, name, sort } = searchParams;
+    const { page, per_page, productName, sort } = searchParams;
 
     const res = await axios.get("http://localhost:3001/products");
 
@@ -22,12 +22,12 @@ export async function productFakeData(
     const [sortColumn, sortOrder] = (sort?.toString().split(".") as [
       keyof IProduct | undefined,
       "asc" | "desc" | undefined
-    ]) ?? ["name", "asc"];
+    ]) ?? ["productName", "asc"];
     let filteredData = fakeData;
 
-    if (name) {
+    if (productName) {
       filteredData = filteredData.filter((filter) =>
-        filter.name.includes(name.toString())
+        filter.productName.includes(productName.toString())
       );
     }
 

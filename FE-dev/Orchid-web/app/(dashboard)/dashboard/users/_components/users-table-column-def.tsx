@@ -15,6 +15,8 @@ import {
   QuestionMarkCircledIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons";
+import { BsGenderMale,BsGenderFemale ,BsGenderTrans } from "react-icons/bs";
+
 import { type ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -34,20 +36,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-
-export interface Task {
-  id: string;
-  code: string;
-  title: string;
-  status: string;
-  label: string;
-  priority: string;
-}
+import { IUser } from "@/types/dashboard";
 
 export function fetchTasksTableColumnDefs(
   isPending: boolean,
   startTransition: React.TransitionStartFunction
-): ColumnDef<Task, unknown>[] {
+): ColumnDef<IUser, unknown>[] {
   return [
     {
       id: "select",
@@ -61,11 +55,11 @@ export function fetchTasksTableColumnDefs(
           className="translate-y-[2px] dark:text-white"
         />
       ),
-      cell: ({row}) => (
+      cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => {
-            row.toggleSelected(!!value)
+            row.toggleSelected(!!value);
           }}
           aria-label="Select row"
           className="translate-y-[2px] dark:text-white"
@@ -75,113 +69,76 @@ export function fetchTasksTableColumnDefs(
       enableHiding: false,
     },
     {
-      accessorKey: "code",
+      accessorKey: "id",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Task" />
+        <DataTableColumnHeader column={column} title="UserID" />
       ),
-      cell: ({ row }) => <div className="w-[80px]">{row.getValue("code")}</div>,
+      cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
       enableSorting: false,
       enableHiding: false,
     },
     {
-      accessorKey: "title",
+      accessorKey: "name",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Title" />
+        <DataTableColumnHeader column={column} title="Name" />
       ),
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
             <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("title")}
+              {row.getValue("name")}
             </span>
           </div>
         );
       },
     },
     {
-      accessorKey: "status",
+      accessorKey: "email",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="Email" />
       ),
       cell: ({ row }) => {
-        const status = ["canceled", "done", "in-progress", "todo"].find(
-          (status) => status === row.original.status
-        );
-
-        if (!status) return null;
-
         return (
-          <div className="flex w-[100px] items-center">
-            {status === "canceled" ? (
-              <CrossCircledIcon
-                className="mr-2 size-4 text-muted-foreground"
-                aria-hidden="true"
-              />
-            ) : status === "done" ? (
-              <CheckCircledIcon
-                className="mr-2 size-4 text-muted-foreground"
-                aria-hidden="true"
-              />
-            ) : status === "in-progress" ? (
-              <StopwatchIcon
-                className="mr-2 size-4 text-muted-foreground"
-                aria-hidden="true"
-              />
-            ) : status === "todo" ? (
-              <QuestionMarkCircledIcon
-                className="mr-2 size-4 text-muted-foreground"
-                aria-hidden="true"
-              />
-            ) : (
-              <CircleIcon
-                className="mr-2 size-4 text-muted-foreground"
-                aria-hidden="true"
-              />
-            )}
-            <span className="capitalize">{status}</span>
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+              {row.getValue("email")}
+            </span>
           </div>
         );
       },
-      filterFn: (row, id, value) => {
-        return value instanceof Array && value.includes(row.getValue(id));
-      },
     },
+
     {
-      accessorKey: "priority",
+      accessorKey: "gender",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Priority" />
+        <DataTableColumnHeader column={column} title="Gender" />
       ),
       cell: ({ row }) => {
-        const priority = row.original.priority;
+        const gender = row.original.gender;
 
-        if (!priority) {
+        if (!gender) {
           return null;
         }
 
         return (
           <div className="flex items-center">
-            {priority === "low" ? (
-              <ArrowDownIcon
+            {gender === "MALE" ? (
+              <BsGenderMale
                 className="mr-2 size-4 text-muted-foreground"
                 aria-hidden="true"
               />
-            ) : priority === "medium" ? (
-              <ArrowRightIcon
-                className="mr-2 size-4 text-muted-foreground"
-                aria-hidden="true"
-              />
-            ) : priority === "high" ? (
-              <ArrowUpIcon
+            ) : gender === "FEMALE" ? (
+              <BsGenderFemale
                 className="mr-2 size-4 text-muted-foreground"
                 aria-hidden="true"
               />
             ) : (
-              <CircleIcon
+              <BsGenderTrans 
                 className="mr-2 size-4 text-muted-foreground"
                 aria-hidden="true"
               />
             )}
-            <span className="capitalize">{priority}</span>
+            <span className="capitalize">{gender}</span>
           </div>
         );
       },
@@ -192,28 +149,20 @@ export function fetchTasksTableColumnDefs(
   ];
 }
 
-export const filterableColumns: DataTableFilterableColumn<Task>[] = [
+export const filterableColumns: DataTableFilterableColumn<IUser>[] = [
   {
-    id: "status",
-    title: "Status",
-    options: ["canceled", "done", "in-progress", "todo"].map((status) => ({
-      label: status[0]?.toUpperCase() + status.slice(1),
-      value: status,
-    })),
-  },
-  {
-    id: "priority",
-    title: "Priority",
-    options: ["low", "medium", "high"].map((priority) => ({
-      label: priority[0]?.toUpperCase() + priority.slice(1),
-      value: priority,
+    id: "gender",
+    title: "gender",
+    options: ["MALE", "FEMALE", "OTHER"].map((gender) => ({
+      label: gender[0]?.toUpperCase() + gender.slice(1),
+      value: gender,
     })),
   },
 ];
 
-export const searchableColumns: DataTableSearchableColumn<Task>[] = [
+export const searchableColumns: DataTableSearchableColumn<IUser>[] = [
   {
-    id: "title",
-    title: "titles",
+    id: "email",
+    title: "emails",
   },
 ];

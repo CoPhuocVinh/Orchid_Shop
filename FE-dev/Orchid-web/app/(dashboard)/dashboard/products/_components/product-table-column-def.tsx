@@ -51,7 +51,22 @@ export function fetchProductsTableColumnDefs(
       enableHiding: false,
     },
     {
-      accessorKey: "name",
+      accessorKey: "productCode",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Code" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+              {row.getValue("productCode")}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "productName",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Name" />
       ),
@@ -59,7 +74,7 @@ export function fetchProductsTableColumnDefs(
         return (
           <div className="flex space-x-2">
             <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("name")}
+              {row.getValue("productName")}
             </span>
           </div>
         );
@@ -80,42 +95,27 @@ export function fetchProductsTableColumnDefs(
         );
       },
     },
-    {
-      accessorKey: "version",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Version" />
-      ),
-      cell: ({ row }) => {
-        return (
-          <div className="flex space-x-2">
-            <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("version")}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "code",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Code" />
-      ),
-      cell: ({ row }) => {
-        return (
-          <div className="flex space-x-2">
-            <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("code")}
-            </span>
-          </div>
-        );
-      },
-    },
+    // {
+    //   accessorKey: "version",
+    //   header: ({ column }) => (
+    //     <DataTableColumnHeader column={column} title="Version" />
+    //   ),
+    //   cell: ({ row }) => {
+    //     return (
+    //       <div className="flex space-x-2">
+    //         <span className="max-w-[500px] truncate font-medium">
+    //           {row.getValue("version")}
+    //         </span>
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 }
 
 export const searchableColumns: DataTableSearchableColumn<IProduct>[] = [
   {
-    id: "name",
-    title: "name",
+    id: "productName",
+    title: "productName",
   },
 ];

@@ -8,11 +8,10 @@ import { DataTable } from "@/components/data-table/data-table";
 import { productFakeData } from "./fake-product-data";
 import { IProduct } from "@/types/dashboard";
 import { fetchProductsTableColumnDefs,searchableColumns } from "./product-table-column-def";
-
-
+import { getProducts } from "@/lib/actions";
 
 interface ProductsTableProps {
-    productPromise: ReturnType<typeof productFakeData>;
+    productPromise: ReturnType<typeof getProducts>;
 }
 
 export function ProductTable({ productPromise }: ProductsTableProps) {
