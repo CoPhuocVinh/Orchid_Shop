@@ -47,10 +47,6 @@ public class AuctionService implements IAuctionService {
     @Autowired
     private ValidatorUtil validatorUtil;
 
-
-    @Autowired
-    private Properties properties;
-
     private final AuctionMapper auctionMapper;
     @Autowired
     private ProductRepository productRepository;
@@ -163,7 +159,6 @@ public class AuctionService implements IAuctionService {
             throw new BadRequestException("Auction with " + productName + " is existed");
         }
     }
-
 
 
     @Override
