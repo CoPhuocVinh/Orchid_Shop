@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { api } from "@/lib/api-interceptor/api";
 
 interface ApiResponse<T> {
@@ -13,7 +13,7 @@ export async function fetchListDataWithSearchParam<T>(
   try {
     const response: AxiosResponse<{
       payload: { content: T[]; totalPages: number };
-    }> = await api.get(url, { params: searchParams });
+    }> = await axios.get(url, { params: searchParams });
 
     const { content, totalPages } = response.data.payload;
 
