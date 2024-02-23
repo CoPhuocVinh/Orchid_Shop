@@ -1,20 +1,31 @@
 import { fetchListDataWithSearchParam } from "@/lib/generics";
 import { IUser } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
-let baseURL = "https://orchid-be.azurewebsites.net/api/v1";
+
+let BASE_URL = "http://128.199.185.211:8099/api/v1"
 
 export async function getUserWithRoleCustomer(
   searchParams: SearchParams
 ): Promise<{ data: IUser[]; pageCount: number }> {
-  const url = `${baseURL}/users?role=CUSTOMER`;
+  const url = `${BASE_URL}/users?role=CUSTOMER`;
 
-  return await fetchListDataWithSearchParam(url, searchParams);
+  try {
+    return await fetchListDataWithSearchParam(url, searchParams);
+  } catch (error) {
+    console.error('Failed to fetch data', error);
+    throw error;
+  }
 }
 
 export async function getUserWithRoleStaff(
   searchParams: SearchParams
 ): Promise<{ data: IUser[]; pageCount: number }> {
-  const url = `${baseURL}/users?role=STAFF`;
+  const url = `${BASE_URL}/users?role=STAFF`;
 
-  return await fetchListDataWithSearchParam(url, searchParams);
+  try {
+    return await fetchListDataWithSearchParam(url, searchParams);
+  } catch (error) {
+    console.error('Failed to fetch data', error);
+    throw error;
+  }
 }

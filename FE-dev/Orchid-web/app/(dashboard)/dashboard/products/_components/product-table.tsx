@@ -11,11 +11,13 @@ import { fetchProductsTableColumnDefs,searchableColumns } from "./product-table-
 import { getProducts } from "@/lib/actions";
 
 interface ProductsTableProps {
-    productPromise: ReturnType<typeof getProducts>;
+    // productPromise: ReturnType<typeof getProducts>;
+    products: IProduct[];
+    pageCount: number
 }
 
-export function ProductTable({ productPromise }: ProductsTableProps) {
-  const {data, pageCount} = React.use(productPromise);
+export function ProductTable({  products, pageCount }: ProductsTableProps) {
+  // const {data, pageCount} = React.use(productPromise);
   const [isPending, startTransition] = React.useTransition();
 
   const columns = React.useMemo<ColumnDef<IProduct, unknown>[]>(
@@ -24,7 +26,7 @@ export function ProductTable({ productPromise }: ProductsTableProps) {
   );
 
   const { dataTable } = useDataTable({
-    data,
+    data: products ?? [],
     columns,
     pageCount,
     searchableColumns,

@@ -13,5 +13,3 @@ export type IProduct = {
     productCode: string,
     images?: Image[]
 }
-
-
