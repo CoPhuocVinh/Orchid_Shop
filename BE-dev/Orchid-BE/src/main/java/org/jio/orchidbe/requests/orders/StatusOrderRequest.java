@@ -1,15 +1,14 @@
-package org.jio.orchidbe.requests.auctions;
+package org.jio.orchidbe.requests.orders;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builder
-public class AuctionRequest {
+public class StatusOrderRequest {
     private Long id;
+    private String status;
     private String By;
 }

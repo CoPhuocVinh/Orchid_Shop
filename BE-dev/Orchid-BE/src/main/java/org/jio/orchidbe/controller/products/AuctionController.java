@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
+import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.services.products.IAuctionService;
@@ -87,7 +88,7 @@ public class AuctionController {
     }
     @PostMapping("delete-auction")
     public ResponseEntity<?> deleteAuction(
-            @Valid @RequestBody AuctionRequest deleteAuctionRequest,
+            @Valid @RequestBody Request deleteAuctionRequest,
             BindingResult result
     ) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.exceptions.OptimisticException;
+import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.util.ReflectionUtils;
@@ -166,7 +167,7 @@ public class AuctionService implements IAuctionService {
 
 
     @Override
-    public AuctionResponse deleteAuction(AuctionRequest request) throws DataNotFoundException {
+    public AuctionResponse deleteAuction(Request request) throws DataNotFoundException {
         Optional<Auction> aution = auctionRepository.findById(request.getId());
         Auction existingAuction = aution.orElseThrow(() -> new DataNotFoundException("Auction not found with id: " + request.getId()));
         existingAuction.setDeleted(true);

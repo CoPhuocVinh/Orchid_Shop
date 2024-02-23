@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jio.orchidbe.dtos.users.UserDTOResponse;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.orders.PaymentMethod;
@@ -33,7 +34,7 @@ public class OrderResponse {
     private Integer quantity;
     private String note;
     private AuctionResponse auction;
-    private User user;
+    private UserDTOResponse user;
 
 
     @JsonProperty("created_at")
