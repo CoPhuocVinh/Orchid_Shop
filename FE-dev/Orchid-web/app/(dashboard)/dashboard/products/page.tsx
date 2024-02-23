@@ -4,12 +4,14 @@ import React from "react";
 import { productFakeData } from "./_components/fake-product-data";
 import { SearchParams } from "@/types/table";
 import { ProductTable } from "./_components/product-table";
+import { getProducts } from "@/lib/actions";
 export interface IndexPageProps {
   searchParams: SearchParams;
 }
 
 const ProductsPage = async ({ searchParams }: IndexPageProps) => {
-  const products = productFakeData(searchParams);
+  // const products = productFakeData(searchParams);
+  const products =  getProducts(searchParams)
   return (
     <>
       <div className="2xl:flex-1 w-full">
