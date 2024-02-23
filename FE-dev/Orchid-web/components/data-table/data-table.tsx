@@ -87,6 +87,7 @@ export function DataTable<TData, TValue>({
   floatingBarContent,
   deleteRowsAction,
 }: DataTableProps<TData, TValue>) {
+ 
   return (
     <div className="space-y-4">
       {advancedFilter ? (

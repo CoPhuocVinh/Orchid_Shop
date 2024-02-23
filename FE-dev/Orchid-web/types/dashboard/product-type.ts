@@ -6,10 +6,12 @@ export type Image = {
 
 export type IProduct = {
     id: string,
-    name: string,
+    productName: string,
     description: string,
     quantity: number,
     version?: number,
-    code: string,
-    images: Image[]
+    productCode: string,
+    images?: Image[]
 }
+
+

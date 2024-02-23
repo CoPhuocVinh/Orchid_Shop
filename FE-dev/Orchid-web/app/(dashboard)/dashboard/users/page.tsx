@@ -7,14 +7,17 @@ import RightSidebar from "@/components/dashboard/user/RightSidebar";
 import { SearchParams } from "@/types/table";
 import { Shell } from "@/components/shell";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
-import { getDataFake } from "./_components/fake-data";
-import { TasksTable } from "./_components/users-table";
+
+import { getUserWithRoleCustomer, getUserWithRoleStaff } from "@/lib/actions";
+import { UsersTable } from "./_components/users-table";
+
 export interface IndexPageProps {
   searchParams: SearchParams;
 }
 
 const UsersPage = async ({ searchParams }: IndexPageProps) => {
-  const tasksPromise = getDataFake(searchParams);
+  const customerUserPromise = getUserWithRoleCustomer(searchParams);
+  const staffUserPromise = getUserWithRoleStaff(searchParams);
 
   return (
     <>
@@ -24,7 +27,21 @@ const UsersPage = async ({ searchParams }: IndexPageProps) => {
             <TabsTrigger value="staff">Nhân viên</TabsTrigger>
             <TabsTrigger value="user">Khách hàng</TabsTrigger>
           </TabsList>
-          <TabsContent value="staff">Nhân viên here</TabsContent>
+          <TabsContent value="staff">
+            Nhân viên here
+            <Shell>
+              <React.Suspense
+                fallback={
+                  <DataTableSkeleton
+                    columnCount={4}
+                    filterableColumnCount={2}
+                  />
+                }
+              >
+                <UsersTable customerUserPromise={staffUserPromise} />
+              </React.Suspense>
+            </Shell>
+          </TabsContent>
           <TabsContent value="user">
             Khách hàng here.
             <Shell>
@@ -36,7 +53,7 @@ const UsersPage = async ({ searchParams }: IndexPageProps) => {
                   />
                 }
               >
-                <TasksTable tasksPromise={tasksPromise} />
+                <UsersTable customerUserPromise={customerUserPromise} />
               </React.Suspense>
             </Shell>
           </TabsContent>
