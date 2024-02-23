@@ -168,6 +168,7 @@ export function useDataTable<TData, TValue>({
     // Initialize new params
     const newParamsObject = {
       page: 1,
+      per_page: 5
     }
 
     // Handle debounced searchable column filters

@@ -5,26 +5,33 @@ import { type ColumnDef } from "@tanstack/react-table";
 
 import { useDataTable } from "@/hooks/use-data-table";
 import { DataTable } from "@/components/data-table/data-table";
-import { productFakeData } from "./fake-product-data";
+
 import { IProduct } from "@/types/dashboard";
 import { fetchProductsTableColumnDefs,searchableColumns } from "./product-table-column-def";
 import { getProducts } from "@/lib/actions";
 
 interface ProductsTableProps {
     productPromise: ReturnType<typeof getProducts>;
+    // products: IProduct[];
+    // pageCount: number
 }
 
-export function ProductTable({ productPromise }: ProductsTableProps) {
+export function ProductTable({
+   productPromise
+  //  , products
+  // , pageCount
+ }
+  : ProductsTableProps) {
   const {data, pageCount} = React.use(productPromise);
   const [isPending, startTransition] = React.useTransition();
-
+// console.log(data)
   const columns = React.useMemo<ColumnDef<IProduct, unknown>[]>(
     () => fetchProductsTableColumnDefs(isPending, startTransition),
     [isPending]
   );
 
   const { dataTable } = useDataTable({
-    data,
+    data ,
     columns,
     pageCount,
     searchableColumns,

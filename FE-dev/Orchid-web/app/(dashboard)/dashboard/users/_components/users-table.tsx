@@ -11,19 +11,31 @@ import {
   filterableColumns,
   searchableColumns,
 } from "./users-table-column-def";
-import { getUserWithRoleCustomer, getUserWithRoleStaff } from "@/lib/actions";
 import { IUser } from "@/types/dashboard";
+import { getUserWithRoleCustomer, getUserWithRoleStaff } from "@/lib/actions";
 
 interface UsersTableProps {
-  customerUserPromise: ReturnType<
+  // userType: "staff" | "user";
+  // staffs?: IUser[];
+  // users?: IUser[];
+  // pageCount: number;
+  usersPromise: ReturnType<
     typeof getUserWithRoleCustomer | typeof getUserWithRoleStaff
   >;
 }
 
-export function UsersTable({ customerUserPromise }: UsersTableProps) {
-  const { data, pageCount } = React.use(customerUserPromise);
-  const [isPending, startTransition] = React.useTransition();
+export function UsersTable({
+  usersPromise,
+  // staffs
+//  , users
+//   , userType
+//   , pageCount
+}: 
 
+UsersTableProps) {
+  const { data, pageCount } = React.use(usersPromise);
+  const [isPending, startTransition] = React.useTransition();
+  // const data = userType === "staff" ? staffs : users
   const columns = React.useMemo<ColumnDef<IUser, unknown>[]>(
     () => fetchTasksTableColumnDefs(isPending, startTransition),
     [isPending]

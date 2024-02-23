@@ -26,7 +26,7 @@ const TestFucntionPage = ({searchParams}: IndexPageProps) => {
 
   // console.log(pathName);
   // console.log(newSerachParams);
-  // const initialDate = new Date(Date.now());
+  const initialDate = new Date(Date.now());
 
   // const year = initialDate.getFullYear();
   // const month = String(initialDate.getMonth() + 1).padStart(2, '0');
@@ -39,11 +39,11 @@ const TestFucntionPage = ({searchParams}: IndexPageProps) => {
 
   // console.log(formattedDate);
 
-  const initialDate = moment();
+  // const initialDate = moment();
 
-  const formattedDate = initialDate.format("YYYY-MM-DDTHH:mm:ss");
+  // const formattedDate = initialDate.format("YYYY-MM-DDTHH:mm:ss");
 
-  console.log(formattedDate);
+  console.log(initialDate);
   // const [products, setProducts] = useState<any>([]);
   // useEffect(() => {
   //   const fetchPro = async () => {
@@ -58,7 +58,7 @@ const TestFucntionPage = ({searchParams}: IndexPageProps) => {
   // }, []);
   console.log(searchParams)
   const {data, isLoading} = useQuery<{ data: IProduct[]; pageCount: number }> ({
-    queryKey: [QUERY_KEYS.GET_PRODUCTS,searchParams],
+    queryKey: [QUERY_KEYS.GET_PRODUCTS],
     queryFn: () => getProducts(searchParams)
   })
 if(isLoading) return <div>...Loading</div>;

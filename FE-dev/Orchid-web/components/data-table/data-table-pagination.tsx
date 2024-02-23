@@ -3,26 +3,26 @@ import {
   ChevronRightIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
-} from "@radix-ui/react-icons"
-import { type Table } from "@tanstack/react-table"
+} from "@radix-ui/react-icons";
+import { type Table } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 interface DataTablePaginationProps<TData> {
-  table: Table<TData>
-  pageSizeOptions?: number[]
+  table: Table<TData>;
+  pageSizeOptions?: number[];
 }
 
 export function DataTablePagination<TData>({
   table,
-  pageSizeOptions = [5,10, 20, 30, 40, 50],
+  pageSizeOptions = [5, 10, 20, 30, 40, 50],
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex w-full flex-col items-center justify-between gap-4 overflow-auto px-2 py-1 sm:flex-row sm:gap-8">
@@ -36,7 +36,7 @@ export function DataTablePagination<TData>({
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value))
+              table.setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
@@ -95,5 +95,5 @@ export function DataTablePagination<TData>({
         </div>
       </div>
     </div>
-  )
+  );
 }
