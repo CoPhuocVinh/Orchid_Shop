@@ -56,9 +56,7 @@ public class UserService implements IUserService{
             throw new DataIntegrityViolationException("email đã tồn tại");
         }
 
-
         User newUser = userMapper.toEntity(userDTO);
-
 
         newUser.setRole(UserRole.CUSTOMER);
         String password = userDTO.getPassword();
@@ -121,6 +119,15 @@ public class UserService implements IUserService{
 
 
         }
+        return userDTOResponse;
+    }
+
+    @Override
+    public UserDTOResponse getUser(Long id) throws DataNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found user by id: " + id)
+        );
+        UserDTOResponse userDTOResponse = userMapper.toResponse(user);
         return userDTOResponse;
     }
 }

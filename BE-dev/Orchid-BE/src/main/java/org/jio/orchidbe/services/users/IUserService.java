@@ -20,4 +20,6 @@ public interface IUserService {
     UserDTOResponse createUser(UserDTORequest userDTO, BindingResult result) throws Exception;
 
     UserDTOResponse updateUser(Long id, UserDTORequest userDTO, BindingResult result) throws DataNotFoundException;
+
+    UserDTOResponse getUser(Long id) throws DataNotFoundException;
 }

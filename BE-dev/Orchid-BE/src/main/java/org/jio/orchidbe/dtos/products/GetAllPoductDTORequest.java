@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class GetAllPoductDTORequest extends BaseFilterRequest<Product> {
-    private String search;
+    private String productName;
     private String code;
     private String categoryId;
     @Override
@@ -53,14 +53,17 @@ public class GetAllPoductDTORequest extends BaseFilterRequest<Product> {
                 }
             }
 
-            if (search != null && !search.isBlank()) {
-                String searchTrim = "%" + search.trim().toLowerCase() + "%";
+            if (productName != null && !productName.isBlank()) {
+                String searchTrim = "%" + productName.trim().toLowerCase() + "%";
                 predicates.add(cb.like(cb.lower(root.get(Product.Fields.productName)), searchTrim));
             }
             if (code != null && !code.isBlank()) {
                 String searchTrim = "%" + code.trim().toLowerCase() + "%";
                 predicates.add(cb.like(cb.lower(root.get(Product.Fields.productCode)), searchTrim));
             }
+
+            // Thêm điều kiện deleted == false
+            predicates.add(cb.equal(root.get("deleted"), false));
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }

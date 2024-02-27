@@ -35,3 +35,5 @@ build/
 #custom #
 /src/main/resources/logback.xml
 /src/main/resources/logs/application.log
+
+.env
