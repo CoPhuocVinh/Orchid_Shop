@@ -10,8 +10,10 @@ import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.OrderRepository;
+import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.orders.CreateOrderRequest;
@@ -48,12 +50,14 @@ public class OrderService implements IOrderService {
     private AuctionRepository auctionRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
 
     @Override
     public OrderResponse createOrder(CreateOrderRequest createOrderRequest) throws DataNotFoundException, BadRequestException {
         Order order1 = orderMapper.toEntity(createOrderRequest);
-        validateOrder(createOrderRequest.getAuctionTitle());
+//        validateOrder(createOrderRequest.getAuctionTitle());
 
         Auction auction = auctionRepository.findById(createOrderRequest.getAuctionID())
                 .orElseThrow(() ->
@@ -63,7 +67,18 @@ public class OrderService implements IOrderService {
                 .orElseThrow(() ->
                         new DataNotFoundException(
                                 "Cannot find product with id: "+ createOrderRequest.getUserID()));
-        order1.setAuction(auction);
+        UserInfo userInfo = userInfoRepository.findById(createOrderRequest.getUserID())
+                        .orElseThrow(() ->
+                                new DataNotFoundException(
+                                        "Cannot find product with id: "+ createOrderRequest.getUserID()));
+        if (createOrderRequest.getQuantity() > auction.getQuantity()) {
+            throw new BadRequestException("Quantity of auction must be less than or equal to product quantity.");
+        }
+
+        order1.setPhone(userInfo.getPhone());
+        order1.setAddress(userInfo.getAddress());
+        order1.setProductCode(auction.getProductCode());
+        order1.setProductName(auction.getProductName());
         order1.setUser(user);
         order1.setStatus(OrderStatus.OPEN);
         orderRepository.save(order1);
@@ -101,7 +116,7 @@ public class OrderService implements IOrderService {
 
         try {
             // đổ data theo field
-            validateOrder(updateOrderRequest.getProductName());
+//            validateOrder(updateOrderRequest.getProductName());
             ReflectionUtils.doWithFields(updateOrderRequest.getClass(), field -> {
                 field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
                 Object newValue = field.get(updateOrderRequest);
@@ -128,8 +143,6 @@ public class OrderService implements IOrderService {
                 return ResponseEntity.badRequest().body(apiResponse);
             }
             throw new DataIntegrityViolationException("Contract data");
-        } catch (BadRequestException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -154,9 +167,9 @@ public class OrderService implements IOrderService {
     }
 
 
-    public void validateOrder(String auctionTitle) throws BadRequestException {
-        if (orderRepository.existsOrderByAuctionTitle(auctionTitle)) {
-            throw new BadRequestException("Order with " + auctionTitle + " is existed");
-        }
-    }
+//    public void validateOrder(String auctionTitle) throws BadRequestException {
+//        if (orderRepository.existsOrderByAuctionTitle(auctionTitle)) {
+//            throw new BadRequestException("Order with " + auctionTitle + " is existed");
+//        }
+//    }
 }

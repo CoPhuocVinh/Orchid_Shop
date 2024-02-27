@@ -38,7 +38,7 @@ public class AuctionResponse extends BaseResponse {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime remindAt;
     private Float biddingPrice;
-    private ProductDTOResponse product;
+    private Long productID;
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime createdAt;

@@ -55,7 +55,6 @@ public class AuctionService implements IAuctionService {
 
     @Override
     public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
-        validateAuction(createAuctionResquest.getProductName());
         Auction auction1 = auctionMapper.toEntity(createAuctionResquest);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
         LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate(), formatter);
@@ -64,9 +63,21 @@ public class AuctionService implements IAuctionService {
         //map
         Product product = productRepository.findById(createAuctionResquest.getProductID())
                 .orElseThrow(() ->
-                new DataNotFoundException(
-                        "Cannot find product with id: "+ createAuctionResquest.getProductID()));
-        auction1.setProduct(product);
+                        new DataNotFoundException(
+                                "Cannot find product with id: " + createAuctionResquest.getProductID()));
+
+        // Kiểm tra số lượng của phiên đấu giá
+        if (createAuctionResquest.getQuantity() > product.getQuantity()) {
+            throw new BadRequestException("Quantity of auction must be less than or equal to product quantity.");
+        }
+
+        // Cập nhật số lượng mới của sản phẩm
+        int updatedProductQuantity = product.getQuantity() - createAuctionResquest.getQuantity();
+        product.setQuantity(updatedProductQuantity);
+        productRepository.save(product);
+
+        auction1.setProductCode(product.getProductCode());
+        auction1.setProductName(product.getProductName());
         auction1.setStatus(Status.WAITING);
         auctionRepository.save(auction1);
 
@@ -121,7 +132,7 @@ public class AuctionService implements IAuctionService {
 
         try {
             // đổ data theo field
-            validateAuction(updateAuctionRequest.getProductName());
+//            validateAuction(updateAuctionRequest.getProductName());
             ReflectionUtils.doWithFields(updateAuctionRequest.getClass(), field -> {
                 field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
                 Object newValue = field.get(updateAuctionRequest);
@@ -148,17 +159,15 @@ public class AuctionService implements IAuctionService {
                 return ResponseEntity.badRequest().body(apiResponse);
             }
             throw new DataIntegrityViolationException("Contract data");
-        } catch (BadRequestException e) {
-            throw new RuntimeException(e);
         }
     }
 
 
-    public void validateAuction(String productName) throws BadRequestException {
-        if (auctionRepository.existsAuctionByProductName(productName)) {
-            throw new BadRequestException("Auction with " + productName + " is existed");
-        }
-    }
+//    public void validateAuction(String productName) throws BadRequestException {
+//        if (auctionRepository.existsAuctionByProductName(productName)) {
+//            throw new BadRequestException("Auction with " + productName + " is existed");
+//        }
+//    }
 
 
     @Override

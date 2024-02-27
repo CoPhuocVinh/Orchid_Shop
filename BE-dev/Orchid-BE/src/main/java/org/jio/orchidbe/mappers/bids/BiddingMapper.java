@@ -15,7 +15,5 @@ import org.springframework.stereotype.Component;
 public interface BiddingMapper {
     BiddingResponse toResponse(Bid bid);
 
-    @Mapping(target = "auction",  ignore = true)
-    @Mapping(target = "user", ignore = true)
     Bid toEntity(CreateBidRequest createBidRequest);
 }

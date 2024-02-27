@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
+import org.jio.orchidbe.models.OrderStatus;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.orders.PaymentMethod;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 public class OrderResponse {
 
     private Long id;
-    private Status status;
+    private OrderStatus status;
     private PaymentMethod paymentMethod;
     private Float total;
     private String phone;
@@ -33,7 +34,7 @@ public class OrderResponse {
     private String productCode;
     private Integer quantity;
     private String note;
-    private AuctionResponse auction;
+    private Long auctionID;
     private UserDTOResponse user;
 
 

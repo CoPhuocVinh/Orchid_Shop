@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UpdateOrderRequest {
     private Float total;
-    private String phone;
-    private String address;
-    private String createdBy;
-    private String auctionTitle;
-    private String productName;
-    private String productCode;
+//    private String phone;
+//    private String address;
+//    private String createdBy;
+//    private String auctionTitle;
+//    private String productName;
+//    private String productCode;
     private Integer quantity;
     private String note;
 }

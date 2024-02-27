@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
+import org.jio.orchidbe.models.BidingStatus;
 import org.jio.orchidbe.models.Status;
 
 @AllArgsConstructor
@@ -14,9 +15,9 @@ import org.jio.orchidbe.models.Status;
 public class BiddingResponse {
     private Long id;
     private Integer ratings;
-    private Status status;
+    private BidingStatus status;
     private Float biddingPrice;
     private boolean top1;
-    private AuctionResponse auction;
-    private UserDTOResponse user;
+    private Long auctionID;
+    private Long userID;
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 public interface OrderMapper {
     OrderResponse toResponse(Order order);
 
-    @Mapping(target = "auction",  ignore = true)
     @Mapping(target = "user", ignore = true)
     Order toEntity(CreateOrderRequest createOrderRequest);
 }
