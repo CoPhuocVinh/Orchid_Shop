@@ -8,6 +8,7 @@ package org.jio.orchidbe.dtos.users;/*  Welcome to Jio word
 */
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class UserDTORequest {
     private String password;
     private String name;
     @JsonFormat(pattern = "yyyy-MM-dd'T'", shape = JsonFormat.Shape.STRING)
+    @Past(message = "Date of birth is greater than the present time")
     private Date dob;
     private Gender gender;
 

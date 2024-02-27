@@ -1,4 +1,4 @@
-package org.jio.orchidbe.dtos.users;/*  Welcome to Jio word
+package org.jio.orchidbe.dtos.users.userInfo;/*  Welcome to Jio word
     @author: Jio
     Date: 2/23/2024
     Time: 7:17 PM

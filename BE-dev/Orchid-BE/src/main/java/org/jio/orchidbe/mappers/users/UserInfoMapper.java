@@ -7,7 +7,8 @@ package org.jio.orchidbe.mappers.users;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
-import org.jio.orchidbe.dtos.users.UserIn4DetailDTO;
+import org.jio.orchidbe.dtos.users.userInfo.UserIn4DetailDTO;
+import org.jio.orchidbe.dtos.users.userInfo.Userin4DetailCreate;
 import org.jio.orchidbe.models.users.UserInfo;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 @Component
 public interface UserInfoMapper {
-    UserInfo toEntity(UserInfo dto);
+    UserInfo toEntity(Userin4DetailCreate dto);
 
     UserIn4DetailDTO toResponse(UserInfo userInfo);
 }

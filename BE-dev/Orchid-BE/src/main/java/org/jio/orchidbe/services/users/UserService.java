@@ -81,7 +81,7 @@ public class UserService implements IUserService{
 
     @Override
     @Transactional
-    public UserDTOResponse updateUser(Long id, UserDTORequest userDTO, BindingResult result) throws DataNotFoundException {
+    public UserDTOResponse updateUserIn4(Long id, UserDTORequest userDTO, BindingResult result) throws DataNotFoundException {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found user_controller.")
         );

@@ -42,7 +42,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-
     public ResponseEntity<?> findUser(@PathVariable Long id) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
         UserDTOResponse response = userService.getUser(id);
@@ -80,7 +79,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-        UserDTOResponse updateUser = userService.updateUser(id,userDTO,result);
+        UserDTOResponse updateUser = userService.updateUserIn4(id,userDTO,result);
         apiResponse.ok( updateUser);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
