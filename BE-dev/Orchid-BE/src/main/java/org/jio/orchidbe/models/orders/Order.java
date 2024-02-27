@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.OrderStatus;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.users.User;
@@ -31,7 +32,7 @@ public class Order extends BaseEntity {
     private Float total;
 
     @Column(name = "status")
-    private Status status;
+    private OrderStatus status;
 
     @Column(name = "phone")
     private String phone;

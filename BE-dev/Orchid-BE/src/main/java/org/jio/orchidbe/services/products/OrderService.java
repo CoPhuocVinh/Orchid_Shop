@@ -5,6 +5,7 @@ import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
+import org.jio.orchidbe.models.OrderStatus;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.orders.Order;
@@ -64,7 +65,7 @@ public class OrderService implements IOrderService {
                                 "Cannot find product with id: "+ createOrderRequest.getUserID()));
         order1.setAuction(auction);
         order1.setUser(user);
-        order1.setStatus(Status.WAITING);
+        order1.setStatus(OrderStatus.OPEN);
         orderRepository.save(order1);
 
         return orderMapper.toResponse(order1);
@@ -137,19 +138,17 @@ public class OrderService implements IOrderService {
         Optional<Order> existingOrderO = orderRepository.findById(request.getId());
         Order existingOrder = existingOrderO.get();
 
-        if (request.getStatus().equalsIgnoreCase(Status.COMING.name())) {
-            existingOrder.setStatus(Status.COMING);
+        if (request.getStatus().equalsIgnoreCase(OrderStatus.FAILED.name())) {
+            existingOrder.setStatus(OrderStatus.FAILED);
             existingOrder.setModifiedBy(request.getBy());
-        } else if (request.getStatus().equalsIgnoreCase(Status.END.name())) {
-            existingOrder.setStatus(Status.END);
+        } else if (request.getStatus().equalsIgnoreCase(OrderStatus.CANCELLED.name())) {
+            existingOrder.setStatus(OrderStatus.CANCELLED);
             existingOrder.setModifiedBy(request.getBy());
-        } else if (request.getStatus().equalsIgnoreCase(Status.LIVE.name())) {
-            existingOrder.setStatus(Status.LIVE);
-            existingOrder.setModifiedBy(request.getBy());
-        } else if (request.getStatus().equalsIgnoreCase(Status.APPROVE.name())) {
-            existingOrder.setStatus(Status.APPROVE);
+        } else if (request.getStatus().equalsIgnoreCase(OrderStatus.CONFIRMED.name())) {
+            existingOrder.setStatus(OrderStatus.CONFIRMED);
             existingOrder.setModifiedBy(request.getBy());
         }
+
         orderRepository.save(existingOrder);
         return orderMapper.toResponse(existingOrder);
     }

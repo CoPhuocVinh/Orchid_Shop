@@ -1,26 +1,28 @@
 package org.jio.orchidbe.services.products;
 
-import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
-import org.jio.orchidbe.models.BidingStatus;
+import org.jio.orchidbe.mappers.feedbacks.FeedbackMapper;
+import org.jio.orchidbe.models.FBStatus;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
-import org.jio.orchidbe.models.orders.Order;
+import org.jio.orchidbe.models.feedbacks.Feedbacks;
+import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.BidRepository;
+import org.jio.orchidbe.repositorys.products.FeedbackRepository;
+import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.Request;
-import org.jio.orchidbe.requests.bids.CreateBidRequest;
-import org.jio.orchidbe.requests.bids.GetAllBidRequest;
-import org.jio.orchidbe.requests.bids.UpdateBiddingRequest;
-import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
+import org.jio.orchidbe.requests.feedbacks.CreateFeedbackRequest;
+import org.jio.orchidbe.requests.feedbacks.GetAllFeedbackRequest;
+import org.jio.orchidbe.requests.feedbacks.UpdateFeedbackRequest;
 import org.jio.orchidbe.responses.BiddingResponse;
-import org.jio.orchidbe.responses.OrderResponse;
+import org.jio.orchidbe.responses.FeedbackResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,76 +39,89 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 
 @Service
-public class BidService implements IBidService{
+public class FeedbackService implements IFeedbackService{
 
     @Autowired
-    private BidRepository bidRepository;
+    private FeedbackRepository feedbackRepository;
     @Autowired
-    private BiddingMapper biddingMapper;
+    private FeedbackMapper feedbackMapper;
     @Autowired
     private ValidatorUtil validatorUtil;
     @Autowired
-    private AuctionRepository auctionRepository;
+    private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
 
+
     @Override
-    public BiddingResponse createBid(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException {
-        Bid bid1 = biddingMapper.toEntity(createBidRequest);
+    public FeedbackResponse createFeedback(CreateFeedbackRequest createFeedbackRequest) throws DataNotFoundException {
+        Feedbacks feedbacks1 = feedbackMapper.toEntity(createFeedbackRequest);
 
-        Auction auction = auctionRepository.findById(createBidRequest.getAuctionID())
+        Product product = productRepository.findById(createFeedbackRequest.getProductID())
                 .orElseThrow(() ->
                         new DataNotFoundException(
-                                "Cannot find product with id: "+ createBidRequest.getAuctionID()));
-        User user = userRepository.findById(createBidRequest.getUserID())
+                                "Cannot find product with id: "+ createFeedbackRequest.getProductID()));
+        User user = userRepository.findById(createFeedbackRequest.getUserID())
                 .orElseThrow(() ->
                         new DataNotFoundException(
-                                "Cannot find product with id: "+ createBidRequest.getUserID()));
-        bid1.setAuction(auction);
-        bid1.setUser(user);
-        bid1.setStatus(BidingStatus.OPEN);
-        bidRepository.save(bid1);
+                                "Cannot find product with id: "+ createFeedbackRequest.getUserID()));
+        feedbacks1.setProduct(product);
+        feedbacks1.setUser(user);
+        feedbacks1.setStatus(FBStatus.OPEN);
+        feedbackRepository.save(feedbacks1);
 
-        return biddingMapper.toResponse(bid1);
+        return feedbackMapper.toResponse(feedbacks1);
+    }
+
+
+
+    @Override
+    public Page<FeedbackResponse> getAllFeedbacks(GetAllFeedbackRequest getAllFeedbackRequest) {
+        return feedbackRepository.findAll(getAllFeedbackRequest.getSpecification(), getAllFeedbackRequest.getPageable())
+                .map(feedbackMapper::toResponse);
     }
 
     @Override
-    public Page<BiddingResponse> getAllBids(GetAllBidRequest getAllBidRequest) {
-        return bidRepository.findAll(getAllBidRequest.getSpecification(), getAllBidRequest.getPageable())
-                .map(biddingMapper::toResponse);
+    public FeedbackResponse deleteFeedback(Long id) throws DataNotFoundException {
+        Optional<Feedbacks> fb = feedbackRepository.findById(id);
+        Feedbacks existingFb = fb.orElseThrow(() -> new DataNotFoundException("Feedback not found with id: " + id));
+        existingFb.setDeleted(true);
+        Feedbacks updatedFb = feedbackRepository.save(existingFb);
+        return feedbackMapper.toResponse(updatedFb);
     }
 
     @Override
-    public ResponseEntity updateBidding(UpdateBiddingRequest updateBiddingRequest, Long id, BindingResult bindingResult) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity updateFB(UpdateFeedbackRequest updateFeedbackRequest, Long id, BindingResult bindingResult) throws ChangeSetPersister.NotFoundException {
         ApiResponse apiResponse = new ApiResponse();
         if (bindingResult.hasErrors()) {
             apiResponse.error(validatorUtil.handleValidationErrors(bindingResult.getFieldErrors()));
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-        final Bid bid = bidRepository.findById(id).orElseThrow(
+        final Feedbacks fb = feedbackRepository.findById(id).orElseThrow(
                 () -> new ChangeSetPersister.NotFoundException()
         );
 
         try {
             // đổ data theo field
-            ReflectionUtils.doWithFields(updateBiddingRequest.getClass(), field -> {
+            ReflectionUtils.doWithFields(updateFeedbackRequest.getClass(), field -> {
                 field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
-                Object newValue = field.get(updateBiddingRequest);
+                Object newValue = field.get(updateFeedbackRequest);
                 if (newValue != null) { // lấy các giá trị không null
                     String fieldName = field.getName();
-                    Field existingField = ReflectionUtils.findField(bid.getClass(), fieldName);
+                    Field existingField = ReflectionUtils.findField(fb.getClass(), fieldName);
                     if (existingField != null) {
                         existingField.setAccessible(true);
-                        ReflectionUtils.setField(existingField, bid, newValue);
+                        ReflectionUtils.setField(existingField, fb, newValue);
                     }
                 }
             });
+            fb.setStatus(FBStatus.UPDATED);
 
-            Bid updateBid = bidRepository.save(bid);
+            Feedbacks updateFb = feedbackRepository.save(fb);
 
-            BiddingResponse bidResponse = biddingMapper.toResponse(updateBid);
-            apiResponse.ok(bidResponse);
+            FeedbackResponse fbResponse = feedbackMapper.toResponse(updateFb);
+            apiResponse.ok(fbResponse);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (OptimisticLockingFailureException ex) {
             throw new OptimisticException("Data is updated by another user!");
@@ -118,25 +133,4 @@ public class BidService implements IBidService{
             throw new DataIntegrityViolationException("Contract data");
         }
     }
-
-    @Override
-    public BiddingResponse deleteBidding(Long id) throws DataNotFoundException {
-        Optional<Bid> bid = bidRepository.findById(id);
-        Bid existingBid = bid.orElseThrow(() -> new DataNotFoundException("Bidding not found with id: " + id));
-        existingBid.setDeleted(true);
-        Bid updatedBidding = bidRepository.save(existingBid);
-        return biddingMapper.toResponse(updatedBidding);
-    }
-
-    @Override
-    public BiddingResponse isTop1(Long id) throws DataNotFoundException {
-        Optional<Bid> bid = bidRepository.findById(id);
-        Bid existingBid = bid.orElseThrow(() -> new DataNotFoundException("Bidding not found with id: " + id));
-        existingBid.setTop1(true);
-        Bid updatedBidding = bidRepository.save(existingBid);
-        return biddingMapper.toResponse(updatedBidding);
-    }
 }
-
-
-
