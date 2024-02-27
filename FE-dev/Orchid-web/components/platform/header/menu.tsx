@@ -49,7 +49,7 @@ export default function Menu() {
       <ul className="hidden flex-wrap md:flex">
         {menuItems.map((item) => (
           <li key={item.id}>
-            <Link href={item.path} className="px-5 capitalize text-white">
+            <Link href={item.path} className="px-5 capitalize text-black font-bold">
               {item.label}
             </Link>
           </li>

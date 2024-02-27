@@ -1,30 +1,53 @@
-'use client';
+"use client";
 
-import { useTimeout } from '@/hooks/use-timeout';
-import {topBoats} from '@/data/user-working-data/top-boats'
-import Section from '@/components/platform/section';
-import SeeMore from '@/components/platform/see-more';
-import ListingCardLoader from '@/components/loader/listing-card-loader';
-import ListingCard from './live-auction-card';
+import { useTimeout } from "@/hooks/use-timeout";
+import { topBoats } from "@/data/user-working-data/top-boats";
+import Section from "@/components/platform/section";
+import SeeMore from "@/components/platform/see-more";
+import ListingCardLoader from "@/components/loader/listing-card-loader";
+import ListingCard from "./live-auction-card";
+import { useGetLiveAuction } from "@/lib/react-query/queries";
 
 function AuctionGrid() {
+  const { data: liveAuction, isLoading } = useGetLiveAuction();
+  if (isLoading) {
+    return <ListingCardLoader />;
+  }
+
+
   return (
     <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-      {topBoats.slice(0, 8).map((item, index) => (
+      {liveAuction?.data.slice(0, 8).map((item, index) => (
         <ListingCard
           key={`top-boat-grid-${index}`}
-          id={`top-boat-grid-${index}`}
-          slides={item.thumbnail}
-          time={item.time}
-          caption={item.caption}
-          title={item.title}
-          slug={item.slug}
-          location={item.location}
-          price={item.price}
-          ratingCount={item.ratingCount}
-          rating={item.rating}
-          user={item.user}
+          id={item.id}
+          idCss={`top-boat-grid-${index}`}
+          productName= {item.productName}
+          productCode= {item.productCode}
+          startPrice= {item.startPrice}
+          endPrice= {item.endPrice}
+          status= {item.status}
+          depositPrice= {item.depositPrice}
+          quantity= {item.quantity}
+          modifiedBy= {item.modifiedBy}
+          created_at= {item.created_at}
+          updated_at= {item.updated_at}
+          remindAt= {item.remindAt}
         />
+        // <ListingCard
+        //   key={`top-boat-grid-${index}`}
+        //   idCss={`top-boat-grid-${index}`}
+        //   slides={item.thumbnail}
+        //   time={item.time}
+        //   caption={item.caption}
+        //   title={item.title}
+        //   slug={item.slug}
+        //   location={item.location}
+        //   price={item.price}
+        //   ratingCount={item.ratingCount}
+        //   rating={item.rating}
+        //   user={item.user}
+        // />
       ))}
     </div>
   );
@@ -36,8 +59,8 @@ export default function LiveAuctions() {
   return (
     <Section
       className="group/section container-fluid mt-12 overflow-hidden lg:mt-16"
-      title="Top boat rentals"
-      description="Unsatiable it considered invitation he traveling insensible."
+      title="Live Auction"
+      description="Join us for an enchanting evening auction of rare and exotic flowers"
       headerClassName="items-end mb-4 md:mb-5 xl:mb-6 gap-5"
       rightElement={<SeeMore />}
     >

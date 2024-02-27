@@ -11,5 +11,7 @@ export type IProduct = {
     quantity: number,
     version?: number,
     productCode: string,
+    created_at: Date,
+    updated_at: Date,
     images?: Image[]
 }

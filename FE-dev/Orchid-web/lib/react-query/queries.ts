@@ -8,7 +8,8 @@ import {
   getUserWithRoleStaff,
 } from "../actions";
 import { SearchParams } from "@/types/table";
-import { IProduct, IUser } from "@/types/dashboard";
+import { IAuction, IProduct, IUser } from "@/types/dashboard";
+import { getAuctions } from "../actions/auction";
 
 // USER
 export const useGetStaff = (searchTerm: SearchParams) => {
@@ -30,5 +31,21 @@ export const useGetProducts = (searchTerm: SearchParams) => {
   return useQuery<{ data: IProduct[]; pageCount: number }>({
     queryKey: [QUERY_KEYS.GET_PRODUCTS, searchTerm],
     queryFn: () => getProducts(searchTerm),
+  });
+};
+
+
+
+//AUCTION
+export const useGetLiveAuction = () => {
+  return useQuery<{ data: IAuction[]}>({
+    queryKey: [QUERY_KEYS.GET_AUCTIONS],
+    queryFn: () => getAuctions(),
+  });
+};
+export const useGetTableAuction = () => {
+  return useQuery<{ data: IAuction[]}>({
+    queryKey: [QUERY_KEYS.GET_TBL_AUCTIONS],
+    queryFn: () => getAuctions(),
   });
 };

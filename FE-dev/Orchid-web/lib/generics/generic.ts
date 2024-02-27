@@ -8,6 +8,10 @@ interface ApiResponse<T> {
   pageCount: number;
 }
 
+interface ApiResponseNoParams<T> {
+  data: T[];
+}
+
 export async function fetchListDataWithSearchParam<T>(
   url: string,
   searchParams: Record<string, any>
@@ -23,5 +27,22 @@ export async function fetchListDataWithSearchParam<T>(
   } catch (error) {
     console.log("ERROR to fetching", error);
     return { data: [], pageCount: 0 };
+  }
+}
+
+export async function fetchListData<T>(
+  url: string,
+): Promise<ApiResponseNoParams<T>> {
+  try {
+    const response: AxiosResponse<{
+      payload: { content: T[]; totalPages: number };
+    }> = await api.get(url);
+
+    const { content} = response.data.payload;
+
+    return { data: content };
+  } catch (error) {
+    console.log("ERROR to fetching", error);
+    return { data: [] };
   }
 }

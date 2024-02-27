@@ -4,8 +4,11 @@ import { topBoats } from '@/data/user-working-data/top-boats';
 import ListingCard from '../home/live-auction/live-auction-card';
 import Section from '@/components/platform/section';
 import SeeMore from '@/components/platform/see-more';
+import { useGetLiveAuction } from '@/lib/react-query/queries';
 
 export default function RelatedListingBlock() {
+  const { data: liveAuction, isLoading: auctionLoading } = useGetLiveAuction();
+
   return (
     <Section
       className="pt-5 xl:pt-7"
@@ -15,21 +18,23 @@ export default function RelatedListingBlock() {
       rightElement={<SeeMore className="hidden md:block" />}
     >
       <div className="grid grid-cols-1 gap-x-5 gap-y-8 pt-7 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:gap-y-10">
-        {topBoats.slice(5, 9).map((item, index) => (
-          <ListingCard
-            id={`related-listing-${index}`}
-            key={`related-listing-${index}`}
-            slides={item.thumbnail}
-            time={item.time}
-            caption={item.caption}
-            title={item.title}
-            slug={item.slug}
-            location={item.location}
-            price={item.price}
-            ratingCount={item.ratingCount}
-            rating={item.rating}
-            user={item.user}
-          />
+      {liveAuction?.data.slice(0, 8).map((item, index) => (
+        <ListingCard
+          key={`top-boat-grid-${index}`}
+          id={item.id}
+          idCss={`top-boat-grid-${index}`}
+          productName= {item.productName}
+          productCode= {item.productCode}
+          startPrice= {item.startPrice}
+          endPrice= {item.endPrice}
+          status= {item.status}
+          depositPrice= {item.depositPrice}
+          quantity= {item.quantity}
+          modifiedBy= {item.modifiedBy}
+          created_at= {item.created_at}
+          updated_at= {item.updated_at}
+          remindAt= {item.remindAt}
+        />
         ))}
       </div>
     </Section>
