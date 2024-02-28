@@ -89,10 +89,10 @@ public class WebSecurityConfig {
                                     String.format("%s/orders/**", apiPrefix)).permitAll()
                             .requestMatchers(GET,
                                     String.format("%s/order_details/**", apiPrefix)).permitAll()
-                            .requestMatchers(GET,
+                            /*.requestMatchers(GET,
                                     String.format("%s/hello**", apiPrefix)).authenticated()
                             .requestMatchers(GET,
-                                    String.format("%s/hello**", apiPrefix)).authenticated()
+                                    String.format("%s/hello**", apiPrefix)).authenticated()*/
 //                            .anyRequest()
 //                            .authenticated();
                             .anyRequest().permitAll();

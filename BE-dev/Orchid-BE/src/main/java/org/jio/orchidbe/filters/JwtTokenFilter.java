@@ -43,14 +43,12 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 String requestPath = request.getServletPath();
                 String path = (String.format("%s/hello**", apiPrefix));
-                if(requestPath.matches(path.replace("**", ".*"))){
+                /*if(requestPath.matches(path.replace("**", ".*"))){
                     response.sendError(
                             HttpServletResponse.SC_UNAUTHORIZED,
                             "authHeader null or not started with Bearer");
                     return;
-                }
-
-
+                }*/
                 filterChain.doFilter(request, response); //enable bypass
                 return;
             }
