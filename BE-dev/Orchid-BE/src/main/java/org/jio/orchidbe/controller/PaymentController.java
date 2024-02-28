@@ -7,6 +7,7 @@ package org.jio.orchidbe.controller;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.configs.PaymentConfig;
@@ -26,7 +27,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PaymentController {
     @GetMapping("/create_payment")
-    public String payment(HttpSession session
+    public String payment(HttpSession session, HttpServletResponse response
             , @RequestParam int id, Model model) throws UnsupportedEncodingException {
 
         //Optional<Discount> discountEntity = discountService.findById(discountID);
@@ -38,7 +39,7 @@ public class PaymentController {
 
         //float price_discount = discountEntity.get().getAPackage().getPrice() * (100 - discountEntity.get().getPercentDiscount()) * discountEntity.get().getTimeOnMonth();
 
-        long amount = (long) 10000;
+        long amount = (long) 1000000;
 
         String vnp_TxnRef = PaymentConfig.getRandomNumber(8);
         //String vnp_IpAddr = Config.getIpAddress(req);
@@ -121,7 +122,6 @@ public class PaymentController {
 
     // /FYoGa/Course/PackageCheckOut/payment
     @Transactional
-
     @RequestMapping(value = "/return", method = RequestMethod.GET)
     public String processPayment(@RequestParam("vnp_Amount") String amount,
                                  @RequestParam("vnp_BankCode") String bankCode,
@@ -182,12 +182,12 @@ public class PaymentController {
             registerService.save(registerEntity);*/
             System.out.println("register thành công");
             session.setAttribute("SUCCESS", "Bạn đã đăng kí và thanh toán khóa học thành công");
-            return "redirect:/FYoGa/Course/PackageCheckOut?discountID=" + "&typePaying=1";
+            return "win";
 
         } else {
             session.setAttribute("SUCCESS", "Bạn đã đăng kí và thanh toán khóa học thất bại");
             session.setAttribute("FAIL", "Bạn đã đăng kí và thanh toán khóa học thất bại");
-            return "redirect:/FYoGa/Course/PackageCheckOut?discountID=" + "&typePaying=1";
+            return "fail";
 
         }
 

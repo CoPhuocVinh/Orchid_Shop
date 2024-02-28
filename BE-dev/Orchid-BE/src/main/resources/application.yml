@@ -66,6 +66,4 @@ management:
         #include: "health"
         include: "health, info"
 
-payment:
-  url: http://localhost:8088/api/v1
 

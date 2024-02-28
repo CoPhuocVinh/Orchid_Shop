@@ -8,6 +8,7 @@ package org.jio.orchidbe.configs;/*  Welcome to Jio word
 */
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.jio.orchidbe.constants.BaseConstants;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.Mac;
@@ -19,10 +20,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class PaymentConfig {
-    @Value("${payment.url}")
-    private static String urlReturn;
+
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_Returnurl = urlReturn +"/payments/return";
+    public static String vnp_Returnurl = BaseConstants.HOST_RETURN + "/payments/return";
     public static String vnp_TmnCode = "6C2B7C48";
     public static String vnp_HashSecret = "EBMCXSVGLHDJSHMIDEBQOJHENKLFYAGY";
     public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
