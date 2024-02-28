@@ -1,7 +1,7 @@
 'use server'
 
 import axios, { AxiosResponse } from "axios";
-import { api } from "@/lib/api-interceptor/api";
+import apiAuth, { api } from "@/lib/api-interceptor/api";
 
 interface ApiResponse<T> {
   data: T[];

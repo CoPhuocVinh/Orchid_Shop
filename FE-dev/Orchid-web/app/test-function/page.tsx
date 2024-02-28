@@ -9,11 +9,13 @@ import { IProduct } from "@/types/dashboard";
 import { QUERY_KEYS } from "@/lib/react-query/query-keys";
 import { SearchParams } from "@/types/table";
 import { getProducts } from "@/lib/actions";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/auth-context";
 
 export interface IndexPageProps {
   searchParams: SearchParams;
 }
-const TestFucntionPage = ({searchParams}: IndexPageProps) => {
+const TestFucntionPage = ({ searchParams }: IndexPageProps) => {
   // const pathName = usePathname();
   // const searchParams = useSearchParams();
   // const page = searchParams.get("page") ?? "no have params";
@@ -56,14 +58,24 @@ const TestFucntionPage = ({searchParams}: IndexPageProps) => {
 
   //   fetchPro();
   // }, []);
-  console.log(searchParams)
-  const {data, isLoading} = useQuery<{ data: IProduct[]; pageCount: number }> ({
-    queryKey: [QUERY_KEYS.GET_PRODUCTS],
-    queryFn: () => getProducts(searchParams)
-  })
-if(isLoading) return <div>...Loading</div>;
-  console.log(data)
-  return <div>TestFucntionPage</div>;
+  console.log(searchParams);
+  const { data, isLoading } = useQuery<{ data: IProduct[]; pageCount: number }>(
+    {
+      queryKey: [QUERY_KEYS.GET_PRODUCTS],
+      queryFn: () => getProducts(searchParams),
+    }
+  );
+  if (isLoading) return <div>...Loading</div>;
+  console.log(data);
+
+
+ 
+
+  return (
+    <div>
+      <h1>TestFucntionPage</h1>
+    </div>
+  );
 };
 
 export default TestFucntionPage;
