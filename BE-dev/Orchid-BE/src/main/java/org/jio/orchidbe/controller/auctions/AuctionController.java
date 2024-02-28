@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
+import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionResponse;
@@ -28,6 +30,7 @@ public class AuctionController {
 
     private final IAuctionService auctionService;
     private final ValidatorUtil validatorUtil;
+    private final AuctionRepository auctionRepository;
     @PostMapping("create")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
 
@@ -124,5 +127,16 @@ public class AuctionController {
         Page<AuctionResponse> auctionPage = auctionService.getAllAuctions(getAllAuctionResquest);
         apiResponse.ok(auctionPage);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+    @GetMapping("/{auctionId}")
+    public ResponseEntity<Auction> getAuctionById(@PathVariable long auctionId) {
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElse(null);
+
+        if (auction != null) {
+            return new ResponseEntity<>(auction, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

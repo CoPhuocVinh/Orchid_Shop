@@ -54,7 +54,7 @@ public class OrderService implements IOrderService {
     private UserInfoRepository userInfoRepository;
 
 
-    @Override
+
     public OrderResponse createOrder(CreateOrderRequest createOrderRequest) throws DataNotFoundException, BadRequestException {
         Order order1 = orderMapper.toEntity(createOrderRequest);
 //        validateOrder(createOrderRequest.getAuctionTitle());
@@ -80,7 +80,7 @@ public class OrderService implements IOrderService {
         order1.setProductCode(auction.getProductCode());
         order1.setProductName(auction.getProductName());
         order1.setUser(user);
-        order1.setStatus(OrderStatus.OPEN);
+        order1.setStatus(OrderStatus.PENDING);
         orderRepository.save(order1);
 
         return orderMapper.toResponse(order1);
@@ -154,14 +154,11 @@ public class OrderService implements IOrderService {
         if (request.getStatus().equalsIgnoreCase(OrderStatus.FAILED.name())) {
             existingOrder.setStatus(OrderStatus.FAILED);
             existingOrder.setModifiedBy(request.getBy());
-        } else if (request.getStatus().equalsIgnoreCase(OrderStatus.CANCELLED.name())) {
-            existingOrder.setStatus(OrderStatus.CANCELLED);
-            existingOrder.setModifiedBy(request.getBy());
+
         } else if (request.getStatus().equalsIgnoreCase(OrderStatus.CONFIRMED.name())) {
             existingOrder.setStatus(OrderStatus.CONFIRMED);
             existingOrder.setModifiedBy(request.getBy());
         }
-
         orderRepository.save(existingOrder);
         return orderMapper.toResponse(existingOrder);
     }

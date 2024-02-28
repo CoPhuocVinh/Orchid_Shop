@@ -13,7 +13,7 @@ import org.jio.orchidbe.responses.AuctionResponse;
 @Data
 @Builder
 public class CreateBidRequest {
-    private Integer ratings;
+
     private Float biddingPrice;
     private Long auctionID;
     private Long userID;

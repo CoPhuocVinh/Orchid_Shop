@@ -16,6 +16,6 @@ import org.jio.orchidbe.models.users.User;
 public class FeedbackResponse {
     private Long id;
     private String content;
-    private ProductDTOResponse product;
-    private UserDTOResponse user;
+    private Long productID;
+    private Long userID;
 }

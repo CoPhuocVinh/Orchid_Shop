@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 public interface FeedbackMapper {
     FeedbackResponse toResponse(Feedbacks feedbacks);
 
-    @Mapping(target = "product",  ignore = true)
-    @Mapping(target = "user", ignore = true)
+
     Feedbacks toEntity(CreateFeedbackRequest createFeedbackRequest);
 }

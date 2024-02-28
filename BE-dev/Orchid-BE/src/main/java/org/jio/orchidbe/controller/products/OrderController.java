@@ -35,22 +35,22 @@ public class OrderController {
     private final IOrderService orderService;
     private final ValidatorUtil validatorUtil;
 
-    @PostMapping("create")
-    public ResponseEntity<?> createOrder(
-            @Valid @RequestBody CreateOrderRequest createOrderRequest,
-            BindingResult result
-    ) throws DataNotFoundException, BadRequestException {
-        ApiResponse apiResponse = new ApiResponse();
-        if (result.hasErrors()) {
-            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-            return ResponseEntity.badRequest().body(apiResponse);
-        }
-
-        OrderResponse newOrder = orderService.createOrder(createOrderRequest);
-
-        apiResponse.ok(newOrder);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
+//    @PostMapping("create")
+//    public ResponseEntity<?> createOrder(
+//            @Valid @RequestBody CreateOrderRequest createOrderRequest,
+//            BindingResult result
+//    ) throws DataNotFoundException, BadRequestException {
+//        ApiResponse apiResponse = new ApiResponse();
+//        if (result.hasErrors()) {
+//            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
+//            return ResponseEntity.badRequest().body(apiResponse);
+//        }
+//
+//        OrderResponse newOrder = orderService.createOrder(createOrderRequest);
+//
+//        apiResponse.ok(newOrder);
+//        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+//    }
     @GetMapping("list")
     public ResponseEntity<?> getOrder(@ModelAttribute GetAllOrderRequest getAllOrderRequest){
         ApiResponse apiResponse = new ApiResponse();

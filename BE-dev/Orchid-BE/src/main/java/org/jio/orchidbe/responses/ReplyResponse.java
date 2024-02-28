@@ -18,5 +18,5 @@ public class ReplyResponse {
     private Integer ratings;
     private FBStatus status;
     private FeedbackResponse feedback;
-    private UserDTOResponse user;
+    private Long userID;
 }

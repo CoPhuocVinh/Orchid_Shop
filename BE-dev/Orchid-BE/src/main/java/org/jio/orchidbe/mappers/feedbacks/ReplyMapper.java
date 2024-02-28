@@ -13,6 +13,5 @@ public interface ReplyMapper {
     ReplyResponse toResponse(Replys replys);
 
     @Mapping(target = "feedbacks", ignore = true)
-    @Mapping(target = "user", ignore = true)
     Replys toEntity(CreateReplyRequest createReplyRequest);
 }

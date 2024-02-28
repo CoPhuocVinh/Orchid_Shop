@@ -1,5 +1,6 @@
 package org.jio.orchidbe.services.products;
 
+import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
@@ -51,24 +52,65 @@ public class BidService implements IBidService{
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public BiddingResponse createBid(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException {
-        Bid bid1 = biddingMapper.toEntity(createBidRequest);
+
+
+        // check user register auction
+        Bid userBid = bidRepository.findByUser_Id(createBidRequest.getUserID())
+                .orElseThrow(() ->
+                        new DataNotFoundException(
+                                "Cannot find user with id: "+ createBidRequest.getUserID()));
+
 
         Auction auction = auctionRepository.findById(createBidRequest.getAuctionID())
                 .orElseThrow(() ->
                         new DataNotFoundException(
                                 "Cannot find product with id: "+ createBidRequest.getAuctionID()));
-        User user = userRepository.findById(createBidRequest.getUserID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find product with id: "+ createBidRequest.getUserID()));
-        bid1.setAuction(auction);
-        bid1.setUser(user);
-        bid1.setStatus(BidingStatus.OPEN);
-        bidRepository.save(bid1);
 
-        return biddingMapper.toResponse(bid1);
+        Bid top1Bid = bidRepository.findByTop1TrueAndAuction_Id(createBidRequest.getAuctionID());
+        if (top1Bid == null){
+            // thg dau tien dau gia
+            // > start price of auction + ..
+
+            // set top 1
+
+            //set rating  =1
+
+            // set auction bidding
+            if(createBidRequest.getBiddingPrice() > auction.getStartPrice()){
+
+                userBid.setTop1(true);
+                userBid.setRatings(1);
+                auction.setBiddingPrice(createBidRequest.getBiddingPrice());
+            }else {
+                throw new BadRequestException("Bidding price must be greater than the start price.");
+            }
+        } else {
+            // Existing bids, compare with top1 bid
+            if (createBidRequest.getBiddingPrice() > top1Bid.getBiddingPrice() + auction.getDepositPrice()) {
+                // Set the current user as top1 and update previous top1
+                top1Bid.setTop1(false);
+                userBid.setTop1(true);
+                userBid.setRatings(top1Bid.getRatings() + 1);
+                auction.setBiddingPrice(createBidRequest.getBiddingPrice());
+            } else {
+                throw new BadRequestException("Bidding price must be greater than the current top bid plus deposit.");
+            }
+        }
+
+        userBid.setBiddingPrice(createBidRequest.getBiddingPrice());
+        userBid.setStatus(BidingStatus.OPEN);
+
+        return biddingMapper.toResponse(userBid);
     }
+
+
+
+
+
+
+
 
     @Override
     public Page<BiddingResponse> getAllBids(GetAllBidRequest getAllBidRequest) {

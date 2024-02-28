@@ -4,9 +4,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.exceptions.OptimisticException;
+import org.jio.orchidbe.models.auctions.Bid;
+import org.jio.orchidbe.repositorys.products.BidRepository;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
+import org.jio.orchidbe.requests.orders.CreateOrderRequest;
+import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +40,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -50,7 +56,10 @@ public class AuctionService implements IAuctionService {
     private final AuctionMapper auctionMapper;
     @Autowired
     private ProductRepository productRepository;
-
+    @Autowired
+    private BidRepository bidRepository;
+@Autowired
+private OrderService orderService;
 
 
     @Override
@@ -106,9 +115,6 @@ public class AuctionService implements IAuctionService {
             existingAuction.setModifiedBy(request.getBy());
         } else if (request.getStatus().equalsIgnoreCase(Status.LIVE.name())) {
             existingAuction.setStatus(Status.LIVE);
-            existingAuction.setModifiedBy(request.getBy());
-        } else if (request.getStatus().equalsIgnoreCase(Status.APPROVE.name())) {
-            existingAuction.setStatus(Status.APPROVE);
             existingAuction.setModifiedBy(request.getBy());
         }
         auctionRepository.save(existingAuction);
@@ -194,6 +200,49 @@ public class AuctionService implements IAuctionService {
     public void validateDate(LocalDateTime startDate, LocalDateTime endDate) throws BadRequestException {
         if (endDate.isBefore(startDate)) {
             throw new BadRequestException("End date cannot be before start date!");
+        }
+    }
+
+
+    @Override
+    public void endAuction(long auctionID,int quantity) throws DataNotFoundException {
+        Auction auction = auctionRepository.findById(auctionID)
+                .orElseThrow(() ->
+                        new DataNotFoundException("Cannot find auction with ID: " + auctionID));
+
+        Bid bid = bidRepository.findByTop1TrueAndAuction_Id(auctionID);
+        if (auction.getStatus() == Status.LIVE) {
+            // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
+            auction.setStatus(Status.END);
+            auctionRepository.save(auction);
+
+            // Tạo đơn hàng mới từ thông tin của phiên đấu giá
+            CreateOrderRequest createOrderRequest = new CreateOrderRequest();
+            createOrderRequest.setAuctionID(auctionID);
+            createOrderRequest.setUserID(bid.getUser().getId());
+            createOrderRequest.setQuantity(quantity);
+
+            try {
+                orderService.createOrder(createOrderRequest);
+            } catch (DataNotFoundException | BadRequestException e) {
+                // Xử lý nếu có lỗi xảy ra khi tạo đơn hàng
+                e.printStackTrace();
+                // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
+            }
+        } else {
+            // Xử lý khi phiên đấu giá không ở trạng thái hoạt động
+            // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
+        }
+    }
+
+    @Scheduled(fixedDelay = 60000) // Kiểm tra mỗi 60 giây
+    public void checkAuctionEndings() throws DataNotFoundException {
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<Auction> auctions = auctionRepository.findByEndDateBeforeAndStatus(currentTime, Status.LIVE);
+
+        for (Auction auction : auctions) {
+            // Truyền số lượng vào phương thức endAuction
+            endAuction(auction.getId(), auction.getQuantity());
         }
     }
 

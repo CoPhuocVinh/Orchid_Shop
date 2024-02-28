@@ -18,6 +18,8 @@ public interface IAuctionService {
     Page<AuctionResponse> getAllAuctions(GetAllAuctionResquest getAllAuctionResquest);
     AuctionResponse UpdateStatus(StatusUpdateRequest request) ;
 
+    void endAuction(long auctionID,int quantity) throws DataNotFoundException;
+
     @Transactional
     ResponseEntity updateAuction(UpdateAuctionRequest updateAuctionRequest, Long id,
                                  BindingResult bindingResult) throws ChangeSetPersister.NotFoundException;

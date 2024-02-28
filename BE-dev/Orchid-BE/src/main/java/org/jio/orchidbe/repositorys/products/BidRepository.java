@@ -8,7 +8,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface BidRepository extends JpaRepository<Bid, Long> {
     Page<Bid> findAll(Specification<Bid> specification, Pageable pageable);
+
+    Bid findByTop1TrueAndAuction_Id(Long auctionId);
+
+    Optional<Bid> findByUser_Id(Long id);
 }
