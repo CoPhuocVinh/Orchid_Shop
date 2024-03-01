@@ -7,8 +7,10 @@ package org.jio.orchidbe.mappers.products;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import org.jio.orchidbe.dtos.products.ProductDTOCreateRequest;
 import org.jio.orchidbe.dtos.products.ProductDTORequest;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
+import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.models.products.Product;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
@@ -20,4 +22,9 @@ public interface ProductMapper {
     ProductDTOResponse toResponse(Product product);
 
     Product toEntity(ProductDTORequest productDTORequest);
+
+    ProductDetailDTOResponse toResponseDetails(Product product);
+
+    Product toEntityCreated(ProductDTOCreateRequest productDTORequest);
+
 }

@@ -1,41 +1,39 @@
 package org.jio.orchidbe.dtos.products;/*  Welcome to Jio word
     @author: Jio
-    Date: 2/16/2024
-    Time: 1:47 PM
+    Date: 3/1/2024
+    Time: 1:10 AM
     
     ProjectName: Orchid-BE
     Jio: I wish you always happy with coding <3
 */
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.jio.orchidbe.dtos.api_response.BaseResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductDTORequest {
-
+public class ProductDetailDTOResponse {
+    private Long id;
     @NotBlank(message = "name is required")
     @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters")
     private String productName;
-
-    @Min(value = 0, message = "Quantity must be greater than or equal to 0")
-    @Max(value = 1000, message = "Quantity must be less than or equal to 1000")
+    private String productCode;
     private int quantity;
     private String description;
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime createdAt;
 
-    @JsonProperty("category_id")
-    private Long categoryId;
-
-    private Boolean active = true;
-    private List<ProductImageDTO> productImages;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @JsonProperty("updated_at")
+    private LocalDateTime updatedAt;
+    private List<ProductImageDTOResponse> productImages;
 }

@@ -41,7 +41,8 @@ public class PaymentController {
 
         long amount = (long) 1000000;
 
-        String vnp_TxnRef = PaymentConfig.getRandomNumber(8);
+        //String vnp_TxnRef = PaymentConfig.getRandomNumber(8);
+        String vnp_TxnRef = String.valueOf(id);
         //String vnp_IpAddr = Config.getIpAddress(req);
         String vnp_TmnCode = PaymentConfig.vnp_TmnCode;
 
@@ -108,7 +109,6 @@ public class PaymentController {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = PaymentConfig.vnp_PayUrl + "?" + queryUrl;
         System.out.println(paymentUrl);
-
 //
 //        PaymentDTO paymentDTO = PaymentDTO.builder()
 //                .status("Ok")

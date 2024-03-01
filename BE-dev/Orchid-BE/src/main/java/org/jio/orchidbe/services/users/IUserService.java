@@ -22,4 +22,6 @@ public interface IUserService {
     UserDTOResponse updateUserIn4(Long id, UserDTORequest userDTO, BindingResult result) throws DataNotFoundException;
 
     UserDTOResponse getUser(Long id) throws DataNotFoundException;
+
+    UserDTOResponse DeteleById(Long id) throws DataNotFoundException;
 }

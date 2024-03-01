@@ -13,6 +13,8 @@ import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.users.User;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tbl_products")
 @Getter
@@ -44,6 +46,9 @@ public class Product extends BaseEntity {
     @Column(name = "modified_by", nullable = true)
     private String modifiedBy ="";
 
+    @Column(name = "actived", nullable = false)
+    private boolean actived = true;
+
     @Version
     @Column(name = "modified_version", nullable = true)
     private  Integer version = 0;
@@ -52,6 +57,6 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-
-
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> productImages;
 }

@@ -11,6 +11,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
+
+import java.util.List;
+
 @Entity
 @Table(name = "tbl_categories")
 @Getter
@@ -34,4 +37,7 @@ public class Category extends BaseEntity {
 
     @Column(name = "code")
     private String code;
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
 }
