@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.BidingStatus;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.users.User;
@@ -13,6 +15,7 @@ import org.jio.orchidbe.models.users.User;
 @AllArgsConstructor
 @Builder
 @Data
+@FieldNameConstants
 @NoArgsConstructor
 @Entity
 @Table(name="tbl_bidding")
@@ -35,7 +38,7 @@ public class Bid extends BaseEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private BidingStatus status;
 
     @Column(name = "top1", nullable = false)
     private boolean top1 = false;

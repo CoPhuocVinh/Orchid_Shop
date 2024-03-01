@@ -1,19 +1,19 @@
-package org.jio.orchidbe.mappers.auctions;
+package org.jio.orchidbe.mappers.bids;
 
 import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.requests.auctions.CreateAuctionResquest;
+import org.jio.orchidbe.requests.bids.CreateBidRequest;
 import org.jio.orchidbe.responses.AuctionResponse;
+import org.jio.orchidbe.responses.BiddingResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 @Component
-public interface AuctionMapper {
-    //@Mapping(source = "isReject", target = "isReject")
-    AuctionResponse toResponse(Auction auction);
+public interface BiddingMapper {
+    BiddingResponse toResponse(Bid bid);
 
-    @Mapping(target = "product", ignore = true)
-    Auction toEntity(CreateAuctionResquest createAuctionResquest);
+    Bid toEntity(CreateBidRequest createBidRequest);
 }
-

@@ -71,12 +71,10 @@ public class PaymentController {
 
         vnp_Params.put("vnp_ReturnUrl", PaymentConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", PaymentConfig.vnp_IpAddr);
-
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-
         cld.add(Calendar.MINUTE, 15);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
@@ -180,8 +178,17 @@ public class PaymentController {
             gmailService.sendMailConfirmRegister(account,registerEntity);
 
             registerService.save(registerEntity);*/
+
+            // -----------------------------------------
+            // gọi paymentService xử lí
+
+
+
+
             System.out.println("register thành công");
             session.setAttribute("SUCCESS", "Bạn đã đăng kí và thanh toán khóa học thành công");
+
+            //redirect về trang của frontend với tham số "successful userName, amount, tên sản phẩm"
             return "win";
 
         } else {

@@ -1,4 +1,4 @@
-package org.jio.orchidbe.requests;
+package org.jio.orchidbe.requests.auctions;
 
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
@@ -39,7 +39,7 @@ public class GetAllAuctionResquest extends BaseFilterRequest<Auction> {
 
             if (productCode != null && !productCode.isBlank()) {
                 String codeTrim = "%" + productCode.trim().toLowerCase() + "%";
-                predicates.add(cb.like(cb.lower(root.get(Auction.Fields.product).get("productCode")), codeTrim));
+                predicates.add(cb.like(cb.lower(root.get(Auction.Fields.productCode).get("productCode")), codeTrim));
             }
             predicates.add(cb.equal(root.get(BaseEntity.Fields.deleted), false));
 

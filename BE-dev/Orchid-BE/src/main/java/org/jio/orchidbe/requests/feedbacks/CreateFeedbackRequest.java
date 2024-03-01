@@ -1,4 +1,4 @@
-package org.jio.orchidbe.requests;
+package org.jio.orchidbe.requests.feedbacks;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class AuctionRequest {
-    private Long id;
-    private String By;
+public class CreateFeedbackRequest {
+    private String content;
+    private Long productID;
+    private Long userID;
 }

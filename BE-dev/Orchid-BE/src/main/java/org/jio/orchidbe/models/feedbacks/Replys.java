@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.FBStatus;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.feedbacks.Feedbacks;
 import org.jio.orchidbe.models.users.User;
@@ -14,6 +16,7 @@ import org.jio.orchidbe.models.users.User;
 @Builder
 @Data
 @NoArgsConstructor
+@FieldNameConstants
 @Entity
 @Table(name="tbl_replys")
 public class    Replys extends BaseEntity {
@@ -37,7 +40,7 @@ public class    Replys extends BaseEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private FBStatus status;
 
 
 }

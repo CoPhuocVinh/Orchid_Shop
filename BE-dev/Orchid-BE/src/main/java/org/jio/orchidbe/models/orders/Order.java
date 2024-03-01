@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.OrderStatus;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.users.User;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 @NoArgsConstructor
+@FieldNameConstants
 @Entity
 @Table(name="tbl_orders")
 public class Order extends BaseEntity {
@@ -29,7 +32,7 @@ public class Order extends BaseEntity {
     private Float total;
 
     @Column(name = "status")
-    private Status status;
+    private OrderStatus status;
 
     @Column(name = "phone")
     private String phone;
@@ -68,6 +71,8 @@ public class Order extends BaseEntity {
     @Column(name = "note", nullable = true)
     private String note;
 
+    @Column(name = "user_name")
+    private String userName;
 
     //
     @ManyToOne(fetch = FetchType.LAZY)

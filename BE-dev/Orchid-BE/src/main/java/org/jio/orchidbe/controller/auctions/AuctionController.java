@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
-import org.jio.orchidbe.requests.*;
+import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.repositorys.products.AuctionRepository;
+import org.jio.orchidbe.requests.Request;
+import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.services.products.IAuctionService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -19,8 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("${api.prefix}/auctions")
@@ -29,6 +30,7 @@ public class AuctionController {
 
     private final IAuctionService auctionService;
     private final ValidatorUtil validatorUtil;
+    private final AuctionRepository auctionRepository;
     @PostMapping("create")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
 
@@ -101,7 +103,7 @@ public class AuctionController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
 
     public ResponseEntity<?> deleteAuction(
-            @Valid @RequestBody AuctionRequest deleteAuctionRequest,
+            @Valid @RequestBody Request deleteAuctionRequest,
             BindingResult result
     ) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
@@ -125,5 +127,16 @@ public class AuctionController {
         Page<AuctionResponse> auctionPage = auctionService.getAllAuctions(getAllAuctionResquest);
         apiResponse.ok(auctionPage);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+    @GetMapping("/{auctionId}")
+    public ResponseEntity<Auction> getAuctionById(@PathVariable long auctionId) {
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElse(null);
+
+        if (auction != null) {
+            return new ResponseEntity<>(auction, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

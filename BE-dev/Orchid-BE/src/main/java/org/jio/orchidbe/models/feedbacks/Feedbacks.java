@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.FBStatus;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
 
@@ -14,6 +16,7 @@ import org.jio.orchidbe.models.users.User;
 @Builder
 @Data
 @NoArgsConstructor
+@FieldNameConstants
 @Entity
 @Table(name="tbl_feedback")
 public class Feedbacks extends BaseEntity {
@@ -32,4 +35,8 @@ public class Feedbacks extends BaseEntity {
 
     @Column(name = "content")
     private String content;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private FBStatus status;
 }

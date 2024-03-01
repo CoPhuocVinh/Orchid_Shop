@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.OrderStatus;
 import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
@@ -39,7 +40,7 @@ public class Transaction extends BaseEntity {
     private PaymentMethod paymentMethod;
 
     @Column(name = "status")
-    private Status status;
+    private OrderStatus status;
 
     @Column(name = "content")
     private String content;
