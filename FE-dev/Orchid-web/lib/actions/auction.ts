@@ -1,7 +1,10 @@
-import { unstable_noStore as noStore } from "next/cache";
+"use server";
+
+import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { IAuction } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { fetchListData, fetchListDataWithSearchParam } from "@/lib/generics";
+import axios from "axios";
 
 let BASE_URL = "https://orchid.fams.io.vn/api/v1";
 
@@ -19,4 +22,35 @@ export async function getTableAuctions(
   const url = `/auctions/list`;
 
   return await fetchListDataWithSearchParam(url, searchParams);
+}
+
+interface AuctionStatusUpdate {
+  id: string;
+  status: string;
+}
+export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
+  try {
+    const res = await axios.post(
+      `https://orchid.fams.io.vn/api/v1/auctions/update-status`,
+      { id,status }
+    );
+
+    revalidatePath("/dashboard/auctions");
+
+  } catch (error) {
+    console.log("FALI");
+  }
+}
+
+export async function deleteAuction({ id }: { id: string }) {
+  try {
+    await axios.post(
+      `https://orchid.fams.io.vn/api/v1/auctions/delete-auction`,
+      { id }
+    );
+
+    revalidatePath("/dashboard/auctions");
+  } catch (error) {
+    console.log("Fail to delete: ", error);
+  }
 }

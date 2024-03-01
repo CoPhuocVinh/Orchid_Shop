@@ -1,4 +1,5 @@
 "use client";
+import { DateTimePicker } from "@/components/date-time-picker/date-time-picker";
 import ImageUpload from "@/components/image-cloudinary-upload/image-upload";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,49 +25,94 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 type Category = {
-  category_id: string;
+  product_id: string;
   name: string;
 };
 
 const categories: Category[] = [
   {
-    category_id: "1",
-    name: "A - Category 1",
+    product_id: "1",
+    name: "A - Product 1",
   },
   {
-    category_id: "2",
-    name: "B - Category 2",
+    product_id: "2",
+    name: "B - Product 2",
   },
   {
-    category_id: "3",
-    name: "C - Category 3",
+    product_id: "3",
+    name: "C - Product 3",
   },
 ];
 
-const CreateProduct = () => {
+const CreateAuction = () => {
+  // const formSchema = z.object({
+  //   productName: z.string().min(1, { message: "Hãy nhập tên sản phẩm" }),
+  //   quantity: z.coerce.number().min(1, { message: "Hãy nhập giá tiền" }),
+  //   description: z.string().min(1, { message: "Hãy nhập mô tả" }),
+  //   category_id: z.string().min(1, { message: "Hãy chọn thể loại" }),
+  //   images: z
+  //     .object({ url: z.string() })
+  //     .array()
+  //     .min(1, { message: "Hãy nhập ít nhất 1 ảnh" }),
+  //     startDate: z.date().refine((date) => date !== null, {
+  //       message: "Hãy chọn ngày giờ bắt đầu",
+  //     }),
+  //     endDate: z.date().refine((date) => date !== null, {
+  //       message: "Hãy ngày giờ kết thúc",
+  //     }),
+  // });
+
   const formSchema = z.object({
     productName: z.string().min(1, { message: "Hãy nhập tên sản phẩm" }),
-    quantity: z.coerce.number().min(1, { message: "Hãy nhập giá tiền" }),
+    quantity: z.coerce
+      .number()
+      .min(1, { message: "Hãy nhập giá tiền khởi điểm" }),
     description: z.string().min(1, { message: "Hãy nhập mô tả" }),
-    category_id: z.string().min(1, { message: "Hãy chọn thể loại" }),
+    product_id: z.string().min(1, { message: "Hãy chọn sản phẩm đấu giá" }),
     images: z
-      .object({ url: z.string() })
-      .array()
+      .array(z.object({ url: z.string() }))
       .min(1, { message: "Hãy nhập ít nhất 1 ảnh" }),
+    startDate: z.date().refine(
+      (date) => {
+        const now = new Date();
+        return date !== null && date >= now; // Start date should be from now to future
+      },
+      { message: "Vui lòng chọn không chọn ngày trong quá khứ" }
+    ),
+    endDate: z.date().refine(
+      (date) => {
+        const now = new Date();
+        return date !== null && date >= now; // Start date should be from now to future
+      },
+      { message: "Vui lòng chọn không chọn ngày trong quá khứ" }
+    ),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       productName: "",
-      category_id: "",
+      product_id: "",
       quantity: 0,
       images: [],
       description: "",
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    const formattedDatetime = values.startDate
+      ? new Date(values.startDate).toISOString().replace("Z", "")
+      : null;
+    const formattedDatetime1 = values.endDate
+      ? new Date(values.endDate).toISOString().replace("Z", "")
+      : null;
+
+    console.log({
+      ...values,
+      startDate: formattedDatetime,
+      endDate: formattedDatetime1,
+    });
     // try {
     //   setLoading(true);
     //   if (initialData) {
@@ -88,7 +134,7 @@ const CreateProduct = () => {
 
   return (
     <main className="w-full h-full xl:px-[48px] px-6 pb-6 xl:pb-[48px] sm:pt-[156px] dark:bg-darkblack-700 pt-[100px]">
-      <div className="gap-3 lg:gap-4 xl:gap-6">
+      <div className="gap-3 bg lg:gap-4 xl:gap-6">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -123,14 +169,50 @@ const CreateProduct = () => {
             <div className="md:grid md:grid-cols-3 gap-8">
               <FormField
                 control={form.control}
+                name="startDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="datetime">Start time</FormLabel>
+                    <FormControl>
+                      <DateTimePicker
+                        granularity="minute"
+                        jsDate={field.value}
+                        onJsDateChange={field.onChange}
+                        aria-label="Time Field"
+                      />
+                    </FormControl>
+                    <FormMessage className="dark:text-yellow-300" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="datetime">End time</FormLabel>
+                    <FormControl>
+                      <DateTimePicker
+                        granularity="minute"
+                        jsDate={field.value}
+                        onJsDateChange={field.onChange}
+                        aria-label="Time Field"
+                      />
+                    </FormControl>
+                    <FormMessage className="dark:text-yellow-300" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="productName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tên sản phẩm</FormLabel>
+                    <FormLabel>Tên buổi đấu giá</FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        placeholder="vd: Gấu bông"
+                        placeholder="vd: Đấu giá phong lan"
                         {...field}
                         className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
                         autoComplete="off"
@@ -146,7 +228,7 @@ const CreateProduct = () => {
                 name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Giá tiền</FormLabel>
+                    <FormLabel>Giá khởi điểm</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -163,10 +245,10 @@ const CreateProduct = () => {
 
               <FormField
                 control={form.control}
-                name="category_id"
+                name="product_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mã phân loại</FormLabel>
+                    <FormLabel>Mã sản phẩm</FormLabel>
                     <Select
                       disabled={isLoading}
                       onValueChange={field.onChange}
@@ -184,8 +266,8 @@ const CreateProduct = () => {
                       <SelectContent>
                         {categories.map((category) => (
                           <SelectItem
-                            key={category.category_id}
-                            value={category.category_id}
+                            key={category.product_id}
+                            value={category.product_id}
                           >
                             {category.name}
                           </SelectItem>
@@ -206,7 +288,7 @@ const CreateProduct = () => {
                   <FormControl>
                     <Textarea
                       disabled={isLoading}
-                      placeholder="vd: Mô tả sản phẩm"
+                      placeholder="vd: Mô tả buổi đấu giá"
                       {...field}
                       autoComplete="off"
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
@@ -231,4 +313,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default CreateAuction;

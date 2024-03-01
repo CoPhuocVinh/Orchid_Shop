@@ -11,6 +11,7 @@ import { Icons } from "@/components/icons";
 function Sidebar({ handleActive }: any) {
   const [activeUser, setActiveUser] = useState(false);
   const [activeProduct, setActiveProduct] = useState(false);
+  const [activeAcution, setActiveAcution] = useState(false);
 
   return (
     <aside className="sidebar-wrapper fixed top-0 z-30 block h-full w-[308px] bg-white dark:bg-darkblack-600 sm:hidden xl:block">
@@ -52,9 +53,7 @@ function Sidebar({ handleActive }: any) {
               Menu
             </h4>
             <ul className="mt-2.5">
-              <li
-                className="item py-[11px] text-bgray-900 dark:text-white"
-              >
+              <li className="item py-[11px] text-bgray-900 dark:text-white">
                 <Link href="/dashboard" className="cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
@@ -206,6 +205,48 @@ function Sidebar({ handleActive }: any) {
                       className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
                     >
                       Create product
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li
+                className="item py-[11px] text-bgray-900 dark:text-white"
+                onClick={() => setActiveAcution(!activeAcution)}
+              >
+                <a className="cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2.5">
+                      <span className="item-ico ">
+                        <Icons.productSidebarIcon />
+                      </span>
+                      <span className="item-text text-lg font-medium leading-none">
+                        Auction
+                      </span>
+                    </div>
+                    <span>
+                      <Icons.sidebarChevonLeftIcon />
+                    </span>
+                  </div>
+                </a>
+                <ul
+                  className={`sub-menu ml-2.5 mt-[22px] border-l border-success-100 pl-5 ${
+                    activeAcution && "active"
+                  }`}
+                >
+                  <li>
+                    <Link
+                      href="/dashboard/auctions"
+                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                    >
+                      View auctions
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/dashboard/create-auction"
+                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                    >
+                      Create auction
                     </Link>
                   </li>
                 </ul>
