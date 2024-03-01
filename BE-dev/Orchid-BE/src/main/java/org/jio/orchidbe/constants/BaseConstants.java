@@ -24,4 +24,6 @@ public class BaseConstants {
 
     public static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.DESC;
 
+    public static final String HOST_RETURN = "http://localhost:8088/api/v1";
+
 }

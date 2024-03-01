@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jio.orchidbe.models.orders.PaymentMethod;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +18,7 @@ public class UpdateOrderRequest {
 //    private String auctionTitle;
 //    private String productName;
 //    private String productCode;
+    private PaymentMethod paymentMethod;
     private Integer quantity;
     private String note;
 }

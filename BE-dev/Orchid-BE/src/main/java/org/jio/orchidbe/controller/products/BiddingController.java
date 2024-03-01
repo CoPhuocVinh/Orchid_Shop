@@ -41,7 +41,7 @@ public class BiddingController {
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-        BiddingResponse newBid = bidService.createBid(createBidRequest);
+        BiddingResponse newBid = bidService.Bidding(createBidRequest);
 
         apiResponse.ok(newBid);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -82,21 +82,21 @@ public class BiddingController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("isTop1")
-    public ResponseEntity<?> isTop1Bidding(
-            @Valid @RequestBody Long id,
-            BindingResult result
-    ) throws DataNotFoundException {
-        ApiResponse apiResponse = new ApiResponse();
-        if (result.hasErrors()) {
-            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-            return ResponseEntity.badRequest().body(apiResponse);
-        }
-
-        BiddingResponse newBidding = bidService.isTop1(id);
-
-        apiResponse.ok(newBidding);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
+//    @PostMapping("isTop1")
+//    public ResponseEntity<?> isTop1Bidding(
+//            @Valid @RequestBody Long id,
+//            BindingResult result
+//    ) throws DataNotFoundException {
+//        ApiResponse apiResponse = new ApiResponse();
+//        if (result.hasErrors()) {
+//            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
+//            return ResponseEntity.badRequest().body(apiResponse);
+//        }
+//
+//        BiddingResponse newBidding = bidService.isTop1(id);
+//
+//        apiResponse.ok(newBidding);
+//        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+//    }
 
 }

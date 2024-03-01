@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
 public interface IBidService {
-    BiddingResponse createBid(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException;
+    BiddingResponse Bidding(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException;
 
     Page<BiddingResponse> getAllBids(GetAllBidRequest getAllBidRequest);
     @Transactional
@@ -27,5 +27,5 @@ public interface IBidService {
                                  BindingResult bindingResult) throws ChangeSetPersister.NotFoundException;
 
     BiddingResponse deleteBidding(Long id) throws DataNotFoundException;
-    BiddingResponse isTop1(Long id) throws DataNotFoundException;
+//    BiddingResponse isTop1(Long id) throws DataNotFoundException;
 }

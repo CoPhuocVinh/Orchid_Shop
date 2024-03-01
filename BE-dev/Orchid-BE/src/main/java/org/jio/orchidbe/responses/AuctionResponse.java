@@ -32,6 +32,7 @@ public class AuctionResponse extends BaseResponse {
     private String modifiedBy;
     private String productName;
     private String productCode;
+    private String description;
     private Integer version;
     private Float startPrice;
     private Float endPrice;

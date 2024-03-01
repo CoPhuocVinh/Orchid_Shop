@@ -40,6 +40,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -87,10 +88,20 @@ private OrderService orderService;
 
         auction1.setProductCode(product.getProductCode());
         auction1.setProductName(product.getProductName());
+
+        setRemindAtBeforeStartDate(auction1);
         auction1.setStatus(Status.WAITING);
         auctionRepository.save(auction1);
 
         return auctionMapper.toResponse(auction1);
+    }
+
+
+    public void setRemindAtBeforeStartDate(Auction auction) {
+        if (auction.getStartDate() != null) {
+            LocalDateTime remindAt = auction.getStartDate().minus(12, ChronoUnit.HOURS);
+            auction.setRemindAt(remindAt);
+        }
     }
 
 
@@ -110,11 +121,9 @@ private OrderService orderService;
         if (request.getStatus().equalsIgnoreCase(Status.COMING.name())) {
             existingAuction.setStatus(Status.COMING);
             existingAuction.setModifiedBy(request.getBy());
-        } else if (request.getStatus().equalsIgnoreCase(Status.END.name())) {
-            existingAuction.setStatus(Status.END);
-            existingAuction.setModifiedBy(request.getBy());
-        } else if (request.getStatus().equalsIgnoreCase(Status.LIVE.name())) {
-            existingAuction.setStatus(Status.LIVE);
+        } else if (request.getStatus().equalsIgnoreCase(Status.REJECT.name())) {
+            existingAuction.setStatus(Status.REJECT);
+            existingAuction.setRejected(true);
             existingAuction.setModifiedBy(request.getBy());
         }
         auctionRepository.save(existingAuction);
@@ -214,6 +223,7 @@ private OrderService orderService;
         if (auction.getStatus() == Status.LIVE) {
             // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
             auction.setStatus(Status.END);
+            auction.setEndPrice(bid.getBiddingPrice());
             auctionRepository.save(auction);
 
             // Tạo đơn hàng mới từ thông tin của phiên đấu giá
@@ -243,6 +253,20 @@ private OrderService orderService;
         for (Auction auction : auctions) {
             // Truyền số lượng vào phương thức endAuction
             endAuction(auction.getId(), auction.getQuantity());
+        }
+    }
+
+    @Scheduled(fixedRate = 60000) // Run every 1 minute
+    public void checkAuctionStatus() {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        // Get auctions whose startDate is close to the current time and status is PENDING
+        List<Auction> pendingAuctions = auctionRepository.findByStartDateAfterAndStatus(currentTime, Status.WAITING);
+
+        for (Auction auction : pendingAuctions) {
+            // If the auction's startDate is near the current time, update its status to LIVE
+            auction.setStatus(Status.LIVE);
+            auctionRepository.save(auction);
         }
     }
 

@@ -16,4 +16,7 @@ import java.util.List;
 @Repository
 public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
     List<UserInfo> findAllByUser_Id(Long userId);
+
+    List<UserInfo> findAllByDefaultedTrueAndUser_Id(Long userId);
+
 }

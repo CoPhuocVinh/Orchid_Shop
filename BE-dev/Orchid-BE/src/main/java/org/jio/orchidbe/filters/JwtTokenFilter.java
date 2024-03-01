@@ -41,9 +41,14 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             }
             final String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-//                response.sendError(
-//                        HttpServletResponse.SC_UNAUTHORIZED,
-//                        "authHeader null or not started with Bearer");
+                String requestPath = request.getServletPath();
+                String path = (String.format("%s/hello**", apiPrefix));
+                /*if(requestPath.matches(path.replace("**", ".*"))){
+                    response.sendError(
+                            HttpServletResponse.SC_UNAUTHORIZED,
+                            "authHeader null or not started with Bearer");
+                    return;
+                }*/
                 filterChain.doFilter(request, response); //enable bypass
                 return;
             }
@@ -77,11 +82,8 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 Pair.of(String.format("%s/healthcheck/health", apiPrefix), "GET"),
                 Pair.of(String.format("%s/actuator/**", apiPrefix), "GET"),
 
-                Pair.of(String.format("%s/roles**", apiPrefix), "GET"),
-                Pair.of(String.format("%s/comments**", apiPrefix), "GET"),
-                Pair.of(String.format("%s/coupons**", apiPrefix), "GET"),
 
-                Pair.of(String.format("%s/products**", apiPrefix), "GET"),
+                //Pair.of(String.format("%s/products**", apiPrefix), "GET"),
                 //Pair.of(String.format("%s/products**", apiPrefix), "POST"),
                 Pair.of(String.format("%s/categories**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),

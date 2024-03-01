@@ -71,6 +71,8 @@ public class Order extends BaseEntity {
     @Column(name = "note", nullable = true)
     private String note;
 
+    @Column(name = "user_name")
+    private String userName;
 
     //
     @ManyToOne(fetch = FetchType.LAZY)

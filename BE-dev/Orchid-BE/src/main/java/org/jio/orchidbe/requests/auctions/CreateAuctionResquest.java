@@ -32,10 +32,13 @@ public class CreateAuctionResquest {
 //    private String productCode;
 //    private String createdBy;
 //    private String modifiedBy;
+
+
+
     @Min(value = 0, message = "Start Price must be greater than or equal to 0")
     private Float startPrice;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-
-    private String remindAt;
+//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
+//
+//    private String remindAt;
     private Long productID;
 }

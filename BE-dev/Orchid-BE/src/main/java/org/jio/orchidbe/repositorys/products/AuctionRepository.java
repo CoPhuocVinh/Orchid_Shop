@@ -19,4 +19,5 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     boolean existsAuctionByProductName(String productName);
 
     List<Auction> findByEndDateBeforeAndStatus(LocalDateTime currentTime, Status status);
+    List<Auction> findByStartDateAfterAndStatus(LocalDateTime currentTime, Status status);
 }

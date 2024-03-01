@@ -53,7 +53,7 @@ public class BidService implements IBidService{
 
     @Override
     @Transactional
-    public BiddingResponse createBid(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException {
+    public BiddingResponse Bidding(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException {
 
 
         // check user register auction
@@ -83,6 +83,7 @@ public class BidService implements IBidService{
                 userBid.setTop1(true);
                 userBid.setRatings(1);
                 auction.setBiddingPrice(createBidRequest.getBiddingPrice());
+
             }else {
                 throw new BadRequestException("Bidding price must be greater than the start price.");
             }
@@ -104,10 +105,6 @@ public class BidService implements IBidService{
 
         return biddingMapper.toResponse(userBid);
     }
-
-
-
-
 
 
 
@@ -170,14 +167,14 @@ public class BidService implements IBidService{
         return biddingMapper.toResponse(updatedBidding);
     }
 
-    @Override
-    public BiddingResponse isTop1(Long id) throws DataNotFoundException {
-        Optional<Bid> bid = bidRepository.findById(id);
-        Bid existingBid = bid.orElseThrow(() -> new DataNotFoundException("Bidding not found with id: " + id));
-        existingBid.setTop1(true);
-        Bid updatedBidding = bidRepository.save(existingBid);
-        return biddingMapper.toResponse(updatedBidding);
-    }
+//    @Override
+//    public BiddingResponse isTop1(Long id) throws DataNotFoundException {
+//        Optional<Bid> bid = bidRepository.findById(id);
+//        Bid existingBid = bid.orElseThrow(() -> new DataNotFoundException("Bidding not found with id: " + id));
+//        existingBid.setTop1(true);
+//        Bid updatedBidding = bidRepository.save(existingBid);
+//        return biddingMapper.toResponse(updatedBidding);
+//    }
 }
 
 

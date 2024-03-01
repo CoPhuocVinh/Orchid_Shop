@@ -7,6 +7,7 @@ package org.jio.orchidbe.dtos.users;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.jio.orchidbe.models.users.user_enum.Gender;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
@@ -24,6 +25,7 @@ public class UserDTOResponse {
     private String email;
     private String img;
     private UserRole role;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private Date dob;
     private Gender gender;
 }
