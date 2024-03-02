@@ -18,7 +18,7 @@ import java.util.List;
 public interface IAuctionService {
     AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException;
     Page<AuctionResponse> getAllAuctions(GetAllAuctionResquest getAllAuctionResquest);
-    List<Auction> getAllAuctionsFromContainer();
+    List<AuctionResponse> getAllAuctionsFromContainer();
 
     void endAuction(long auctionID,int quantity) throws DataNotFoundException;
 

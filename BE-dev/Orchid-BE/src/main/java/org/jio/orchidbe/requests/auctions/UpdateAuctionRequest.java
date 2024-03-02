@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jio.orchidbe.models.Status;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
@@ -39,7 +40,7 @@ public class UpdateAuctionRequest {
     private LocalDateTime remindAt;
     @Min(value = 0, message = "Start Price must be greater than or equal to 0")
     private Float startPrice;
-
+    private Status status;
     private Boolean approved;
     private Boolean rejected;
     private String reasonReject;

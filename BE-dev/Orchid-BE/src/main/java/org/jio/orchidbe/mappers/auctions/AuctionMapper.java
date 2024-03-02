@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 @Component
 public interface AuctionMapper {
@@ -15,5 +17,6 @@ public interface AuctionMapper {
 
     @Mapping(target = "product", ignore = true)
     Auction toEntity(CreateAuctionResquest createAuctionResquest);
+    List<AuctionResponse> toResponseList(List<Auction> auctions);
 }
 

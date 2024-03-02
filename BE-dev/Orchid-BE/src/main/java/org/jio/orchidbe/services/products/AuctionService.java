@@ -46,6 +46,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +65,7 @@ public class AuctionService implements IAuctionService {
 @Autowired
 private OrderService orderService;
     @Autowired
-    private final AuctionContainer auctionContainer;
+    private AuctionContainer auctionContainer;
 
 
 
@@ -101,10 +102,13 @@ private OrderService orderService;
         return auctionMapper.toResponse(auction1);
     }
 
+
     @PostConstruct
     public void initializeAuctions() {
         List<Auction> allAuctions = auctionRepository.findAll();
-        auctionContainer.setAuctions(allAuctions);
+        for (Auction auction : allAuctions) {
+            auctionContainer.addAuction(auction);
+        }
     }
 
     public void setRemindAtBeforeStartDate(Auction auction) {
@@ -114,8 +118,10 @@ private OrderService orderService;
         }
     }
     @Override
-    public List<Auction> getAllAuctionsFromContainer() {
-        return auctionContainer.getAuctions();
+    public List<AuctionResponse> getAllAuctionsFromContainer() {
+        return auctionContainer.getAuctions().stream()
+                .map(auctionMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
 
@@ -161,14 +167,26 @@ private OrderService orderService;
                 }
             });
 
-            if(updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null){
-                if(auction.isRejected() == true && auction.isApproved() == false){
-                    auction.setStatus(Status.END);
-                } else if (auction.isApproved()== true && auction.isRejected() == false){
-                    auction.setStatus(Status.COMING);
-                } else if (auction.isRejected() == true && auction.isApproved()== true) {
-                    auction.setStatus(Status.END);
+            if(updateAuctionRequest.getStatus() == null){
+                if(updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null){
+                    if(auction.isRejected() == true && auction.isApproved() == false){
+                      auction.setStatus(Status.END);
+                    } else if (auction.isApproved()== true && auction.isRejected() == false){
+                     auction.setStatus(Status.COMING);
+                      auctionContainer.getWaitingAuctions().remove(auction);
+                      auctionContainer.getComingAuctions().add(auction);
+
+                     } else if (auction.isRejected() == true && auction.isApproved()== true) {
+                       auction.setStatus(Status.END);
+                     }
                 }
+            }else if(updateAuctionRequest.getStatus().equals(Status.LIVE)){
+                auction.setStatus(Status.LIVE);
+                auctionContainer.getWaitingAuctions().remove(auction);
+                auctionContainer.getLiveAuctions().add(auction);
+            } else if(updateAuctionRequest.getStatus().equals(Status.END)){
+                auction.setStatus(Status.END);
+                auctionContainer.getWaitingAuctions().remove(auction);
             }
 
             //Auction updatedAuction = auctionRepository.save(auction);
@@ -225,18 +243,92 @@ private OrderService orderService;
     }
 
 
+//    @Override
+//    public void endAuction(long auctionID,int quantity) throws DataNotFoundException {
+//        Auction auction = auctionRepository.findById(auctionID)
+//                .orElseThrow(() ->
+//                        new DataNotFoundException("Cannot find auction with ID: " + auctionID));
+//
+//        Bid bid = bidRepository.findByTop1TrueAndAuction_Id(auctionID);
+//        if (auction.getStatus() == Status.LIVE) {
+//            // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
+//            auction.setStatus(Status.END);
+//            auction.setEndPrice(bid.getBiddingPrice());
+//            auctionRepository.save(auction);
+//
+//            // Tạo đơn hàng mới từ thông tin của phiên đấu giá
+//            CreateOrderRequest createOrderRequest = new CreateOrderRequest();
+//            createOrderRequest.setAuctionID(auctionID);
+//            createOrderRequest.setUserID(bid.getUser().getId());
+//            createOrderRequest.setQuantity(quantity);
+//
+//            try {
+//                orderService.createOrder(createOrderRequest);
+//            } catch (DataNotFoundException | BadRequestException e) {
+//                // Xử lý nếu có lỗi xảy ra khi tạo đơn hàng
+//                e.printStackTrace();
+//                // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
+//            }
+//        } else {
+//            // Xử lý khi phiên đấu giá không ở trạng thái hoạt động
+//            // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
+//        }
+//    }
+//
+//    @Scheduled(fixedDelay = 30000) // Kiểm tra mỗi 60 giây
+//    public void checkAuctionEndings() throws DataNotFoundException {
+//        LocalDateTime currentTime = LocalDateTime.now();
+//        List<Auction> auctions = auctionRepository.findByEndDateBeforeAndStatus(currentTime, Status.LIVE);
+//
+//        for (Auction auction : auctions) {
+//            // Truyền số lượng vào phương thức endAuction
+//            endAuction(auction.getId(), auction.getQuantity());
+//        }
+//    }
+//
+//    @Scheduled(fixedRate = 60000) // Run every 1 minute
+//    public void checkAuctionStatus() {
+//        LocalDateTime currentTime = LocalDateTime.now();
+//
+//        // Get auctions whose startDate is close to the current time and status is PENDING
+//        List<Auction> pendingAuctions = auctionRepository.findByStartDateAfterAndStatus(currentTime, Status.COMING);
+//
+//        for (Auction auction : pendingAuctions) {
+//            // If the auction's startDate is near the current time, update its status to LIVE
+//            auction.setStatus(Status.LIVE);
+//            auctionRepository.save(auction);
+//        }
+//    }
+
+
+    private Auction findAuctionById(long auctionID) throws DataNotFoundException {
+        List<Auction> allAuctions = auctionContainer.getAuctions();
+        for (Auction auction : allAuctions) {
+            if (auction.getId() == auctionID) {
+                return auction;
+            }
+        }
+        throw new DataNotFoundException("Cannot find auction with ID: " + auctionID);
+    }
+    @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
+    public void checkAuctionEndings() throws DataNotFoundException {
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<Auction> auctions = getAuctionsEndingBefore(currentTime, Status.LIVE);
+
+        for (Auction auction : auctions) {
+            // Truyền số lượng vào phương thức endAuction
+            endAuction(auction.getId(), auction.getQuantity());
+        }
+    }
     @Override
-    public void endAuction(long auctionID,int quantity) throws DataNotFoundException {
-        Auction auction = auctionRepository.findById(auctionID)
-                .orElseThrow(() ->
-                        new DataNotFoundException("Cannot find auction with ID: " + auctionID));
+    public void endAuction(long auctionID, int quantity) throws DataNotFoundException {
+        Auction auction = findAuctionById(auctionID);
 
         Bid bid = bidRepository.findByTop1TrueAndAuction_Id(auctionID);
         if (auction.getStatus() == Status.LIVE) {
             // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
             auction.setStatus(Status.END);
             auction.setEndPrice(bid.getBiddingPrice());
-            auctionRepository.save(auction);
 
             // Tạo đơn hàng mới từ thông tin của phiên đấu giá
             CreateOrderRequest createOrderRequest = new CreateOrderRequest();
@@ -251,35 +343,40 @@ private OrderService orderService;
                 e.printStackTrace();
                 // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
             }
+            auctionContainer.getLiveAuctions().remove(auction);
+            auctionRepository.save(auction);
         } else {
             // Xử lý khi phiên đấu giá không ở trạng thái hoạt động
             // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
         }
     }
 
-    @Scheduled(fixedDelay = 30000) // Kiểm tra mỗi 60 giây
-    public void checkAuctionEndings() throws DataNotFoundException {
-        LocalDateTime currentTime = LocalDateTime.now();
-        List<Auction> auctions = auctionRepository.findByEndDateBeforeAndStatus(currentTime, Status.LIVE);
-
-        for (Auction auction : auctions) {
-            // Truyền số lượng vào phương thức endAuction
-            endAuction(auction.getId(), auction.getQuantity());
-        }
+    private List<Auction> getAuctionsEndingBefore(LocalDateTime endTime, Status status) {
+        return auctionContainer.getLiveAuctions().stream()
+                .filter(auction -> auction.getEndDate().isBefore(endTime) && auction.getStatus() == status)
+                .collect(Collectors.toList());
     }
-
-    @Scheduled(fixedRate = 60000) // Run every 1 minute
+    @Scheduled(fixedRate = 10000) // Run every 1 minute
     public void checkAuctionStatus() {
         LocalDateTime currentTime = LocalDateTime.now();
 
         // Get auctions whose startDate is close to the current time and status is PENDING
-        List<Auction> pendingAuctions = auctionRepository.findByStartDateAfterAndStatus(currentTime, Status.COMING);
+        List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
 
         for (Auction auction : pendingAuctions) {
             // If the auction's startDate is near the current time, update its status to LIVE
             auction.setStatus(Status.LIVE);
+            auctionContainer.getComingAuctions().remove(auction);
+            auctionContainer.getLiveAuctions().add(auction);
             auctionRepository.save(auction);
         }
+    }
+
+
+    private List<Auction> getPendingAuctionsStartingAfter(LocalDateTime startTime, Status status) {
+        return auctionContainer.getComingAuctions().stream()
+                .filter(auction -> auction.getStartDate().isAfter(startTime) && auction.getStatus() == status)
+                .collect(Collectors.toList());
     }
 
 
