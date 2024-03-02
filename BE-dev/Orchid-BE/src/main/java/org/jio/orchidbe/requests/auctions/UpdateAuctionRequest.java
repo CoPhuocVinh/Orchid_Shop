@@ -39,4 +39,8 @@ public class UpdateAuctionRequest {
     private LocalDateTime remindAt;
     @Min(value = 0, message = "Start Price must be greater than or equal to 0")
     private Float startPrice;
+
+    private Boolean approved;
+    private Boolean rejected;
+    private String reasonReject;
 }

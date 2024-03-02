@@ -1,18 +1,11 @@
 package org.jio.orchidbe.services.products;
 
 import jakarta.transaction.Transactional;
-import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.requests.Request;
-import org.jio.orchidbe.requests.auctions.CreateAuctionResquest;
-import org.jio.orchidbe.requests.auctions.GetAllAuctionResquest;
-import org.jio.orchidbe.requests.auctions.StatusUpdateRequest;
-import org.jio.orchidbe.requests.auctions.UpdateAuctionRequest;
-import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
-import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;

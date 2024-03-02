@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldNameConstants
 @Entity
-@Table(name="tbl_aucitons")
+@Table(name="tbl_auctions")
 public class Auction extends BaseEntity {
 
     @Id

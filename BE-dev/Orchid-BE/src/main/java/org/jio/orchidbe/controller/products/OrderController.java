@@ -6,17 +6,10 @@ import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.requests.Request;
-import org.jio.orchidbe.requests.auctions.CreateAuctionResquest;
-import org.jio.orchidbe.requests.auctions.GetAllAuctionResquest;
-import org.jio.orchidbe.requests.auctions.StatusUpdateRequest;
-import org.jio.orchidbe.requests.auctions.UpdateAuctionRequest;
-import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
-import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.OrderResponse;
-import org.jio.orchidbe.services.products.IAuctionService;
 import org.jio.orchidbe.services.products.IOrderService;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -25,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
 
 @RestController
 @RequestMapping("${api.prefix}/orders")

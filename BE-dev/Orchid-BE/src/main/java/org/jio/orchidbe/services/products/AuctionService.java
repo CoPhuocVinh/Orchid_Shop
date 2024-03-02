@@ -113,22 +113,6 @@ private OrderService orderService;
     }
 
 
-    @Override
-    public AuctionResponse UpdateStatus(StatusUpdateRequest request) {
-        Optional<Auction> existingAuctionO = auctionRepository.findById(request.getId());
-        Auction existingAuction = existingAuctionO.get();
-
-        if (request.getStatus().equalsIgnoreCase(Status.COMING.name())) {
-            existingAuction.setStatus(Status.COMING);
-            existingAuction.setModifiedBy(request.getBy());
-        } else if (request.getStatus().equalsIgnoreCase(Status.REJECT.name())) {
-            existingAuction.setStatus(Status.REJECT);
-            existingAuction.setRejected(true);
-            existingAuction.setModifiedBy(request.getBy());
-        }
-        auctionRepository.save(existingAuction);
-        return auctionMapper.toResponse(existingAuction);
-    }
 
 
     @Override
@@ -141,11 +125,14 @@ private OrderService orderService;
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-        final Auction auction = auctionRepository.findById(id).orElseThrow(
+         Auction auction = auctionRepository.findById(id).orElseThrow(
                 () -> new ChangeSetPersister.NotFoundException()
         );
 
         try {
+            if(updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null){
+                throw  new BadRequestException("Fill the reason reject");
+            }
             // đổ data theo field
 //            validateAuction(updateAuctionRequest.getProductName());
             ReflectionUtils.doWithFields(updateAuctionRequest.getClass(), field -> {
@@ -161,9 +148,19 @@ private OrderService orderService;
                 }
             });
 
-            Auction updatedAuction = auctionRepository.save(auction);
+            if(updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null){
+                if(auction.isRejected() == true && auction.isApproved() == false){
+                    auction.setStatus(Status.END);
+                } else if (auction.isApproved()== true && auction.isRejected() == false){
+                    auction.setStatus(Status.COMING);
+                } else if (auction.isRejected() == true && auction.isApproved()== true) {
+                    auction.setStatus(Status.END);
+                }
+            }
 
-            AuctionResponse auctionResponse = auctionMapper.toResponse(updatedAuction);
+            //Auction updatedAuction = auctionRepository.save(auction);
+
+            AuctionResponse auctionResponse = auctionMapper.toResponse(auction);
             apiResponse.ok(auctionResponse);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (OptimisticLockingFailureException ex) {
@@ -174,6 +171,8 @@ private OrderService orderService;
                 return ResponseEntity.badRequest().body(apiResponse);
             }
             throw new DataIntegrityViolationException("Contract data");
+        } catch (BadRequestException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -186,25 +185,25 @@ private OrderService orderService;
 
 
     @Override
-    public AuctionResponse deleteAuction(Request request) throws DataNotFoundException {
-        Optional<Auction> aution = auctionRepository.findById(request.getId());
-        Auction existingAuction = aution.orElseThrow(() -> new DataNotFoundException("Auction not found with id: " + request.getId()));
+    public AuctionResponse deleteAuction(Long  id) throws DataNotFoundException {
+        Optional<Auction> aution = auctionRepository.findById(id);
+        Auction existingAuction = aution.orElseThrow(() -> new DataNotFoundException("Auction not found with id: " + id));
         existingAuction.setDeleted(true);
-        existingAuction.setModifiedBy(request.getBy());
         Auction updatedAuction = auctionRepository.save(existingAuction);
         return auctionMapper.toResponse(updatedAuction);
     }
 
+    @Override
+    public AuctionResponse getById(Long id) throws DataNotFoundException {
 
-    public AuctionResponse rejectAuction(RejectAuctionRequest request) throws DataNotFoundException {
-        Optional<Auction> existingAuctionO = auctionRepository.findById(request.getId());
-        Auction existingAuction = existingAuctionO.get();
-        existingAuction.setStatus(Status.REJECT);
-        existingAuction.setModifiedBy(request.getBy());
-        existingAuction.setRejectReason(request.getReason());
-        auctionRepository.save(existingAuction);
-        return auctionMapper.toResponse(existingAuction);
+            Auction auction = auctionRepository.findById(id).orElseThrow(
+                    () -> new DataNotFoundException("Not found user_controller.")
+            );
+            AuctionResponse response = auctionMapper.toResponse(auction);
+            return response;
+
     }
+
 
     public void validateDate(LocalDateTime startDate, LocalDateTime endDate) throws BadRequestException {
         if (endDate.isBefore(startDate)) {
