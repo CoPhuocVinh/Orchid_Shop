@@ -195,7 +195,7 @@ private OrderService orderService;
         return auctionMapper.toResponse(updatedAuction);
     }
 
-    @Override
+
     public AuctionResponse rejectAuction(RejectAuctionRequest request) throws DataNotFoundException {
         Optional<Auction> existingAuctionO = auctionRepository.findById(request.getId());
         Auction existingAuction = existingAuctionO.get();
@@ -245,7 +245,7 @@ private OrderService orderService;
         }
     }
 
-    @Scheduled(fixedDelay = 60000) // Kiểm tra mỗi 60 giây
+    @Scheduled(fixedDelay = 1000) // Kiểm tra mỗi 60 giây
     public void checkAuctionEndings() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
         List<Auction> auctions = auctionRepository.findByEndDateBeforeAndStatus(currentTime, Status.LIVE);

@@ -38,6 +38,9 @@ public class Product extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "actived", nullable = false)
+    private boolean actived = true;
+
     @Column(name = "created_by", nullable = true)
     private String createdBy = "";
 

@@ -69,24 +69,7 @@ public class AuctionController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("reject-auction")
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
 
-    public ResponseEntity<?> rejectStatusAuction(
-            @Valid @RequestBody RejectAuctionRequest rejectAuctionRequest,
-            BindingResult result
-    ) throws DataNotFoundException {
-        ApiResponse apiResponse = new ApiResponse();
-        if (result.hasErrors()) {
-            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-            return ResponseEntity.badRequest().body(apiResponse);
-        }
-
-        AuctionResponse newAuction = auctionService.rejectAuction(rejectAuctionRequest);
-
-        apiResponse.ok(newAuction);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
 
 
     @PutMapping("update-auction/{id}")

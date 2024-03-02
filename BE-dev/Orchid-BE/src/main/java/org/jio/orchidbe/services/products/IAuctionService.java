@@ -25,5 +25,5 @@ public interface IAuctionService {
                                  BindingResult bindingResult) throws ChangeSetPersister.NotFoundException;
 
     AuctionResponse deleteAuction(Request request) throws DataNotFoundException;
-    AuctionResponse rejectAuction(RejectAuctionRequest request) throws DataNotFoundException;
+
 }
