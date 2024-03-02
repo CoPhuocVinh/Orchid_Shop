@@ -9,6 +9,7 @@ import org.jio.orchidbe.repositorys.products.BidRepository;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.requests.orders.CreateOrderRequest;
+import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -54,13 +55,14 @@ public class AuctionService implements IAuctionService {
     @Autowired
     private ValidatorUtil validatorUtil;
 
-    private final AuctionMapper auctionMapper;
+    private AuctionMapper auctionMapper;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private BidRepository bidRepository;
 @Autowired
 private OrderService orderService;
+    private AuctionContainer auctionContainer;
 
 
     @Override
@@ -92,7 +94,7 @@ private OrderService orderService;
         setRemindAtBeforeStartDate(auction1);
         auction1.setStatus(Status.WAITING);
         auctionRepository.save(auction1);
-
+        auctionContainer.addAuction(auction1);
         return auctionMapper.toResponse(auction1);
     }
 
@@ -244,7 +246,7 @@ private OrderService orderService;
         }
     }
 
-    @Scheduled(fixedDelay = 1000) // Kiểm tra mỗi 60 giây
+    @Scheduled(fixedDelay = 30000) // Kiểm tra mỗi 60 giây
     public void checkAuctionEndings() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
         List<Auction> auctions = auctionRepository.findByEndDateBeforeAndStatus(currentTime, Status.LIVE);
@@ -260,7 +262,7 @@ private OrderService orderService;
         LocalDateTime currentTime = LocalDateTime.now();
 
         // Get auctions whose startDate is close to the current time and status is PENDING
-        List<Auction> pendingAuctions = auctionRepository.findByStartDateAfterAndStatus(currentTime, Status.WAITING);
+        List<Auction> pendingAuctions = auctionRepository.findByStartDateAfterAndStatus(currentTime, Status.COMING);
 
         for (Auction auction : pendingAuctions) {
             // If the auction's startDate is near the current time, update its status to LIVE
