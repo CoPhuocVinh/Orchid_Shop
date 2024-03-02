@@ -24,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/auctions")
@@ -95,13 +96,10 @@ public class AuctionController {
         apiResponse.ok(auctionPage);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-    @GetMapping("/{id}")
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<?> findAuctionById(@PathVariable Long id) throws DataNotFoundException {
-        ApiResponse apiResponse = new ApiResponse();
-        AuctionResponse response = auctionService.getById(id);
-        apiResponse.ok(response);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+
+    @GetMapping("/all")
+    public List<Auction> getAllAuctions() {
+        return auctionService.getAllAuctionsFromContainer();
     }
 
 
