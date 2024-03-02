@@ -12,6 +12,7 @@ interface ApiResponseNoParams<T> {
   data: T[];
 }
 
+
 export async function fetchListDataWithSearchParam<T>(
   url: string,
   searchParams: Record<string, any>
@@ -35,7 +36,7 @@ export async function fetchListData<T>(
 ): Promise<ApiResponseNoParams<T>> {
   try {
     const response: AxiosResponse<{
-      payload: { content: T[]; totalPages: number };
+      payload: { content: T[]};
     }> = await api.get(url);
 
     const { content} = response.data.payload;
@@ -46,3 +47,4 @@ export async function fetchListData<T>(
     return { data: [] };
   }
 }
+

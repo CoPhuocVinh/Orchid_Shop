@@ -4,7 +4,7 @@ import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { IAuction } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { fetchListData, fetchListDataWithSearchParam } from "@/lib/generics";
-import axios from "axios";
+import { api } from "../api-interceptor/api";
 
 let BASE_URL = "https://orchid.fams.io.vn/api/v1";
 
@@ -14,6 +14,8 @@ export async function getAuctions(): Promise<{ data: IAuction[] }> {
 
   return await fetchListData(url);
 }
+
+
 
 export async function getTableAuctions(
   searchParams: SearchParams
@@ -30,13 +32,9 @@ interface AuctionStatusUpdate {
 }
 export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
   try {
-    const res = await axios.post(
-      `https://orchid.fams.io.vn/api/v1/auctions/update-status`,
-      { id,status }
-    );
+    const res = await api.post(`/auctions/update-status`, { id, status });
 
     revalidatePath("/dashboard/auctions");
-
   } catch (error) {
     console.log("FALI");
   }
@@ -44,10 +42,7 @@ export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
 
 export async function deleteAuction({ id }: { id: string }) {
   try {
-    await axios.post(
-      `https://orchid.fams.io.vn/api/v1/auctions/delete-auction`,
-      { id }
-    );
+    await api.post(`/auctions/delete-auction`, { id });
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {

@@ -8,7 +8,7 @@ import {
   getUserWithRoleStaff,
 } from "../actions";
 import { SearchParams } from "@/types/table";
-import { IAuction, IProduct, IUser } from "@/types/dashboard";
+import { IAuction, IProduct,IUser } from "@/types/dashboard";
 import { getAuctions } from "../actions/auction";
 
 // USER
@@ -33,6 +33,7 @@ export const useGetProducts = (searchTerm: SearchParams) => {
     queryFn: () => getProducts(searchTerm),
   });
 };
+
 
 
 

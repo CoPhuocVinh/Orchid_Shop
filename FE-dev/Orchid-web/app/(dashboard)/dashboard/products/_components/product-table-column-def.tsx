@@ -10,10 +10,29 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { IProduct } from "@/types/dashboard";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { Edit } from "lucide-react";
 
 export function fetchProductsTableColumnDefs(
   isPending: boolean,
-  startTransition: React.TransitionStartFunction
+  startTransition: React.TransitionStartFunction,
+  router: AppRouterInstance
 ): ColumnDef<IProduct, unknown>[] {
   return [
     {
@@ -95,21 +114,54 @@ export function fetchProductsTableColumnDefs(
         );
       },
     },
-    // {
-    //   accessorKey: "version",
-    //   header: ({ column }) => (
-    //     <DataTableColumnHeader column={column} title="Version" />
-    //   ),
-    //   cell: ({ row }) => {
-    //     return (
-    //       <div className="flex space-x-2">
-    //         <span className="max-w-[500px] truncate font-medium">
-    //           {row.getValue("version")}
-    //         </span>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      id: "actions",
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              aria-label="Open menu"
+              variant="ghost"
+              className="flex size-8 p-0 data-[state=open]:bg-muted"
+            >
+              <DotsHorizontalIcon className="size-4" aria-hidden="true" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[160px]">
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(`/dashboard/products/${row.original.id}`)
+              }
+            >
+              <Edit className="mr-2 h-4 w-4" /> Chỉnh sửa
+            </DropdownMenuItem>
+
+            {/* <DropdownMenuSeparator /> */}
+            {/* <DropdownMenuItem
+              onClick={() => {
+                startTransition(() => {
+                  row.toggleSelected(false);
+                  toast.promise(
+                    deleteAuction({
+                      id: row.original.id,
+                    }),
+                    {
+                      loading: "Deleting...",
+                      success: () => "Auction deleted successfully.",
+                      // error: (err: unknown) => catchError(err),
+                      error: () => "Dellete error",
+                    }
+                  );
+                });
+              }}
+            >
+              Delete
+              <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+            </DropdownMenuItem> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
   ];
 }
 

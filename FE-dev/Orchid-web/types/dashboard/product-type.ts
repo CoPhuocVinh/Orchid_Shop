@@ -1,7 +1,7 @@
 
 export type Image = {
     image_url: string,
-    isDelete: boolean
+    // isDelete: boolean
 }
 
 export type IProduct = {
@@ -13,5 +13,13 @@ export type IProduct = {
     productCode: string,
     created_at: Date,
     updated_at: Date,
-    images?: Image[]
+    productImages?: Image[]
+}
+
+export type IProductCreate = {
+    productName:string,
+    category_id:string,
+    quantity: number,
+    productImages: Image[],
+    description:string,
 }

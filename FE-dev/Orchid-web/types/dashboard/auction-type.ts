@@ -8,10 +8,19 @@ export type IAuction = {
   endPrice: number;
   status: string;
   depositPrice: number;
-  product : IProduct
+  product: IProduct;
   quantity: number;
   modifiedBy: string;
   created_at: Date;
   updated_at: Date;
   remindAt: Date;
+};
+
+export type IAuctionCreateField = {
+  quantity: number;
+  depositPrice: string;
+  startPrice: string;
+  productID: string;
+  startDate: Date;
+  endDate: Date;
 };
