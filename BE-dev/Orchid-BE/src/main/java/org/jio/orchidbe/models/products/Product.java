@@ -49,9 +49,6 @@ public class Product extends BaseEntity {
     @Column(name = "modified_by", nullable = true)
     private String modifiedBy ="";
 
-    @Column(name = "actived", nullable = false)
-    private boolean actived = true;
-
     @Version
     @Column(name = "modified_version", nullable = true)
     private  Integer version = 0;
