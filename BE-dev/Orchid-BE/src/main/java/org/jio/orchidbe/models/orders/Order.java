@@ -32,6 +32,7 @@ public class Order extends BaseEntity {
     private Float total;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     @Column(name = "phone")

@@ -25,7 +25,7 @@ public interface IOrderService {
     OrderResponse deleteOrder(Request request) throws DataNotFoundException;
     @Transactional
     ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id,
-                               BindingResult bindingResult) throws ChangeSetPersister.NotFoundException;
+                               BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException;
 
     OrderResponse UpdateOrderStatus(StatusOrderRequest request) ;
 }

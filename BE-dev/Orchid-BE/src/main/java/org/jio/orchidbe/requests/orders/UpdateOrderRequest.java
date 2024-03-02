@@ -11,7 +11,7 @@ import org.jio.orchidbe.models.orders.PaymentMethod;
 @Data
 @Builder
 public class UpdateOrderRequest {
-    private Float total;
+    //private Float total;
 //    private String phone;
 //    private String address;
 //    private String createdBy;
@@ -19,6 +19,8 @@ public class UpdateOrderRequest {
 //    private String productName;
 //    private String productCode;
     private PaymentMethod paymentMethod;
-    private Integer quantity;
+    //private Integer quantity;
     private String note;
+
+    private Long userIn4Id;
 }

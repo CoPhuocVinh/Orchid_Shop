@@ -24,8 +24,7 @@ import java.util.List;
 @Builder
 public class ProductDTORequest {
 
-    @NotBlank(message = "name is required")
-    @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters")
+
     private String productName;
 
     @Min(value = 0, message = "Quantity must be greater than or equal to 0")

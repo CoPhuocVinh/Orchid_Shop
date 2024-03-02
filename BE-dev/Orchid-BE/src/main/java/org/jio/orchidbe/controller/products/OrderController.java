@@ -80,7 +80,7 @@ public class OrderController {
     @PutMapping("update-order/{id}")
     public ResponseEntity updateOrder(@PathVariable("id") Long id,
                                         @RequestBody UpdateOrderRequest updateOrderRequest,
-                                        BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, BadRequestException {
+                                        BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, BadRequestException, DataNotFoundException {
 
         return orderService.updateOrder(updateOrderRequest, id, bindingResult);
 

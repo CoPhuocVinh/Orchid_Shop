@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.configs.PaymentConfig;
+import org.jio.orchidbe.services.products.PaymentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -26,6 +27,9 @@ import java.util.*;
 @RequestMapping("${api.prefix}/payments")
 @RequiredArgsConstructor
 public class PaymentController {
+
+    private final PaymentService paymentService;
+
     @GetMapping("/create_payment")
     public String payment(HttpSession session, HttpServletResponse response
             , @RequestParam int id, Model model) throws UnsupportedEncodingException {
@@ -125,78 +129,14 @@ public class PaymentController {
                                  @RequestParam("vnp_BankCode") String bankCode,
                                  @RequestParam("vnp_ResponseCode") String responseCode,
                                  @RequestParam("vnp_OrderInfo") String order, Model model,
-                                 HttpSession session) {
+                                 HttpSession session) throws Exception {
+
+        return paymentService.processPayment(amount,bankCode,responseCode,order);
         //RegisterDTO registerDTO = (RegisterDTO) session.getAttribute("REGISTER");
         //Account account = (Account) session.getAttribute("USER");
         //Optional<Discount> discountEntity = discountService.findById(registerDTO.getADiscountID());
 
-        if (responseCode.equals("00")) {
-            /*Date currentDate = MyUtil.currentDate();
-            registerDTO.setRegisteredDate(currentDate);
-            Register registerEntity = new Register();
 
-            BeanUtils.copyProperties(registerDTO, registerEntity);
-            registerEntity.setCustomer(account);
-            registerEntity.setADiscount(discountEntity.orElseThrow());
-            registerEntity.setTypePaying(MyUtil.tran4Paying(registerDTO.getTypePaying()));
-            int courseID = registerEntity.getADiscount().getAPackage().getCourse().getCourseID();
-
-
-            int noDateExpired = registerEntity.getTimeAvailable()*4*7;
-            Register register02 = null;
-            Register register03 = null;
-            try{
-                register02 = registerService.findTopByStatusAndCourseIDOrderByRegisteredDateDesc(2,courseID,account.getAccountID());
-                register03 = registerService.findRegisterByStatusAndcourseID(3,courseID,account.getAccountID());
-            }catch (Exception ex){
-
-            }
-            if (register03 != null){
-
-                if (register02 != null){
-
-                    Date dateExpired = MyUtil.expiredDateOnDate(register02.getExpired(),noDateExpired);
-                    registerEntity.setExpired(dateExpired);
-                }else {
-
-                    Date dateExpired = MyUtil.expiredDateOnDate(register03.getExpired(),noDateExpired);
-                    registerEntity.setExpired(dateExpired);
-                }
-            }else {
-                if (register02 != null){
-
-                    Date dateExpired = MyUtil.expiredDateOnDate(register02.getExpired(),noDateExpired);
-                    registerEntity.setExpired(dateExpired);
-                }else {
-
-                    Date dateExpired = MyUtil.expiredDateOnDate(noDateExpired);
-                    registerEntity.setExpired(dateExpired);
-                }
-            }
-
-            registerEntity.setStatus(2);
-            gmailService.sendMailConfirmRegister(account,registerEntity);
-
-            registerService.save(registerEntity);*/
-
-            // -----------------------------------------
-            // gọi paymentService xử lí
-
-
-
-
-            System.out.println("register thành công");
-            session.setAttribute("SUCCESS", "Bạn đã đăng kí và thanh toán khóa học thành công");
-
-            //redirect về trang của frontend với tham số "successful userName, amount, tên sản phẩm"
-            return "win";
-
-        } else {
-            session.setAttribute("SUCCESS", "Bạn đã đăng kí và thanh toán khóa học thất bại");
-            session.setAttribute("FAIL", "Bạn đã đăng kí và thanh toán khóa học thất bại");
-            return "fail";
-
-        }
 
     }
 }
