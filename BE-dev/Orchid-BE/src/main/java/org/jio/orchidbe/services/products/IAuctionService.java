@@ -16,7 +16,7 @@ import java.text.ParseException;
 public interface IAuctionService {
     AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException;
     Page<AuctionResponse> getAllAuctions(GetAllAuctionResquest getAllAuctionResquest);
-    AuctionResponse UpdateStatus(StatusUpdateRequest request) ;
+
 
     void endAuction(long auctionID,int quantity) throws DataNotFoundException;
 
@@ -24,6 +24,7 @@ public interface IAuctionService {
     ResponseEntity updateAuction(UpdateAuctionRequest updateAuctionRequest, Long id,
                                  BindingResult bindingResult) throws ChangeSetPersister.NotFoundException;
 
-    AuctionResponse deleteAuction(Request request) throws DataNotFoundException;
-    AuctionResponse rejectAuction(RejectAuctionRequest request) throws DataNotFoundException;
+    AuctionResponse deleteAuction(Long id) throws DataNotFoundException;
+
+    AuctionResponse getById(Long id) throws DataNotFoundException;
 }

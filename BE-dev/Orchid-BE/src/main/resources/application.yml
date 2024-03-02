@@ -8,6 +8,7 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:bangbig123}
 
+
 #  datasource:
 #    url: jdbc:mysql://localhost:3306/db_orchid
 #    username: root

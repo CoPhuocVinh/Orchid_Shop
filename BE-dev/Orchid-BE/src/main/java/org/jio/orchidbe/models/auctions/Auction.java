@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldNameConstants
 @Entity
-@Table(name="tbl_aucitons")
+@Table(name="tbl_auctions")
 public class Auction extends BaseEntity {
 
     @Id
@@ -47,6 +47,9 @@ public class Auction extends BaseEntity {
 
     @Column(name = "reject-reason")
     private String rejectReason = "";
+
+    @Column(name = "approved", nullable = false)
+    private boolean approved = false;
 
     @Column(name = "product_name")
     private String productName;

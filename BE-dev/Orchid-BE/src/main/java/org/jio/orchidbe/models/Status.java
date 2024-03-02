@@ -4,6 +4,5 @@ public enum Status {
     COMING,
     LIVE,
     END,
-    REJECT,
     WAITING
 }

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
@@ -16,6 +17,7 @@ import org.jio.orchidbe.services.products.IAuctionService;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -50,43 +52,8 @@ public class AuctionController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("update-status")
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
 
-    public ResponseEntity<?> updateStatusAuction(
-            @Valid @RequestBody StatusUpdateRequest statusUpdateRequest,
-            BindingResult result
-    )  {
-        ApiResponse apiResponse = new ApiResponse();
-        if (result.hasErrors()) {
-            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-            return ResponseEntity.badRequest().body(apiResponse);
-        }
 
-        AuctionResponse newAuction = auctionService.UpdateStatus(statusUpdateRequest);
-
-        apiResponse.ok(newAuction);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
-
-    @PostMapping("reject-auction")
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-
-    public ResponseEntity<?> rejectStatusAuction(
-            @Valid @RequestBody RejectAuctionRequest rejectAuctionRequest,
-            BindingResult result
-    ) throws DataNotFoundException {
-        ApiResponse apiResponse = new ApiResponse();
-        if (result.hasErrors()) {
-            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-            return ResponseEntity.badRequest().body(apiResponse);
-        }
-
-        AuctionResponse newAuction = auctionService.rejectAuction(rejectAuctionRequest);
-
-        apiResponse.ok(newAuction);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
 
 
     @PutMapping("update-auction/{id}")
@@ -99,11 +66,11 @@ public class AuctionController {
             return auctionService.updateAuction(updateAuctionRequest, id, bindingResult);
 
     }
-    @PostMapping("delete-auction")
+    @DeleteMapping("delete-auction")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
 
     public ResponseEntity<?> deleteAuction(
-            @Valid @RequestBody Request deleteAuctionRequest,
+            @Valid @RequestBody Long id,
             BindingResult result
     ) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
@@ -112,7 +79,7 @@ public class AuctionController {
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-        AuctionResponse newAuction = auctionService.deleteAuction(deleteAuctionRequest);
+        AuctionResponse newAuction = auctionService.deleteAuction(id);
 
         apiResponse.ok(newAuction);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -128,15 +95,14 @@ public class AuctionController {
         apiResponse.ok(auctionPage);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-    @GetMapping("/{auctionId}")
-    public ResponseEntity<Auction> getAuctionById(@PathVariable long auctionId) {
-        Auction auction = auctionRepository.findById(auctionId)
-                .orElse(null);
-
-        if (auction != null) {
-            return new ResponseEntity<>(auction, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> findAuctionById(@PathVariable Long id) throws DataNotFoundException {
+        ApiResponse apiResponse = new ApiResponse();
+        AuctionResponse response = auctionService.getById(id);
+        apiResponse.ok(response);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+
 }
