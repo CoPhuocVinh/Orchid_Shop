@@ -1,5 +1,6 @@
 package org.jio.orchidbe.services.products;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -54,7 +55,7 @@ public class AuctionService implements IAuctionService {
 
     @Autowired
     private ValidatorUtil validatorUtil;
-
+    @Autowired
     private AuctionMapper auctionMapper;
     @Autowired
     private ProductRepository productRepository;
@@ -62,7 +63,9 @@ public class AuctionService implements IAuctionService {
     private BidRepository bidRepository;
 @Autowired
 private OrderService orderService;
-    private AuctionContainer auctionContainer;
+    @Autowired
+    private final AuctionContainer auctionContainer;
+
 
 
     @Override
@@ -98,6 +101,11 @@ private OrderService orderService;
         return auctionMapper.toResponse(auction1);
     }
 
+    @PostConstruct
+    public void initializeAuctions() {
+        List<Auction> allAuctions = auctionRepository.findAll();
+        auctionContainer.setAuctions(allAuctions);
+    }
 
     public void setRemindAtBeforeStartDate(Auction auction) {
         if (auction.getStartDate() != null) {
@@ -105,7 +113,10 @@ private OrderService orderService;
             auction.setRemindAt(remindAt);
         }
     }
-
+    @Override
+    public List<Auction> getAllAuctionsFromContainer() {
+        return auctionContainer.getAuctions();
+    }
 
 
     @Override
