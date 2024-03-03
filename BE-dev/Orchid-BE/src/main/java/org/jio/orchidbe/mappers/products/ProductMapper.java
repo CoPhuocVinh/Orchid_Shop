@@ -13,6 +13,7 @@ import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.models.products.Product;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
@@ -22,7 +23,7 @@ public interface ProductMapper {
     ProductDTOResponse toResponse(Product product);
 
     Product toEntity(ProductDTORequest productDTORequest);
-
+    @Mapping(source = "product.category.id", target = "category_id")
     ProductDetailDTOResponse toResponseDetails(Product product);
 
     Product toEntityCreated(ProductDTOCreateRequest productDTORequest);

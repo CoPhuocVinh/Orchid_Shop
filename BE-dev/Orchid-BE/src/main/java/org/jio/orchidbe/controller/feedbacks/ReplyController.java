@@ -1,4 +1,4 @@
-package org.jio.orchidbe.controller.products;
+package org.jio.orchidbe.controller.feedbacks;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

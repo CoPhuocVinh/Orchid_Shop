@@ -8,10 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.dtos.api_response.BaseResponse;
-import org.jio.orchidbe.dtos.products.ProductDTOResponse;
-import org.jio.orchidbe.models.BaseEntity;
-import org.jio.orchidbe.models.Status;
-import org.jio.orchidbe.models.products.Product;
+import org.jio.orchidbe.enums.Status;
 
 import java.time.LocalDateTime;
 

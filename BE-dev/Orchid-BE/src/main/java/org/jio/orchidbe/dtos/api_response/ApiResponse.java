@@ -3,7 +3,7 @@ package org.jio.orchidbe.dtos.api_response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.jio.orchidbe.dtos.dto_enum.StatusEnum;
+import org.jio.orchidbe.enums.StatusEnum;
 
 import java.util.HashMap;
 import java.util.Map;

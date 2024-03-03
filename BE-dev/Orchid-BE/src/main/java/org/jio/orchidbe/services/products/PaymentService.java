@@ -1,10 +1,14 @@
 package org.jio.orchidbe.services.products;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jio.orchidbe.configs.PaymentConfig;
+import org.jio.orchidbe.constants.BaseConstants;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
-import org.jio.orchidbe.models.OrderStatus;
+import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.wallets.Transaction;
+import org.jio.orchidbe.models.wallets.Wallet;
 import org.jio.orchidbe.repositorys.products.OrderRepository;
 import org.jio.orchidbe.repositorys.products.TransactionRepository;
 import org.jio.orchidbe.repositorys.products.WalletRepository;
@@ -12,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -27,12 +32,13 @@ public class PaymentService {
     private TransactionRepository transactionRepository;
     @Autowired
     private WalletRepository walletRepository;
-    public String createPayment(Float total, String context) throws UnsupportedEncodingException {
+
+    public String createPayment(Float total, String context, Long id) throws UnsupportedEncodingException {
         String orderType = "billpayment";
 
-        long amount = (long) (total *100);
+        long amount = (long) (total * 100);
 
-        String vnp_TxnRef = context;
+        String vnp_TxnRef = String.valueOf(id);
         String vnp_TmnCode = PaymentConfig.vnp_TmnCode;
 
         Map<String, String> vnp_Params = new HashMap<>();
@@ -44,7 +50,7 @@ public class PaymentService {
         vnp_Params.put("vnp_BankCode", "NCB");
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + context);
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_ReturnUrl", PaymentConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", PaymentConfig.vnp_IpAddr);
@@ -86,10 +92,13 @@ public class PaymentService {
     }
 
     @Transactional
-    public String processPayment(String amount, String bankCode, String responseCode, String orderInfo) throws Exception {
+    public String processPayment(String amount, String bankCode,
+                                 String responseCode, String orderInfo, String bankTranNo,
+                                 HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
 
-
+            Transaction existingTrans = null;
+            Float total = Float.valueOf(amount) / 100;
             //cắt chuỗi orderInfo thành 3 phần Order/wallet  - id của đối tượng đó - transaction tương ứng
             String[] parts = orderInfo.split("-");
 
@@ -100,45 +109,130 @@ public class PaymentService {
 
             Long objectId = Long.parseLong(IdStr);
             Long tranId = Long.parseLong(transactionIdStr);
-            if (responseCode.equals("00")) {
+            Long bankTranId = Long.parseLong(request.getParameter("vnp_TxnRef"));
+//                check transacton
+            if (tranId != null && tranId >= 0 && tranId.equals(bankTranId)) {
+                existingTrans = transactionRepository.findById(tranId).orElseThrow(
+                        () -> new DataNotFoundException("transaction id by payment not found! " + tranId)
+                );
+            }
 
-                if (type.contains("Order")) {
-                    // Cập nhật trạng thái của đơn hàng và giao dịch
-                    // (Đã giả sử rằng order và transaction có các phương thức tương ứng để cập nhật trạng thái)
-                    Order existingOrder = orderRepository.findById(objectId).orElseThrow(
-                            () -> new DataNotFoundException("order id by payment not found! " + objectId)
-                    );
-                    //Order existingOrder = order1.get();
-                    existingOrder.setStatus(OrderStatus.CONFIRMED);
+            if (existingTrans.getStatus().equals(OrderStatus.CONFIRMED)){
+                //throw new BadRequestException("transaction id " + existingTrans.getId() + " not true by status CONFIRMED");
+                failed(response,"transaction id " + existingTrans.getId() + " not true by status CONFIRMED"
+                        ,existingTrans, bankTranNo);
+                return "error";
+            }
 
-                    Transaction existingTrans = transactionRepository.findById(tranId).orElseThrow(
-                            () -> new DataNotFoundException("transaction id by payment not found! " + tranId)
-                    );
+            existingTrans.setContent(orderDetails + "-" + amount);
 
-                    existingTrans.setResource(bankCode);
-                    existingTrans.setStatus(OrderStatus.CONFIRMED);
+            Map fields = new HashMap();
+            for (Enumeration params = request.getParameterNames(); params.hasMoreElements(); ) {
+                String fieldName = URLEncoder.encode((String) params.nextElement(), StandardCharsets.US_ASCII.toString());
+                String fieldValue = URLEncoder.encode(request.getParameter(fieldName), StandardCharsets.US_ASCII.toString());
+                if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                    fields.put(fieldName, fieldValue);
+                }
+            }
+            String vnp_SecureHash = request.getParameter("vnp_SecureHash");
+            if (fields.containsKey("vnp_SecureHashType")) {
+                fields.remove("vnp_SecureHashType");
+            }
+            if (fields.containsKey("vnp_SecureHash")) {
+                fields.remove("vnp_SecureHash");
+            }
 
-                    orderRepository.save(existingOrder);
-                    transactionRepository.save(existingTrans);
+            // Check checksum
+            String signValue = PaymentConfig.hashAllFields(fields);
+            if (signValue.equals(vnp_SecureHash)) {
 
-                    System.out.println("Cập nhật trạng thái đơn hàng và giao dịch thành CONFIRMED");
-                } else if (type.equals("Wallet")) {
-                    //Nếu phần đầu là Wallet thì cập nhật  số dư = số dư + amount và cập nhật transaction là CONFIRMED
+                if (responseCode.equals("00")) {
 
+                    if (type.contains("Order")) {
+                        // Cập nhật trạng thái của đơn hàng và giao dịch
+                        // (Đã giả sử rằng order và transaction có các phương thức tương ứng để cập nhật trạng thái)
+                        Order existingOrder = orderRepository.findById(objectId).orElseThrow(
+                                () -> new DataNotFoundException("order id by payment not found! " + objectId)
+                        );
+                        // check status
+                        if (!existingOrder.getStatus().equals(OrderStatus.CONFIRMED)) {
+                            // check total of bank == total of database (order)
+
+                            if (existingOrder.getTotal().equals(total)) {
+                                existingOrder.setStatus(OrderStatus.CONFIRMED);
+
+                                existingTrans.setResource(bankTranNo);
+                                existingTrans.setStatus(OrderStatus.CONFIRMED);
+                                existingTrans.setContent(orderDetails + "-" + amount);
+                            } else {
+                                // error
+
+                                failed(response,"amount not true",existingTrans, bankTranNo);
+                                return "error";
+                            }
+                        } else {
+                            //throw new BadRequestException("order id " + existingOrder.getId() + " not true by status CONFIRMED");
+
+                            failed(response,"order id " + existingOrder.getId() + " not true by status CONFIRMED"
+                                    ,existingTrans, bankTranNo);
+                            return "error";
+                        }
+
+
+                    } else if (type.contains("Wallet")) {
+                        //Nếu phần đầu là Wallet thì cập nhật số dư = số dư + amount và cập nhật transaction là CONFIRMED
+                        Wallet existingWallet = walletRepository.findById(objectId).orElseThrow(
+                                () -> new DataNotFoundException("wallet id by payment not found! " + objectId)
+                        );
+
+                        Float balance = existingWallet.getBalance() + total;
+                        existingWallet.setBalance(balance);
+
+                        existingTrans.setResource(bankTranNo);
+                        existingTrans.setStatus(OrderStatus.CONFIRMED);
+                        existingTrans.setContent(orderDetails + "-" + amount);
+
+                    }
+
+                    System.out.println("Thanh toán thành công");
+
+
+                    return "win"; // Redirect về trang FrontEnd
+                    // https://orchid-shop-iota.vercel.app/
+
+
+                } else {
+                    if (type.contains("Order")) {
+                        Order existingOrder = orderRepository.findById(objectId).orElseThrow(
+                                () -> new DataNotFoundException("order id by payment not found! " + objectId)
+                        );
+                        //Order existingOrder = order1.get();
+                        existingOrder.setStatus(OrderStatus.PENDING);
+                    }
+                    // Xử lý thất bại
+                    existingTrans.setStatus(OrderStatus.FAILED);
+                    response.sendRedirect(BaseConstants.RETURN_PAYMENT_FAILED);
+                    System.out.println("Thanh toán thất bại");
+                    return "fail";
                 }
 
-                System.out.println("Thanh toán thành công");
-                return "win"; // Redirect về trang FrontEnd
-                // https://orchid-shop-iota.vercel.app/
-                // http://localhost:3000/test-success?test=1
-
-            } else {
-                // Xử lý thất bại
-                System.out.println("Thanh toán thất bại");
-                return "fail";
             }
-        }catch (Exception e){
+            failed(response,"error can not hash",existingTrans,bankTranNo);
+            return "error";
+
+
+        } catch (Exception e) {
             throw new Exception("Error at processPayment: " + e.getMessage());
         }
+    }
+
+    private String failed(HttpServletResponse response, String msg,Transaction transaction, String bankTranNo) throws IOException {
+        transaction.setStatus(OrderStatus.FAILED);
+        transaction.setResource(bankTranNo);
+        transaction.setFailedReason(msg);
+        String url = BaseConstants.RETURN_PAYMENT_FAILED+"&msg="+msg;
+        response.sendRedirect(url);
+        return url;
+
     }
 }

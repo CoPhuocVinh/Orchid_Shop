@@ -3,14 +3,11 @@ package org.jio.orchidbe.requests.auctions;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jio.orchidbe.models.Status;
-import org.springframework.cglib.core.Local;
+import org.jio.orchidbe.enums.Status;
 
 import java.time.LocalDateTime;
 

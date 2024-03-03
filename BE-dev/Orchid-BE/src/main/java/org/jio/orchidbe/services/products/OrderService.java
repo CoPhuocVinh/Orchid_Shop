@@ -3,11 +3,11 @@ package org.jio.orchidbe.services.products;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.enums.TypeTrans;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
-import org.jio.orchidbe.models.OrderStatus;
-import org.jio.orchidbe.models.Status;
+import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
@@ -26,26 +26,20 @@ import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
-import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.OrderResponse;
+import org.jio.orchidbe.utils.GenerateCodeUtils;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.NoTransactionException;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -78,15 +72,15 @@ public class OrderService implements IOrderService {
         Auction auction = auctionRepository.findById(createOrderRequest.getAuctionID())
                 .orElseThrow(() ->
                         new DataNotFoundException(
-                                "Cannot find product with id: "+ createOrderRequest.getAuctionID()));
+                                "Cannot find product with id: " + createOrderRequest.getAuctionID()));
         User user = userRepository.findById(createOrderRequest.getUserID())
                 .orElseThrow(() ->
                         new DataNotFoundException(
-                                "Cannot find product with id: "+ createOrderRequest.getUserID()));
+                                "Cannot find product with id: " + createOrderRequest.getUserID()));
         UserInfo userInfo = userInfoRepository.findById(createOrderRequest.getUserID())
-                        .orElseThrow(() ->
-                                new DataNotFoundException(
-                                        "Cannot find product with id: "+ createOrderRequest.getUserID()));
+                .orElseThrow(() ->
+                        new DataNotFoundException(
+                                "Cannot find product with id: " + createOrderRequest.getUserID()));
         if (createOrderRequest.getQuantity() > auction.getQuantity()) {
             throw new BadRequestException("Quantity of auction must be less than or equal to product quantity.");
         }
@@ -188,27 +182,39 @@ public class OrderService implements IOrderService {
 
     @Override
     @Transactional
-    public ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id, BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException {
+    public ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id, BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException {
         ApiResponse apiResponse = new ApiResponse();
         if (bindingResult.hasErrors()) {
             apiResponse.error(validatorUtil.handleValidationErrors(bindingResult.getFieldErrors()));
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-        final Order order = orderRepository.findById(id).orElseThrow(
+        Order order = orderRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Order not found with id: " + id)
         );
 
+        if (order.getStatus().equals(OrderStatus.CONFIRMED)) {
+            throw new BadRequestException("Order is CONFIRMED");
+        }
+
+        UserInfo userInfo = userInfoRepository.findById(updateOrderRequest.getUserIn4Id()).orElseThrow(
+                () -> new DataNotFoundException("UserInfo not found with id: " + updateOrderRequest.getUserIn4Id())
+        );
+        // if note null ?
+        order.setNote(updateOrderRequest.getNote());
+        order.setAddress(userInfo.getAddress());
+        order.setPhone(userInfo.getPhone());
         // Lấy phương thức thanh toán từ yêu cầu
         PaymentMethod paymentMethod = updateOrderRequest.getPaymentMethod();
 
+        String tranCode = GenerateCodeUtils.generateCode4Transaction(TypeTrans.RT, order.getProductCode(), order.getUser().getId());
         // Tạo một transaction mới
         Transaction transaction = Transaction.builder()
                 .order(order)
                 .amount(order.getTotal()) // Giả sử giá trị thanh toán là tổng số tiền đơn hàng
                 .status(OrderStatus.PENDING) // Trạng thái của giao dịch là chờ xử lý ban đầu
                 .paymentMethod(paymentMethod)
-                .transactionCode("RT-" + order.getProductCode())
+                .transactionCode(tranCode)
                 .build();
         transactionRepository.save(transaction);
         try {
@@ -221,7 +227,8 @@ public class OrderService implements IOrderService {
                 // Xử lý thanh toán bằng VNPay
                 String vnpayUrl = handleVNPayPayment(order, transaction);
                 // Trả về URL của VNPay
-                return ResponseEntity.ok().body(vnpayUrl);
+                apiResponse.ok(vnpayUrl);
+                return ResponseEntity.ok().body(apiResponse);
             } else {
                 throw new NotAcceptableStatusException("Unsupported payment method.");
             }
@@ -247,14 +254,15 @@ public class OrderService implements IOrderService {
     }
 
     // Xử lý thanh toán bằng ví
-    private void handleWalletPayment(Order order, Transaction transaction) throws BadRequestException, DataNotFoundException {
+    private void handleWalletPayment(Order order, Transaction transaction) throws BadRequestException, DataNotFoundException, NotAcceptableStatusException {
         // Kiểm tra xem số dư trong ví có đủ để thanh toán không
         Wallet userWallet = walletRepository.findByUser_Id(order.getUser().getId())
                 .orElseThrow(() ->
                         new DataNotFoundException(
-                                "Cannot find wallet with user_id: "+ order.getUser().getId()));
+                                "Cannot find wallet with user_id: " + order.getUser().getId()));
         Float walletBalance = userWallet.getBalance();
         Float orderTotal = order.getTotal();
+        transaction.setContent("Thanh toan don hang: " + order.getId());
         if (walletBalance >= orderTotal) {
             // Cập nhật số dư mới cho ví
             Float newBalance = walletBalance - orderTotal;
@@ -266,7 +274,7 @@ public class OrderService implements IOrderService {
 
 
             transaction.setResource(
-                    generateResource4Wallet(userWallet.getId(),order.getProductCode())
+                    GenerateCodeUtils.generateResource4Wallet(userWallet.getId(), order.getProductCode())
             );
 
             order.setStatus(OrderStatus.CONFIRMED);
@@ -275,6 +283,7 @@ public class OrderService implements IOrderService {
             // Nếu số dư không đủ, đánh dấu giao dịch là thất bại và đơn hàng là chờ xử lý
             transaction.setStatus(OrderStatus.FAILED);
             order.setStatus(OrderStatus.PENDING);
+            transaction.setFailedReason("Insufficient balance in wallet.");
             transactionRepository.save(transaction);
             orderRepository.save(order);
             //
@@ -285,8 +294,9 @@ public class OrderService implements IOrderService {
     // Xử lý thanh toán bằng VNPay
     private String handleVNPayPayment(Order order, Transaction transaction) throws UnsupportedEncodingException {
         // Gọi phương thức generatePaymentUrl từ paymentService và trả về URL thanh toán VNPay
-        String context = "Order-"+ order.getUserName() +"," + order.getProductName() + "-"+ order.getId() + "-" +transaction.getId();
-        return paymentService.createPayment(order.getTotal(), context);
+        String context = "Order-" + order.getUserName() + "," + order.getProductName() + "-" + order.getId() + "-" + transaction.getId();
+
+        return paymentService.createPayment(order.getTotal(), context, transaction.getId());
     }
 
     @Override
@@ -304,14 +314,6 @@ public class OrderService implements IOrderService {
         }
         orderRepository.save(existingOrder);
         return orderMapper.toResponse(existingOrder);
-    }
-
-    private String generateResource4Wallet(Long walletId, String productCode){
-        LocalDateTime currentTime = LocalDateTime.now();
-        String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
-        String resource = productCode + "-" + walletId + "-" + formattedTime;
-
-        return resource;
     }
 
 

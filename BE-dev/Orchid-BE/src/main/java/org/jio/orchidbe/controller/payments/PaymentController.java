@@ -1,4 +1,4 @@
-package org.jio.orchidbe.controller;/*  Welcome to Jio word
+package org.jio.orchidbe.controller.payments;/*  Welcome to Jio word
     @author: Jio
     Date: 2/28/2024
     Time: 3:18 PM
@@ -7,6 +7,7 @@ package org.jio.orchidbe.controller;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -128,10 +129,12 @@ public class PaymentController {
     public String processPayment(@RequestParam("vnp_Amount") String amount,
                                  @RequestParam("vnp_BankCode") String bankCode,
                                  @RequestParam("vnp_ResponseCode") String responseCode,
-                                 @RequestParam("vnp_OrderInfo") String order, Model model,
-                                 HttpSession session) throws Exception {
+                                 @RequestParam("vnp_OrderInfo") String order,
+                                 @RequestParam("vnp_BankTranNo") String bankTranNo,
+                                 HttpServletResponse response,
+                                 HttpServletRequest request) throws Exception {
 
-        return paymentService.processPayment(amount,bankCode,responseCode,order);
+        return paymentService.processPayment(amount,bankCode,responseCode,order,bankTranNo, request,response);
         //RegisterDTO registerDTO = (RegisterDTO) session.getAttribute("REGISTER");
         //Account account = (Account) session.getAttribute("USER");
         //Optional<Discount> discountEntity = discountService.findById(registerDTO.getADiscountID());
@@ -139,4 +142,6 @@ public class PaymentController {
 
 
     }
+
+
 }

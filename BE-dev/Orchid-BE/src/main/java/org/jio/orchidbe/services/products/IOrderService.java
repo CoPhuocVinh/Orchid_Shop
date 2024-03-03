@@ -1,6 +1,7 @@
 package org.jio.orchidbe.services.products;
 
 import jakarta.transaction.Transactional;
+import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
@@ -18,7 +19,7 @@ public interface IOrderService {
     OrderResponse deleteOrder(Request request) throws DataNotFoundException;
     @Transactional
     ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id,
-                               BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException;
+                               BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException;
 
     OrderResponse UpdateOrderStatus(StatusOrderRequest request) ;
 }

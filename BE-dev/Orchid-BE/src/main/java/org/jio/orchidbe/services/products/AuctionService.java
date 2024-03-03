@@ -7,11 +7,9 @@ import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.repositorys.products.BidRepository;
-import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.responses.AuctionContainer;
-import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ReflectionUtils;
@@ -31,7 +29,7 @@ import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
-import org.jio.orchidbe.models.Status;
+import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
@@ -45,7 +43,6 @@ import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 @Service

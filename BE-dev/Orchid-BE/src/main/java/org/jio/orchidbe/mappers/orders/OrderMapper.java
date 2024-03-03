@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 @Component
 public interface OrderMapper {
+
+    @Mapping(source = "order.auction.id", target = "auctionID")
     OrderResponse toResponse(Order order);
 
     @Mapping(target = "user", ignore = true)

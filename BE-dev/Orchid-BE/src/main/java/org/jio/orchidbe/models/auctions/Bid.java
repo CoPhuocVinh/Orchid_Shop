@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.BidingStatus;
-import org.jio.orchidbe.models.Status;
-import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.users.User;
 
 @AllArgsConstructor
