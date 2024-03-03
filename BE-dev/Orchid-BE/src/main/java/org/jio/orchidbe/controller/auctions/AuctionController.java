@@ -8,10 +8,12 @@ import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
+import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
+import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.services.products.IAuctionService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -30,10 +32,11 @@ import java.util.List;
 @RequestMapping("${api.prefix}/auctions")
 @RequiredArgsConstructor
 public class AuctionController {
-
+    private final AuctionContainer auctionContainer;
     private final IAuctionService auctionService;
     private final ValidatorUtil validatorUtil;
     private final AuctionRepository auctionRepository;
+    private final AuctionMapper auctionMapper;
     @PostMapping("create")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
 
@@ -97,9 +100,28 @@ public class AuctionController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    public List<Auction> getAllAuctions() {
-        return auctionService.getAllAuctionsFromContainer();
+    @GetMapping("/auctions/waiting")
+    public List<AuctionResponse> getWaitingAuctions() {
+        // Lấy danh sách các phiên đấu giá có trạng thái WAITING từ AuctionContainer
+        List<Auction> waitingAuctions = auctionContainer.getWaitingAuctions();
+        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+        return auctionMapper.toResponseList(waitingAuctions);
+    }
+
+    @GetMapping("/auctions/coming")
+    public List<AuctionResponse> getComingAuctions() {
+        // Lấy danh sách các phiên đấu giá có trạng thái COMING từ AuctionContainer
+        List<Auction> comingAuctions = auctionContainer.getComingAuctions();
+        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+        return auctionMapper.toResponseList(comingAuctions);
+    }
+
+    @GetMapping("/auctions/live")
+    public List<AuctionResponse> getLiveAuctions() {
+        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
+        List<Auction> liveAuctions = auctionContainer.getLiveAuctions();
+        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+        return auctionMapper.toResponseList(liveAuctions);
     }
 
 
