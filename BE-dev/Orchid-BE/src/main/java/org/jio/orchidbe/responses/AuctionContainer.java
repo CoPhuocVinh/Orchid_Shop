@@ -1,5 +1,7 @@
 package org.jio.orchidbe.responses;
 
+import org.jio.orchidbe.exceptions.DataNotFoundException;
+import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.jio.orchidbe.models.Status.COMING;
+import static org.jio.orchidbe.models.Status.LIVE;
 
 @Component
 @Configuration
@@ -29,6 +34,36 @@ public class AuctionContainer {
         updateAuctionLists(auction);
     }
 
+    public Auction getAuctionById(Long id) throws DataNotFoundException {
+        for (Auction auction : auctions) {
+            if (auction.getId().equals(id)) {
+                return auction;
+            }
+        }
+        throw new DataNotFoundException(
+                "Cannot find auction with id: " + id);
+    }
+    public void removeAuctionFromList(Auction auction, Status statusToRemoveFrom) {
+        switch (statusToRemoveFrom) {
+            case WAITING:
+                if (waitingAuctions.contains(auction)) {
+                    waitingAuctions.remove(auction);
+                }
+                break;
+            case COMING:
+                if (comingAuctions.contains(auction)) {
+                    comingAuctions.remove(auction);
+                }
+                break;
+            case LIVE:
+                if (liveAuctions.contains(auction)) {
+                    liveAuctions.remove(auction);
+                }
+                break;
+            default:
+                break;
+        }
+    }
     private void updateAuctionLists(Auction auction) {
         switch (auction.getStatus()) {
             case WAITING:
@@ -45,6 +80,40 @@ public class AuctionContainer {
         }
     }
 
+    public void moveAuctionToList(Auction auction, Status newStatus) {
+        // Remove auction from its current list based on its current status
+        switch (auction.getStatus()) {
+            case WAITING:
+                waitingAuctions.remove(auction);
+                break;
+            case COMING:
+                comingAuctions.remove(auction);
+                break;
+            case LIVE:
+                liveAuctions.remove(auction);
+                break;
+            default:
+                break;
+        }
+
+        // Update auction status
+        auction.setStatus(newStatus);
+
+        // Add auction to the new list based on the new status
+        switch (newStatus) {
+            case WAITING:
+                waitingAuctions.add(auction);
+                break;
+            case COMING:
+                comingAuctions.add(auction);
+                break;
+            case LIVE:
+                liveAuctions.add(auction);
+                break;
+            default:
+                break;
+        }
+    }
     public List<Auction> getAuctions() {
         return auctions;
     }

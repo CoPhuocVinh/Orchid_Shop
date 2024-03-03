@@ -65,7 +65,7 @@ public class AuctionController {
 
     public ResponseEntity updateAuction(@PathVariable("id") Long id,
                                         @RequestBody UpdateAuctionRequest updateAuctionRequest,
-                                        BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, BadRequestException {
+                                        BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, BadRequestException, DataNotFoundException {
 
             return auctionService.updateAuction(updateAuctionRequest, id, bindingResult);
 
