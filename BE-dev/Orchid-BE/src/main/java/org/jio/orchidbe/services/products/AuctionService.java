@@ -134,27 +134,25 @@ private OrderService orderService;
     @Override
     @Transactional
     public ResponseEntity updateAuction(UpdateAuctionRequest updateAuctionRequest, Long id,
-                                        BindingResult bindingResult) throws ChangeSetPersister.NotFoundException {
+                                        BindingResult bindingResult) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
         if (bindingResult.hasErrors()) {
             apiResponse.error(validatorUtil.handleValidationErrors(bindingResult.getFieldErrors()));
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-         Auction auction = auctionRepository.findById(id).orElseThrow(
-                () -> new ChangeSetPersister.NotFoundException()
-        );
+        Auction auction = auctionContainer.getAuctionById(id); // Lấy đối tượng Auction từ AuctionContainer
 
         try {
             if(updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null){
                 throw  new BadRequestException("Fill the reason reject");
             }
-            // đổ data theo field
-//            validateAuction(updateAuctionRequest.getProductName());
+
+            // Update auction fields
             ReflectionUtils.doWithFields(updateAuctionRequest.getClass(), field -> {
                 field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
                 Object newValue = field.get(updateAuctionRequest);
-                if (newValue != null) { // lấy các giá trị không null
+                if (newValue != null) { // Lấy các giá trị không null
                     String fieldName = field.getName();
                     Field existingField = ReflectionUtils.findField(auction.getClass(), fieldName);
                     if (existingField != null) {
@@ -164,29 +162,33 @@ private OrderService orderService;
                 }
             });
 
-            if(updateAuctionRequest.getStatus() == null){
-                if(updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null){
-                    if(auction.isRejected() == true && auction.isApproved() == false){
-                      auction.setStatus(Status.END);
-                    } else if (auction.isApproved()== true && auction.isRejected() == false){
-                     auction.setStatus(Status.COMING);
-                      auctionContainer.getWaitingAuctions().remove(auction);
-                      auctionContainer.getComingAuctions().add(auction);
+            // Handle status updates
+            if (updateAuctionRequest.getStatus() == null) {
+                // Xử lý việc cập nhật trạng thái dựa trên các trường khác
+                if (updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null) {
+                    if (auction.isRejected() && !auction.isApproved()) {
+                        auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+                        auction.setStatus(Status.END);
+                    } else if (auction.isApproved() && !auction.isRejected()) {
 
-                     } else if (auction.isRejected() == true && auction.isApproved()== true) {
-                       auction.setStatus(Status.END);
-                     }
+                        auction.setStatus(Status.COMING);
+                        auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+                        auctionContainer.moveAuctionToList(auction, Status.COMING);
+                    } else if (auction.isRejected() && auction.isApproved()) {
+                        auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+                        auction.setStatus(Status.END);
+                    }
                 }
-            }else if(updateAuctionRequest.getStatus().equals(Status.LIVE)){
+            } else if (updateAuctionRequest.getStatus().equals(Status.LIVE)) {
+                auctionContainer.moveAuctionToList(auction, Status.LIVE);
+                auctionContainer.removeAuctionFromList(auction, Status.WAITING);
                 auction.setStatus(Status.LIVE);
-                auctionContainer.getWaitingAuctions().remove(auction);
-                auctionContainer.getLiveAuctions().add(auction);
-            } else if(updateAuctionRequest.getStatus().equals(Status.END)){
-                auction.setStatus(Status.END);
-                auctionContainer.getWaitingAuctions().remove(auction);
-            }
 
-            //Auction updatedAuction = auctionRepository.save(auction);
+            } else if (updateAuctionRequest.getStatus().equals(Status.END)) {
+                auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+                auction.setStatus(Status.END);
+            }
+            auctionRepository.save(auction);
 
             AuctionResponse auctionResponse = auctionMapper.toResponse(auction);
             apiResponse.ok(auctionResponse);
@@ -240,64 +242,6 @@ private OrderService orderService;
     }
 
 
-//    @Override
-//    public void endAuction(long auctionID,int quantity) throws DataNotFoundException {
-//        Auction auction = auctionRepository.findById(auctionID)
-//                .orElseThrow(() ->
-//                        new DataNotFoundException("Cannot find auction with ID: " + auctionID));
-//
-//        Bid bid = bidRepository.findByTop1TrueAndAuction_Id(auctionID);
-//        if (auction.getStatus() == Status.LIVE) {
-//            // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
-//            auction.setStatus(Status.END);
-//            auction.setEndPrice(bid.getBiddingPrice());
-//            auctionRepository.save(auction);
-//
-//            // Tạo đơn hàng mới từ thông tin của phiên đấu giá
-//            CreateOrderRequest createOrderRequest = new CreateOrderRequest();
-//            createOrderRequest.setAuctionID(auctionID);
-//            createOrderRequest.setUserID(bid.getUser().getId());
-//            createOrderRequest.setQuantity(quantity);
-//
-//            try {
-//                orderService.createOrder(createOrderRequest);
-//            } catch (DataNotFoundException | BadRequestException e) {
-//                // Xử lý nếu có lỗi xảy ra khi tạo đơn hàng
-//                e.printStackTrace();
-//                // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
-//            }
-//        } else {
-//            // Xử lý khi phiên đấu giá không ở trạng thái hoạt động
-//            // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
-//        }
-//    }
-//
-//    @Scheduled(fixedDelay = 30000) // Kiểm tra mỗi 60 giây
-//    public void checkAuctionEndings() throws DataNotFoundException {
-//        LocalDateTime currentTime = LocalDateTime.now();
-//        List<Auction> auctions = auctionRepository.findByEndDateBeforeAndStatus(currentTime, Status.LIVE);
-//
-//        for (Auction auction : auctions) {
-//            // Truyền số lượng vào phương thức endAuction
-//            endAuction(auction.getId(), auction.getQuantity());
-//        }
-//    }
-//
-//    @Scheduled(fixedRate = 60000) // Run every 1 minute
-//    public void checkAuctionStatus() {
-//        LocalDateTime currentTime = LocalDateTime.now();
-//
-//        // Get auctions whose startDate is close to the current time and status is PENDING
-//        List<Auction> pendingAuctions = auctionRepository.findByStartDateAfterAndStatus(currentTime, Status.COMING);
-//
-//        for (Auction auction : pendingAuctions) {
-//            // If the auction's startDate is near the current time, update its status to LIVE
-//            auction.setStatus(Status.LIVE);
-//            auctionRepository.save(auction);
-//        }
-//    }
-
-
     private Auction findAuctionById(long auctionID) throws DataNotFoundException {
         List<Auction> allAuctions = auctionContainer.getAuctions();
         for (Auction auction : allAuctions) {
@@ -325,6 +269,7 @@ private OrderService orderService;
         if (auction.getStatus() == Status.LIVE) {
             // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
             auction.setStatus(Status.END);
+            auctionContainer.removeAuctionFromList(auction, Status.LIVE);
             auction.setEndPrice(bid.getBiddingPrice());
 
             // Tạo đơn hàng mới từ thông tin của phiên đấu giá
@@ -363,8 +308,9 @@ private OrderService orderService;
         for (Auction auction : pendingAuctions) {
             // If the auction's startDate is near the current time, update its status to LIVE
             auction.setStatus(Status.LIVE);
-            auctionContainer.getComingAuctions().remove(auction);
-            auctionContainer.getLiveAuctions().add(auction);
+//            auctionContainer.getComingAuctions().remove(auction);
+//            auctionContainer.getLiveAuctions().add(auction);
+            auctionContainer.moveAuctionToList(auction, Status.LIVE);
             auctionRepository.save(auction);
         }
     }
