@@ -124,5 +124,14 @@ public class AuctionController {
         return auctionMapper.toResponseList(liveAuctions);
     }
 
+    @GetMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> findAuctionById(@PathVariable Long id) throws DataNotFoundException {
+        ApiResponse apiResponse = new ApiResponse();
+        AuctionResponse response = auctionService.getById(id);
+        apiResponse.ok(response);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
 
 }

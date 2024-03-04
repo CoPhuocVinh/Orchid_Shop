@@ -71,7 +71,7 @@ private OrderService orderService;
 
     @Override
     public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
-        Auction auction1 = auctionMapper.toEntity(createAuctionResquest);
+        Auction newAuction = auctionMapper.toEntity(createAuctionResquest);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
         LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate(), formatter);
         LocalDateTime startDate = LocalDateTime.parse(createAuctionResquest.getStartDate(), formatter);
@@ -91,15 +91,12 @@ private OrderService orderService;
         int updatedProductQuantity = product.getQuantity() - createAuctionResquest.getQuantity();
         product.setQuantity(updatedProductQuantity);
         productRepository.save(product);
-
-        auction1.setProductCode(product.getProductCode());
-        auction1.setProductName(product.getProductName());
-
-        setRemindAtBeforeStartDate(auction1);
-        auction1.setStatus(Status.WAITING);
-        auctionRepository.save(auction1);
-        auctionContainer.addAuction(auction1);
-        return auctionMapper.toResponse(auction1);
+        newAuction.setProductCode(product.getProductCode());
+        newAuction.setProductName(product.getProductName());
+        newAuction.setStatus(Status.WAITING);
+        auctionRepository.save(newAuction);
+        auctionContainer.addAuction(newAuction);
+        return auctionMapper.toResponse(newAuction);
     }
 
 
@@ -111,12 +108,12 @@ private OrderService orderService;
         }
     }
 
-    public void setRemindAtBeforeStartDate(Auction auction) {
-        if (auction.getStartDate() != null) {
-            LocalDateTime remindAt = auction.getStartDate().minus(12, ChronoUnit.HOURS);
-            auction.setRemindAt(remindAt);
-        }
-    }
+//    public void setRemindAtBeforeStartDate(Auction auction) {
+//        if (auction.getStartDate() != null) {
+//            LocalDateTime remindAt = auction.getStartDate().minus(12, ChronoUnit.HOURS);
+//            auction.setRemindAt(remindAt);
+//        }
+//    }
     @Override
     public List<AuctionResponse> getAllAuctionsFromContainer() {
         return auctionContainer.getAuctions().stream()
@@ -144,7 +141,7 @@ private OrderService orderService;
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-        Auction auction = auctionContainer.getAuctionById(id); // Lấy đối tượng Auction từ AuctionContainer
+        Auction auction = auctionContainer.getAuctionById(id);
 
         try {
             if(updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null){
@@ -253,6 +250,7 @@ private OrderService orderService;
             }
         }
         throw new DataNotFoundException("Cannot find auction with ID: " + auctionID);
+
     }
     @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
     public void checkAuctionEndings() throws DataNotFoundException {

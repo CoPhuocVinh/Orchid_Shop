@@ -84,7 +84,9 @@ public class AuctionContainer {
         // Remove auction from its current list based on its current status
         switch (auction.getStatus()) {
             case WAITING:
-                waitingAuctions.remove(auction);
+                if (waitingAuctions.contains(auction)) {
+                    waitingAuctions.remove(auction);
+                }
                 break;
             case COMING:
                 comingAuctions.remove(auction);

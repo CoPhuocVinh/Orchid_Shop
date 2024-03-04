@@ -63,6 +63,9 @@ public class Auction extends BaseEntity {
     @Column(name = "modified_by")
     private String modifiedBy = "";
 
+    @Column(name = "image_url")
+    private String imageUrl ;
+
     @Version
     @Column(name = "version", nullable = true)
     private  Integer version = 0;
