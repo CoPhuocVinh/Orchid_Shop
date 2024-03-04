@@ -4,9 +4,9 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://swd.cp0mgw20o90d.ap-southeast-1.rds.amazonaws.com/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://128.199.185.211:3307/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
     username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:bangbig123}
+    password: ${SPRING_DATASOURCE_PASSWORD:Abc123456789@}
 
 
 #  datasource:
