@@ -30,6 +30,7 @@ public class AuctionResponse extends BaseResponse {
     private Float depositPrice;
     private Integer quantity;
     private String modifiedBy;
+    @JsonProperty("image_url")
     private String imageUrl;
     private String productName;
     private String productCode;
