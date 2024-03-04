@@ -1,7 +1,7 @@
 package org.jio.orchidbe.dtos.products;/*  Welcome to Jio word
     @author: Jio
-    Date: 2/16/2024
-    Time: 1:47 PM
+    Date: 2/15/2024
+    Time: 10:58 PM
     
     ProjectName: Orchid-BE
     Jio: I wish you always happy with coding <3
@@ -13,18 +13,17 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.jio.orchidbe.dtos.api_response.BaseResponse;
 
 import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductDTORequest {
+public class ProductDTOCreateRequest {
 
-
+    @NotBlank(message = "name is required")
+    @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters")
     private String productName;
 
     @Min(value = 0, message = "Quantity must be greater than or equal to 0")
@@ -35,6 +34,7 @@ public class ProductDTORequest {
     @JsonProperty("category_id")
     private Long categoryId;
 
-    private Boolean active = true;
+    private boolean active = true;
+
     private List<ProductImageDTO> productImages;
 }

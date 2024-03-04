@@ -26,4 +26,6 @@ public class BaseConstants {
 
     public static final String HOST_RETURN = "http://localhost:8088/api/v1";
 
+    public static final String RETURN_PAYMENT = "";
+
 }

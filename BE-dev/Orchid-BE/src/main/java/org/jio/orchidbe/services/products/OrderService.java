@@ -44,6 +44,8 @@ import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -186,7 +188,7 @@ public class OrderService implements IOrderService {
 
     @Override
     @Transactional
-    public ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id, BindingResult bindingResult) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id, BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
         if (bindingResult.hasErrors()) {
             apiResponse.error(validatorUtil.handleValidationErrors(bindingResult.getFieldErrors()));
@@ -194,7 +196,7 @@ public class OrderService implements IOrderService {
         }
 
         final Order order = orderRepository.findById(id).orElseThrow(
-                () -> new ChangeSetPersister.NotFoundException()
+                () -> new DataNotFoundException("Order not found with id: " + id)
         );
 
         // Lấy phương thức thanh toán từ yêu cầu
@@ -208,11 +210,13 @@ public class OrderService implements IOrderService {
                 .paymentMethod(paymentMethod)
                 .transactionCode("RT-" + order.getProductCode())
                 .build();
-
+        transactionRepository.save(transaction);
         try {
             if (paymentMethod == PaymentMethod.CARD) {
                 // Xử lý thanh toán bằng ví
+                order.setPaymentMethod(paymentMethod);
                 handleWalletPayment(order, transaction);
+
             } else if (paymentMethod == PaymentMethod.BANK) {
                 // Xử lý thanh toán bằng VNPay
                 String vnpayUrl = handleVNPayPayment(order, transaction);
@@ -223,7 +227,7 @@ public class OrderService implements IOrderService {
             }
 
             // Lưu transaction và order sau khi xử lý thanh toán thành công
-            transactionRepository.save(transaction);
+
             Order updatedOrder = orderRepository.save(order);
 
             OrderResponse orderResponse = orderMapper.toResponse(updatedOrder);
@@ -259,11 +263,20 @@ public class OrderService implements IOrderService {
 
             // Cập nhật trạng thái của giao dịch và đơn hàng
             transaction.setStatus(OrderStatus.CONFIRMED);
+
+
+            transaction.setResource(
+                    generateResource4Wallet(userWallet.getId(),order.getProductCode())
+            );
+
             order.setStatus(OrderStatus.CONFIRMED);
+
         } else {
             // Nếu số dư không đủ, đánh dấu giao dịch là thất bại và đơn hàng là chờ xử lý
             transaction.setStatus(OrderStatus.FAILED);
             order.setStatus(OrderStatus.PENDING);
+            transactionRepository.save(transaction);
+            orderRepository.save(order);
             //
             throw new NotAcceptableStatusException("Insufficient balance in wallet.");
         }
@@ -291,6 +304,14 @@ public class OrderService implements IOrderService {
         }
         orderRepository.save(existingOrder);
         return orderMapper.toResponse(existingOrder);
+    }
+
+    private String generateResource4Wallet(Long walletId, String productCode){
+        LocalDateTime currentTime = LocalDateTime.now();
+        String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+        String resource = productCode + "-" + walletId + "-" + formattedTime;
+
+        return resource;
     }
 
 

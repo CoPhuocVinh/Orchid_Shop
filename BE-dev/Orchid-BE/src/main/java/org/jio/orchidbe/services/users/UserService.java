@@ -9,12 +9,14 @@ package org.jio.orchidbe.services.users;/*  Welcome to Jio word
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import org.jio.orchidbe.dtos.category.CategoryDTOResponse;
 import org.jio.orchidbe.dtos.users.GetAllUserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.users.UserMapper;
+import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
 import org.jio.orchidbe.repositorys.users.UserRepository;
@@ -85,6 +87,9 @@ public class UserService implements IUserService{
         User user = userRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found user_controller.")
         );
+        if (user.isDeleted() == true){
+            throw new DataNotFoundException("Is deteted.");
+        }
         UserDTOResponse userDTOResponse = null;
         try {
             // đổ data theo field
@@ -101,6 +106,7 @@ public class UserService implements IUserService{
 
                 }
             });
+
 
             userDTOResponse = userMapper.toResponse(user);
 
@@ -127,7 +133,25 @@ public class UserService implements IUserService{
         User user = userRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found user by id: " + id)
         );
+        if (user.isDeleted() == true){
+            throw new DataNotFoundException("Is deteted.");
+        }
         UserDTOResponse userDTOResponse = userMapper.toResponse(user);
         return userDTOResponse;
+    }
+
+    @Override
+    public UserDTOResponse DeteleById(Long id) throws DataNotFoundException {
+        User entity = userRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found user_controller.")
+        );
+        entity.setDeleted(true);
+        UserDTOResponse response = userMapper.toResponse(entity);
+        entity.getUserInfos().forEach(object -> {
+            object.setDeleted(true);
+
+        });
+
+        return response;
     }
 }

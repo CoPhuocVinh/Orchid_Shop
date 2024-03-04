@@ -40,7 +40,7 @@ public class UserInfoService implements IUserInfoService{
     @Override
     public List<UserIn4DetailDTO> findUserIn4ById(Long userId) throws DataNotFoundException {
         isUserExistsById(userId);
-        List<UserInfo> userInfos = userInfoRepository.findAllByUser_Id(userId);
+        List<UserInfo> userInfos = userInfoRepository.findAllByDeletedFalseAndUser_Id(userId);
 
 
         return userInfos.stream().map(userInfoMapper::toResponse).collect(Collectors.toList());
@@ -54,6 +54,9 @@ public class UserInfoService implements IUserInfoService{
         UserInfo userin4 = userInfoRepository.findById(userDTO.getId()).orElseThrow(
                 () -> new DataNotFoundException("Not found userinfo.")
         );
+        if (userin4.isDeleted() == true){
+            throw new DataNotFoundException("Is deteted.");
+        }
         UserIn4DetailDTO userDTOResponse = null;
         try {
             // đổ data theo field
@@ -90,7 +93,7 @@ public class UserInfoService implements IUserInfoService{
     @Override
     public List<UserIn4DetailDTO> findUserIn4DefaultById(Long id) throws DataNotFoundException {
         isUserExistsById(id);
-        List<UserInfo> userInfos = userInfoRepository.findAllByDefaultedTrueAndUser_Id(id);
+        List<UserInfo> userInfos = userInfoRepository.findAllByDeletedFalseAndDefaultedTrueAndUser_Id(id);
 
 
         return userInfos.stream().map(userInfoMapper::toResponse).collect(Collectors.toList());

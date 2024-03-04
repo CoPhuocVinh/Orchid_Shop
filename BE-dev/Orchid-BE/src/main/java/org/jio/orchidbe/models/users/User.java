@@ -11,6 +11,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
+import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.user_enum.Gender;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -107,6 +108,7 @@ public class User extends BaseEntity implements UserDetails {
 
     // --- relationship----
 
-
+    @OneToMany(mappedBy = "user")
+    private List<UserInfo> userInfos;
 
 }

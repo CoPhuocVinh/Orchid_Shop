@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.OrderStatus;
-import org.jio.orchidbe.models.Status;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
 

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.dtos.category.CategoryDTOResponse;
 import org.jio.orchidbe.dtos.users.GetAllUserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
@@ -81,6 +82,18 @@ public class UserController {
 
         UserDTOResponse updateUser = userService.updateUserIn4(id,userDTO,result);
         apiResponse.ok( updateUser);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+
+    // DELETE
+    @DeleteMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> DeleteById(@PathVariable Long id) throws DataNotFoundException {
+        ApiResponse apiResponse = new ApiResponse();
+        UserDTOResponse response = userService.DeteleById(id);
+        apiResponse.ok(response);
+        apiResponse.setMessage("delete successfully with user id: " + id);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

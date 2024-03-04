@@ -13,5 +13,6 @@ public interface OrderMapper {
     OrderResponse toResponse(Order order);
 
     @Mapping(target = "user", ignore = true)
+
     Order toEntity(CreateOrderRequest createOrderRequest);
 }

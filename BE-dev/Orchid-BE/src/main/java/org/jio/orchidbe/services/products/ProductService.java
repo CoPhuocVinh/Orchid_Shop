@@ -8,18 +8,17 @@ package org.jio.orchidbe.services.products;/*  Welcome to Jio word
 */
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.jio.orchidbe.dtos.products.GetAllPoductDTORequest;
-import org.jio.orchidbe.dtos.products.ProductDTORequest;
-import org.jio.orchidbe.dtos.products.ProductDTOResponse;
-import org.jio.orchidbe.dtos.users.UserDTOResponse;
+import org.jio.orchidbe.dtos.products.*;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.products.ProductMapper;
 import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.products.Product;
-import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.models.products.ProductImage;
 import org.jio.orchidbe.repositorys.products.CategoryRepository;
+import org.jio.orchidbe.repositorys.products.ProductImageRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -39,24 +38,30 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final CategoryRepository categoryRepository;
-
+    private final ProductImageRepository productImageRepository;
     @Override
-    public ProductDTOResponse createProduct(ProductDTORequest productDTORequest) throws DataNotFoundException {
+    public ProductDetailDTOResponse createProduct(@Valid ProductDTOCreateRequest productDTORequest) throws DataNotFoundException {
         Category existingCategory = categoryRepository
                 .findById(productDTORequest.getCategoryId())
                 .orElseThrow(() ->
                         new DataNotFoundException(
                                 "Cannot find category with id: " + productDTORequest.getCategoryId()));
         //map
-        Product product = productMapper.toEntity(productDTORequest);
+        Product product = productMapper.toEntityCreated(productDTORequest);
         //set category by id
         product.setCategory(existingCategory);
+
         // Set code
         long countProduct = productRepository.countByCategory_Id(existingCategory.getId());
         product.setProductCode(generateProductCode(existingCategory.getCode(), countProduct));
         //save
         try {
+            // save product
             productRepository.save(product);
+            // save product img
+            product.getProductImages().forEach(img -> img.setProduct(product));
+            productImageRepository.saveAll(product.getProductImages());
+
         } catch (OptimisticLockingFailureException ex) {
             // Xử lý xung đột dữ liệu ở đây
             // Thông báo cho người dùng hoặc thực hiện các hành động cần thiết
@@ -66,10 +71,11 @@ public class ProductService implements IProductService {
             if (productRepository.existsByProductName(product.getProductName())) {
                 throw new DataIntegrityViolationException("ProductName đã tồn tại");
             }
+            throw new DataIntegrityViolationException(e.getMessage());
 
         }
         //response
-        return productMapper.toResponse(product);
+        return productMapper.toResponseDetails(product);
     }
 
     @Override
@@ -121,11 +127,27 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ProductDTOResponse getById(Long id) throws DataNotFoundException {
+    public ProductDetailDTOResponse getById(Long id) throws DataNotFoundException {
+        Product entity = productRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found .")
+        );
+        if (entity.isDeleted() == true){
+            throw new DataNotFoundException("Is deteted.");
+        }
+        ProductDetailDTOResponse response = productMapper.toResponseDetails(entity);
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public ProductDetailDTOResponse DeteleById(Long id) throws DataNotFoundException {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found user_controller.")
         );
-        ProductDTOResponse response = productMapper.toResponse(product);
+        product.setDeleted(true);
+        ProductDetailDTOResponse response = productMapper.toResponseDetails(product);
+        product.getProductImages().forEach(img -> img.setDeleted(true));
+
         return response;
     }
 

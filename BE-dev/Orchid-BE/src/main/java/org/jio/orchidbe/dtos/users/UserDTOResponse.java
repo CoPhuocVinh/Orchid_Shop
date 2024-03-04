@@ -28,4 +28,6 @@ public class UserDTOResponse {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private Date dob;
     private Gender gender;
+
+    private boolean banned ;
 }

@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jio.orchidbe.dtos.common.BaseFilterRequest;
+import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.products.Product;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,6 +33,7 @@ public class GetAllPoductDTORequest extends BaseFilterRequest<Product> {
     private String productName;
     private String code;
     private String categoryId;
+    private Boolean active ;
     @Override
     public Specification<Product> getSpecification() {
         return (root, query, cb) -> {
@@ -62,8 +64,14 @@ public class GetAllPoductDTORequest extends BaseFilterRequest<Product> {
                 predicates.add(cb.like(cb.lower(root.get(Product.Fields.productCode)), searchTrim));
             }
 
+            if (active != null) {
+                //String searchTrim = "%" + code.trim().toLowerCase() + "%";
+                predicates.add(cb.equal(root.get(Product.Fields.actived), active));
+
+            }
             // Thêm điều kiện deleted == false
-            predicates.add(cb.equal(root.get("deleted"), false));
+            predicates.add(cb.equal(root.get(BaseEntity.Fields.deleted), false));
+            //predicates.add(cb.equal(root.get("deleted"), false));
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }

@@ -34,4 +34,5 @@ public class UserDTORequest {
     private Date dob;
     private Gender gender;
 
+    private Boolean banned;
 }

@@ -1,13 +1,16 @@
 package org.jio.orchidbe.services.products;
 
 import org.jio.orchidbe.configs.PaymentConfig;
+import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.models.OrderStatus;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.repositorys.products.OrderRepository;
 import org.jio.orchidbe.repositorys.products.TransactionRepository;
+import org.jio.orchidbe.repositorys.products.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -22,6 +25,8 @@ public class PaymentService {
     private OrderRepository orderRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private WalletRepository walletRepository;
     public String createPayment(Float total, String context) throws UnsupportedEncodingException {
         String orderType = "billpayment";
 
@@ -80,43 +85,60 @@ public class PaymentService {
         return paymentUrl;
     }
 
-    public String processPayment(String amount, String bankCode, String responseCode, String orderInfo) {
-
-        //cắt chuỗi orderInfo thành 3 phần Order/wallet  - id của đối tượng đó - transaction tương ứng
-        String[] parts = orderInfo.split("-");
-
-        String type = parts[0]; // Phần đầu tiên là loại đối tượng (Order hoặc Wallet)
-        String orderDetails = parts[1]; // Phần thứ hai là thông tin về đơn hàng
-        String orderIdStr = parts[2];
-        String transactionIdStr = parts[3]; // Phần thứ ba là ID của giao dịch
+    @Transactional
+    public String processPayment(String amount, String bankCode, String responseCode, String orderInfo) throws Exception {
+        try {
 
 
-        Long orderId = Long.parseLong(orderIdStr);
-        Long tranId = Long.parseLong(transactionIdStr);
-        if (responseCode.equals("00")) {
-            if (type.equals("Order")) {
-                // Cập nhật trạng thái của đơn hàng và giao dịch
-                // (Đã giả sử rằng order và transaction có các phương thức tương ứng để cập nhật trạng thái)
-                Optional<Order> order1= orderRepository.findById(orderId);
-                Order existingOrder = order1.get();
-                existingOrder.setStatus(OrderStatus.CONFIRMED);
+            //cắt chuỗi orderInfo thành 3 phần Order/wallet  - id của đối tượng đó - transaction tương ứng
+            String[] parts = orderInfo.split("-");
 
-                Optional<Transaction> trans= transactionRepository.findById(tranId);
-                Transaction existingTrans = trans.get();
-                existingTrans.setStatus(OrderStatus.CONFIRMED);
+            String type = parts[0]; // Phần đầu tiên là loại đối tượng (Order hoặc Wallet)
+            String orderDetails = parts[1]; // Phần thứ hai là thông tin về đơn hàng
+            String IdStr = parts[2];
+            String transactionIdStr = parts[3]; // Phần thứ ba là ID của giao dịch
 
-                System.out.println("Cập nhật trạng thái đơn hàng và giao dịch thành CONFIRMED");
-            } else if (type.equals("Wallet")) {
-                //Nếu phần đầu là Wallet thì cập nhật  số dư = số dư + amount và cập nhật transaction là CONFIRMED
+            Long objectId = Long.parseLong(IdStr);
+            Long tranId = Long.parseLong(transactionIdStr);
+            if (responseCode.equals("00")) {
+
+                if (type.contains("Order")) {
+                    // Cập nhật trạng thái của đơn hàng và giao dịch
+                    // (Đã giả sử rằng order và transaction có các phương thức tương ứng để cập nhật trạng thái)
+                    Order existingOrder = orderRepository.findById(objectId).orElseThrow(
+                            () -> new DataNotFoundException("order id by payment not found! " + objectId)
+                    );
+                    //Order existingOrder = order1.get();
+                    existingOrder.setStatus(OrderStatus.CONFIRMED);
+
+                    Transaction existingTrans = transactionRepository.findById(tranId).orElseThrow(
+                            () -> new DataNotFoundException("transaction id by payment not found! " + tranId)
+                    );
+
+                    existingTrans.setResource(bankCode);
+                    existingTrans.setStatus(OrderStatus.CONFIRMED);
+
+                    orderRepository.save(existingOrder);
+                    transactionRepository.save(existingTrans);
+
+                    System.out.println("Cập nhật trạng thái đơn hàng và giao dịch thành CONFIRMED");
+                } else if (type.equals("Wallet")) {
+                    //Nếu phần đầu là Wallet thì cập nhật  số dư = số dư + amount và cập nhật transaction là CONFIRMED
+
+                }
+
+                System.out.println("Thanh toán thành công");
+                return "win"; // Redirect về trang FrontEnd
+                // https://orchid-shop-iota.vercel.app/
+                // http://localhost:3000/test-success?test=1
+
+            } else {
+                // Xử lý thất bại
+                System.out.println("Thanh toán thất bại");
+                return "fail";
             }
-
-            System.out.println("Thanh toán thành công");
-            return "win"; // Redirect về trang FrontEnd
-
-        } else {
-            // Xử lý thất bại
-            System.out.println("Thanh toán thất bại");
-            return "fail";
+        }catch (Exception e){
+            throw new Exception("Error at processPayment: " + e.getMessage());
         }
     }
 }
