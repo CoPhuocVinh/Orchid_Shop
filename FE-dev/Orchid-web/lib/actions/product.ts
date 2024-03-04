@@ -5,7 +5,7 @@ import { SearchParams } from "@/types/table";
 import { fetchListDataWithSearchParam } from "@/lib/generics";
 import { api } from "../api-interceptor/api";
 
-let BASE_URL = "https://orchid.fams.io.vn/api/v1";
+
 
 export async function getProducts(
   searchParams: SearchParams
@@ -16,9 +16,25 @@ export async function getProducts(
   return await fetchListDataWithSearchParam(url, searchParams);
 }
 
-export async function getProductByID(
+export async function getProductByIDToCreate(
   params: string
 ): Promise<{ data: IProductCreate | null }> {
+  noStore();
+  const url = `/products/${params}`;
+
+  try {
+    const res = await api.get(url);
+
+    return { data: res.data.payload };
+  } catch (error) {
+    return { data: null };
+  }
+
+  // return await fetchDataByID(url);
+}
+export async function getProductByID(
+  params: string
+): Promise<{ data: IProduct | null }> {
   noStore();
   const url = `/products/${params}`;
 
@@ -59,7 +75,7 @@ export async function updateProductDetail(
   try {
     await api.put(url, data);
 
-    revalidatePath("/dashboard/products");
+    revalidatePath(`/dashboard/products/${params}`);
   } catch (error) {
     console.log(error);
     throw error;

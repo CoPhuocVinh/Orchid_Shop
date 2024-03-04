@@ -243,7 +243,7 @@ function Sidebar({ handleActive }: any) {
                   </li>
                   <li>
                     <Link
-                      href="/dashboard/create-auction"
+                      href="/dashboard/auctions/create-auctions"
                       className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
                     >
                       Create auction

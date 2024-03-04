@@ -1,13 +1,13 @@
 'use client';
 
-import { topBoats } from '@/data/user-working-data/top-boats';
 import ListingCard from '../home/live-auction/live-auction-card';
 import Section from '@/components/platform/section';
 import SeeMore from '@/components/platform/see-more';
-import { useGetLiveAuction } from '@/lib/react-query/queries';
+import { useGetAuctionsWithStatus } from '@/lib/react-query/queries';
+import { AuctionStatus } from '@/types/dashboard';
 
 export default function RelatedListingBlock() {
-  const { data: liveAuction, isLoading: auctionLoading } = useGetLiveAuction();
+  const { data: liveAuction, isLoading: auctionLoading } = useGetAuctionsWithStatus(AuctionStatus.END);
 
   return (
     <Section
@@ -34,6 +34,7 @@ export default function RelatedListingBlock() {
           created_at= {item.created_at}
           updated_at= {item.updated_at}
           remindAt= {item.remindAt}
+          image_url={item.image_url}
         />
         ))}
       </div>

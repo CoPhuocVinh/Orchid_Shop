@@ -27,11 +27,10 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 
-import { ICategoryForm, IProductCreate } from "@/types/dashboard";
+import { ICategoryForm, IProduct, IProductCreate } from "@/types/dashboard";
 import ImageUpload from "@/components/image-cloudinary-upload/image-upload";
 import { Textarea } from "@/components/ui/textarea";
 
-import { api } from "@/lib/api-interceptor/api";
 import { toast } from "sonner";
 import { checkProductNameExits, createProduct, deleteProductByID, updateProductDetail} from "@/lib/actions";
 import { AlertModal } from "@/components/modal/alert-modal";
@@ -41,9 +40,9 @@ const formSchema = z.object({
   productName: z.string().min(1, { message: "Hãy nhập tên sản phẩm" }),
   quantity: z.coerce.number().min(1, { message: "Hãy nhập giá tiền" }),
   description: z.string().min(1, { message: "Hãy nhập mô tả" }),
-  category_id: z.string().min(1, { message: "Hãy chọn thể loại" }),
+  category_id: z.coerce.number().min(1, { message: "Hãy chọn thể loại" }),
   productImages: z
-    .object({ image_url: z.string() })
+    .object({ image_url: z.string() , image_code: z.string() })
     .array()
     .min(1, { message: "Hãy nhập ít nhất 1 ảnh" }),
 });
@@ -51,7 +50,7 @@ const formSchema = z.object({
 export type ProductFormValues = z.infer<typeof formSchema>;
 
 interface ProductFormProps {
-  initialData: IProductCreate | null;
+  initialData: IProduct | null;
   categories: ICategoryForm[];
 }
 
@@ -78,7 +77,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     ? initialData
     : {
         productName: "",
-        category_id: "",
+        category_id: 0,
         quantity: 0,
         productImages: [],
         description: "",
@@ -90,7 +89,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   });
 
   const onSubmit = async (data: ProductFormValues) => {
-    console.log(data);
+  console.log(data)
 
     // check productName
     const isProductNameExits = await checkProductNameExits(data.productName);
@@ -175,8 +174,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <ImageUpload
                     value={field.value.map((image) => image.image_url)}
                     disabled={isLoading}
-                    onChange={(image_url) =>
-                      field.onChange([...field.value, { image_url }])
+                    onChange={(image_url, image_code) =>
+                      field.onChange([...field.value, { image_url, image_code, }])
                     }
                     onRemove={(image_url) =>
                       field.onChange([
@@ -241,13 +240,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <Select
                     disabled={isLoading}
                     onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
+                    value={field.value.toString()}
+                    defaultValue={field.value.toString()}
                   >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue
-                          defaultValue={field.value}
+                          defaultValue={field.value.toString()}
                           placeholder="Lựa một mã phân loại"
                         />
                       </SelectTrigger>
@@ -256,7 +255,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       {categories.map((category) => (
                         <SelectItem
                           key={category.category_id}
-                          value={category.category_id}
+                          value={category.category_id.toString()}
                         >
                           <span>{category.type}</span>
                         </SelectItem>

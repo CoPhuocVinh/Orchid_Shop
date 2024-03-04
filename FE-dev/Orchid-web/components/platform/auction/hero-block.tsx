@@ -1,12 +1,17 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { VendorTypes } from '@/types/platform';
-import { Menu } from '@headlessui/react';
-import { HeartIcon, ShareIcon } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+
+import useCountdownTimer from "@/hooks/use-countdown-time";
+import { IAuction } from "@/types/dashboard";
+import { VendorTypes } from "@/types/platform";
+import { Menu } from "@headlessui/react";
+import { HeartIcon, ShareIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ListingDetailsHeroBlockProps {
   vendor: VendorTypes;
+  auction: IAuction | null;
 }
 
 // share icons
@@ -25,7 +30,6 @@ function ShareIcons() {
         className="!border-none !bg-gray-lightest !p-4 text-gray-dark hover:!bg-gray-dark hover:text-white"
         size="sm"
         variant="outline"
-        
       >
         <HeartIcon className="h-auto w-5" />
       </Button>
@@ -64,16 +68,35 @@ function ShareMenu() {
 
 export default function ListingDetailsHeroBlock({
   vendor,
+  auction,
 }: ListingDetailsHeroBlockProps) {
+  const startDate = auction?.startDate?.toString();
+  const endDate = auction?.endDate?.toString();
+
+  const countdownToStart = useCountdownTimer(startDate);
+  // const countdownToEnd = useCountdownTimer(endDate);
+
+  // console.log(countdownToStart)
+  // console.log(countdownToEnd)
   return (
     <div className="flex justify-between border-b border-gray-lighter pb-6 md:pb-8 2xl:pb-10">
       <div>
-        <p className="text-gray-dark">{vendor.location}</p>
-        {/* <Text
-          tag="h2"
-          className="mt-2 !text-2xl uppercase !leading-7 md:!text-[26px] md:!leading-10 2xl:!text-[28px] 4xl:!text-3xl"
-        > */}
-          {vendor.boatName}
+        <p className="text-gray-dark">{auction?.productName}</p>
+        {auction?.productCode} -
+        {countdownToStart && (
+          <span className="ml-2 text-red-500">
+            {countdownToStart.days} days {countdownToStart.hours} hours{" "}
+            {countdownToStart.minutes} minutes {countdownToStart.seconds}{" "}
+            seconds until start
+          </span>
+        )}
+        {/* {!countdownToStart && countdownToEnd && (
+          <span className="ml-2 text-red-500">
+            {countdownToEnd.days} days {countdownToEnd.hours} hours{" "}
+            {countdownToEnd.minutes} minutes {countdownToEnd.seconds} seconds
+            until end
+          </span>
+        )} */}
         {/* </Text> */}
         <div className="mt-3 flex items-center gap-2 leading-4 text-gray-dark md:mt-4">
           <p>{vendor.boatGuests} guests</p>

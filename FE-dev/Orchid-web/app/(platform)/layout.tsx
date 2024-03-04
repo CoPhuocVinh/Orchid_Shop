@@ -22,10 +22,13 @@ export const metadata: Metadata = {
   title: "Orchid platform",
   description: "Find your boat with the best experience.",
   icons: ["/images/logo.svg"],
-  viewport: { width: "device-width", initialScale: 1, maximumScale: 1 },
 };
 
-export default function RootLayout({ children }: React.PropsWithChildren<{}>) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"

@@ -12,7 +12,7 @@ export default function DestinationCard({
 }: DestinationTypes) {
   return (
     <Link
-      href={slug}
+      href='/auction'
       className="group/item relative flex aspect-auto h-[340px] w-full flex-col overflow-hidden rounded-xl lg:h-[380px] 2xl:h-[420px] 4xl:h-[500px]"
     >
       <Image

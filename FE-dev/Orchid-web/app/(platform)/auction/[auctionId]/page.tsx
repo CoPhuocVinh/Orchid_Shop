@@ -5,7 +5,11 @@ import LeftSideAuction from "@/components/platform/auction/left-side-auction";
 import ListingDetails from "@/components/platform/auction/listing-details-block";
 import RelatedListingBlock from "@/components/platform/auction/related-listings-block";
 import BreadCrumb from "@/components/platform/bread-crumb";
-const AuctionIdPage = ({ params }: { params: { auctionId: string } }) => {
+import { getAuctionByID } from "@/lib/actions";
+const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
+  const auction = await getAuctionByID(params.auctionId);
+  // console.log(auction.data?.productID)
+
   return (
     <>
       <BreadCrumb
@@ -17,10 +21,10 @@ const AuctionIdPage = ({ params }: { params: { auctionId: string } }) => {
 
       <div className="container-fluid w-full 3xl:!px-12 mt-10 mb-4">
         <div className="flex flex-col md:flex-row">
-          <LeftSideAuction />
+          <LeftSideAuction productId={auction.data?.productID!} />
 
           <div className="w-full md:w-3/5 h-[250px] md:pl-4">
-            <ListingDetails />
+            <ListingDetails auction={auction.data} />
           </div>
         </div>
 
@@ -31,32 +35,15 @@ const AuctionIdPage = ({ params }: { params: { auctionId: string } }) => {
               <TabsTrigger value="Bidding">Bidding history</TabsTrigger>
             </TabsList>
             <TabsContent value="description">
-              <h1 className="text-2xl font-bold mb-4">
-                How can have anything you want in life if you ?
-              </h1>
+              <h1 className="text-2xl font-bold mb-4">Mô tả chi tiết</h1>
 
               <p>
-                If you’ve been following the crypto space, you’ve likely heard
-                of Non-Fungible Tokens (Biddings), more popularly referred to as
-                ‘Crypto Collectibles.’ The world of Biddings is growing rapidly.
+                {auction.data?.description
+                  ? auction.data.description
+                  : "EOS hog có desc"}
               </p>
-
-              <ul className="">
-                <li>
-                  Amet consectetur adipisicing elit. Maxime reprehenderit
-                  quaerat, velit rem atque vel impedit! Expensive Design.
-                </li>
-                <li>
-                  Amet consectetur adipisicing elit. Maxime reprehenderit
-                  quaerat, velit rem atque vel impedit! Expensive Design.
-                </li>
-                <li>
-                  Amet consectetur adipisicing elit. Maxime reprehenderit
-                  quaerat, velit rem atque vel impedit! Expensive Design.
-                </li>
-              </ul>
             </TabsContent>
-            <TabsContent value="Bidding">contente 2</TabsContent>
+            <TabsContent value="Bidding">content 2</TabsContent>
           </Tabs>
         </div>
 

@@ -45,6 +45,7 @@
     "lucide-react": "^0.314.0",
     "moment": "^2.30.1",
     "next": "14.0.4",
+    "next-auth": "^5.0.0-beta.13",
     "next-cloudinary": "^6.0.1",
     "next-themes": "^0.2.1",
     "quilljs": "^0.18.1",

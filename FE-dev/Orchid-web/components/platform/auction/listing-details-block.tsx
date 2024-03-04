@@ -15,13 +15,16 @@ import { reviewsData } from '@/data/user-working-data/reviews';
 import { Button } from '@/components/ui/button';
 import ListingDetailsHeroBlock from './hero-block';
 import { Input } from '@/components/ui/input';
-
-export default function ListingDetails() {
+import { IAuction } from '@/types/dashboard';
+interface ListingDetailsProps {
+  auction : IAuction | null
+}
+export default function ListingDetails({auction}: ListingDetailsProps) {
   return (
     <>
       <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16">
         <div className="w-full">
-          <ListingDetailsHeroBlock vendor={vendorData.vendor} />
+          <ListingDetailsHeroBlock vendor={vendorData.vendor} auction={auction} />
           {/* <DescriptionBlock description={vendorData.description} />
           <EquipmentBlock equipment={vendorData.equipment} />
           <SpecificationBlock specifications={vendorData.specifications} />
