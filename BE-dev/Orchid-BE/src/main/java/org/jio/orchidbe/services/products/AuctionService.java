@@ -90,6 +90,7 @@ private OrderService orderService;
         productRepository.save(product);
         newAuction.setProductCode(product.getProductCode());
         newAuction.setProductName(product.getProductName());
+        newAuction.setProduct(product);
         newAuction.setStatus(Status.WAITING);
         auctionRepository.save(newAuction);
         auctionContainer.addAuction(newAuction);

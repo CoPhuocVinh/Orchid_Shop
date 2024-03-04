@@ -13,10 +13,13 @@ import java.util.List;
 @Component
 public interface AuctionMapper {
     //@Mapping(source = "isReject", target = "isReject")
+    @Mapping(source = "auction.product.id", target = "productID")
     AuctionResponse toResponse(Auction auction);
 
     @Mapping(target = "product", ignore = true)
     Auction toEntity(CreateAuctionResquest createAuctionResquest);
     List<AuctionResponse> toResponseList(List<Auction> auctions);
+
+
 }
 
