@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.models.BaseEntity;
-import org.jio.orchidbe.models.OrderStatus;
+import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
 
@@ -20,7 +20,7 @@ public class Transaction extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wallet_id")
-    private Wallet user;
+    private Wallet wallet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
@@ -48,6 +48,9 @@ public class Transaction extends BaseEntity {
 
     @Column(name = "transaction_code")
     private String transactionCode;
+
+    @Column(name = "failed_reason")
+    private String failedReason;
 
     @Column(name = "created_by", nullable = true)
     private String createdBy = "";

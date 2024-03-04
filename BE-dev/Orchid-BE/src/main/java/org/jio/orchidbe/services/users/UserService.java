@@ -19,6 +19,8 @@ import org.jio.orchidbe.mappers.users.UserMapper;
 import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
+import org.jio.orchidbe.models.wallets.Wallet;
+import org.jio.orchidbe.repositorys.products.WalletRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -42,6 +44,7 @@ public class UserService implements IUserService{
     final private UserRepository userRepository;
     final private UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final WalletRepository walletRepository;
     private final ValidatorUtil validatorUtil;
 
     @Override
@@ -67,6 +70,11 @@ public class UserService implements IUserService{
         // Kiểm tra nếu có accountId, không yêu cầu password
         try {
             userRepository.save(newUser);
+            Wallet walletUser = Wallet.builder()
+                    .user(newUser)
+                    .balance(0f)
+                    .build();
+            walletRepository.save(walletUser);
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException) {
                 // Xử lý trường hợp unique constraint violation

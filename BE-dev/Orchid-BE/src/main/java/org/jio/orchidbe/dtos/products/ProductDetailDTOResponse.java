@@ -28,6 +28,9 @@ public class ProductDetailDTOResponse {
     private String productCode;
     private int quantity;
     private String description;
+    private boolean actived;
+
+    private Long category_id;
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime createdAt;

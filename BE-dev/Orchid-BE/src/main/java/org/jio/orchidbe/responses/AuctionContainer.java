@@ -1,7 +1,7 @@
 package org.jio.orchidbe.responses;
 
 import org.jio.orchidbe.exceptions.DataNotFoundException;
-import org.jio.orchidbe.models.Status;
+import  org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.jio.orchidbe.models.Status.COMING;
-import static org.jio.orchidbe.models.Status.LIVE;
 
 @Component
 @Configuration

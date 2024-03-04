@@ -1,4 +1,4 @@
-package org.jio.orchidbe.dtos.dto_enum;/*  Welcome to Jio word
+package org.jio.orchidbe.enums;/*  Welcome to Jio word
     @author: Jio
     Date: 10/6/2023
     Time: 2:52 PM

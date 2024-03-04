@@ -7,11 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
-import org.jio.orchidbe.models.OrderStatus;
-import org.jio.orchidbe.models.Status;
-import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.orders.PaymentMethod;
-import org.jio.orchidbe.models.users.User;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +32,7 @@ public class OrderResponse {
     private Integer quantity;
     private String note;
     private Long auctionID;
-    private UserDTOResponse user;
+    //private UserDTOResponse user;
 
 
     @JsonProperty("created_at")
