@@ -63,7 +63,7 @@ public class Schedule {
     @Scheduled(fixedRate = 1000) // Run every 1 minute
     public void checkAuctionExpired() {
         LocalDateTime currentTime = LocalDateTime.now();
-        List<Auction> expiredAuctions = getWaitingAuctionsStartingAfter(currentTime, Status.WAITING);
+        List<Auction> expiredAuctions = getWaitingAuctionsStartingAt(currentTime, Status.WAITING);
 
         for (Auction auction : expiredAuctions) {
             auction.setStatus(Status.END);
@@ -74,10 +74,11 @@ public class Schedule {
         }
     }
 
-    private List<Auction> getWaitingAuctionsStartingAfter(LocalDateTime startTime, Status status) {
+    private List<Auction> getWaitingAuctionsStartingAt(LocalDateTime startTime, Status status) {
         return auctionContainer.getWaitingAuctions().stream()
-                .filter(auction -> auction.getStartDate().isAfter(startTime) && auction.getStatus() == status)
+                .filter(auction -> auction.getStartDate().isEqual(startTime) && auction.getStatus() == status)
                 .collect(Collectors.toList());
     }
+
 
 }
