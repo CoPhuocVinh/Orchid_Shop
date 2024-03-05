@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
+import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.models.auctions.Auction;
@@ -70,24 +71,6 @@ public class AuctionController {
             return auctionService.updateAuction(updateAuctionRequest, id, bindingResult);
 
     }
-    @DeleteMapping("delete-auction")
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-
-    public ResponseEntity<?> deleteAuction(
-            @Valid @RequestBody Long id,
-            BindingResult result
-    ) throws DataNotFoundException {
-        ApiResponse apiResponse = new ApiResponse();
-        if (result.hasErrors()) {
-            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-            return ResponseEntity.badRequest().body(apiResponse);
-        }
-
-        AuctionResponse newAuction = auctionService.deleteAuction(id);
-
-        apiResponse.ok(newAuction);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
 
     @GetMapping("list")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -130,6 +113,16 @@ public class AuctionController {
         ApiResponse apiResponse = new ApiResponse();
         AuctionResponse response = auctionService.getById(id);
         apiResponse.ok(response);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> DeleteById(@PathVariable Long id) throws DataNotFoundException {
+        ApiResponse apiResponse = new ApiResponse();
+        AuctionResponse response = auctionService.DeteleById(id);
+        apiResponse.ok(response);
+        apiResponse.setMessage("Delete successfully with auction id: " + id);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
