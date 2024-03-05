@@ -135,12 +135,12 @@ public class AuctionService implements IAuctionService {
         }
 
         Auction auction = auctionContainer.getAuctionById(id);
-
+        auctionContainer.removeOnAuctionListById(id);
+        auctionContainer.removeOnStatusLists(auction);
         try {
             if(updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null){
                 throw  new BadRequestException("Fill the reason reject");
             }
-
             // Update auction fields
             ReflectionUtils.doWithFields(updateAuctionRequest.getClass(), field -> {
                 field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
@@ -154,31 +154,23 @@ public class AuctionService implements IAuctionService {
                     }
                 }
             });
-
             // Handle status updates
             if (updateAuctionRequest.getStatus() == null) {
                 // Xử lý việc cập nhật trạng thái dựa trên các trường khác
                 if (updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null) {
-                    if (auction.isRejected() && !auction.isApproved()) {
+                    if (auction.isRejected()) {
                         auctionContainer.removeAuctionFromList(auction, Status.WAITING);
                         auction.setStatus(Status.END);
                     } else if (auction.isApproved() && !auction.isRejected()) {
-
                         auction.setStatus(Status.COMING);
-                        auctionContainer.removeAuctionFromList(auction, Status.WAITING);
-                        auctionContainer.moveAuctionToList(auction, Status.COMING);
-                    } else if (auction.isRejected() && auction.isApproved()) {
-                        auctionContainer.removeAuctionFromList(auction, Status.WAITING);
-                        auction.setStatus(Status.END);
                     }
                 }
             } else if (updateAuctionRequest.getStatus().equals(Status.LIVE)) {
-                auctionContainer.moveAuctionToList(auction, Status.LIVE);
-                auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+
                 auction.setStatus(Status.LIVE);
 
             } else if (updateAuctionRequest.getStatus().equals(Status.END)) {
-                auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+
                 auction.setStatus(Status.END);
             }
             auctionRepository.save(auction);
