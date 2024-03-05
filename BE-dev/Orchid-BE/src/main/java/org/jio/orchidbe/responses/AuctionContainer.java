@@ -79,27 +79,7 @@ public class AuctionContainer {
     }
 
     public void moveAuctionToList(Auction auction, Status newStatus) {
-        // Remove auction from its current list based on its current status
-        switch (auction.getStatus()) {
-            case WAITING:
-                if (waitingAuctions.contains(auction)) {
-                    waitingAuctions.remove(auction);
-                }
-                break;
-            case COMING:
-                comingAuctions.remove(auction);
-                break;
-            case LIVE:
-                liveAuctions.remove(auction);
-                break;
-            default:
-                break;
-        }
-
-        // Update auction status
         auction.setStatus(newStatus);
-
-        // Add auction to the new list based on the new status
         switch (newStatus) {
             case WAITING:
                 waitingAuctions.add(auction);
@@ -116,18 +96,6 @@ public class AuctionContainer {
     }
     public List<Auction> getAuctions() {
         return auctions;
-    }
-
-    public void setAuctions(List<Auction> auctions) {
-        this.auctions = auctions;
-        // Clear existing lists
-        waitingAuctions.clear();
-        comingAuctions.clear();
-        liveAuctions.clear();
-        // Rebuild lists
-        for (Auction auction : auctions) {
-            updateAuctionLists(auction);
-        }
     }
 
     public List<Auction> getWaitingAuctions() {

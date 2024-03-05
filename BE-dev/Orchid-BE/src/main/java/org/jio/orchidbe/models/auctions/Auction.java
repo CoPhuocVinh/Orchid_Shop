@@ -82,6 +82,9 @@ public class Auction extends BaseEntity {
    @Column(name = "bidding_price")
    private Float biddingPrice;
 
+    @Column(name = "description")
+    private String description;
+
     //
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

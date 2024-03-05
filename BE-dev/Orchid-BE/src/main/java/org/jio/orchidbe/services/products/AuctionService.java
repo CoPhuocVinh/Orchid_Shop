@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.repositorys.products.BidRepository;
@@ -50,7 +51,6 @@ import java.util.stream.Collectors;
 public class AuctionService implements IAuctionService {
     @Autowired
     private AuctionRepository auctionRepository;
-
     @Autowired
     private ValidatorUtil validatorUtil;
     @Autowired
@@ -59,8 +59,8 @@ public class AuctionService implements IAuctionService {
     private ProductRepository productRepository;
     @Autowired
     private BidRepository bidRepository;
-@Autowired
-private OrderService orderService;
+    @Autowired
+    private OrderService orderService;
     @Autowired
     private AuctionContainer auctionContainer;
 
@@ -90,6 +90,7 @@ private OrderService orderService;
         productRepository.save(product);
         newAuction.setProductCode(product.getProductCode());
         newAuction.setProductName(product.getProductName());
+        newAuction.setDescription(product.getDescription());
         newAuction.setProduct(product);
         newAuction.setStatus(Status.WAITING);
         auctionRepository.save(newAuction);
@@ -106,27 +107,12 @@ private OrderService orderService;
         }
     }
 
-//    public void setRemindAtBeforeStartDate(Auction auction) {
-//        if (auction.getStartDate() != null) {
-//            LocalDateTime remindAt = auction.getStartDate().minus(12, ChronoUnit.HOURS);
-//            auction.setRemindAt(remindAt);
-//        }
-//    }
-    @Override
-    public List<AuctionResponse> getAllAuctionsFromContainer() {
-        return auctionContainer.getAuctions().stream()
-                .map(auctionMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
 
     @Override
     public Page<AuctionResponse> getAllAuctions(GetAllAuctionResquest request) {
         return auctionRepository.findAll(request.getSpecification(), request.getPageable())
                 .map(auctionMapper::toResponse);
     }
-
-
 
 
     @Override
@@ -205,13 +191,6 @@ private OrderService orderService;
     }
 
 
-//    public void validateAuction(String productName) throws BadRequestException {
-//        if (auctionRepository.existsAuctionByProductName(productName)) {
-//            throw new BadRequestException("Auction with " + productName + " is existed");
-//        }
-//    }
-
-
     @Override
     public AuctionResponse deleteAuction(Long  id) throws DataNotFoundException {
         Optional<Auction> aution = auctionRepository.findById(id);
@@ -239,30 +218,10 @@ private OrderService orderService;
         }
     }
 
-
-    private Auction findAuctionById(long auctionID) throws DataNotFoundException {
-        List<Auction> allAuctions = auctionContainer.getAuctions();
-        for (Auction auction : allAuctions) {
-            if (auction.getId() == auctionID) {
-                return auction;
-            }
-        }
-        throw new DataNotFoundException("Cannot find auction with ID: " + auctionID);
-
-    }
-    @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
-    public void checkAuctionEndings() throws DataNotFoundException {
-        LocalDateTime currentTime = LocalDateTime.now();
-        List<Auction> auctions = getAuctionsEndingBefore(currentTime, Status.LIVE);
-
-        for (Auction auction : auctions) {
-            // Truyền số lượng vào phương thức endAuction
-            endAuction(auction.getId(), auction.getQuantity());
-        }
-    }
     @Override
     public void endAuction(long auctionID, int quantity) throws DataNotFoundException {
-        Auction auction = findAuctionById(auctionID);
+        Optional<Auction> auction1 = auctionRepository.findById(auctionID);
+        Auction auction = auction1.get();
 
         Bid bid = bidRepository.findByTop1TrueAndAuction_Id(auctionID);
         if (auction.getStatus() == Status.LIVE) {
@@ -292,33 +251,15 @@ private OrderService orderService;
         }
     }
 
-    private List<Auction> getAuctionsEndingBefore(LocalDateTime endTime, Status status) {
-        return auctionContainer.getLiveAuctions().stream()
-                .filter(auction -> auction.getEndDate().isBefore(endTime) && auction.getStatus() == status)
-                .collect(Collectors.toList());
-    }
-    @Scheduled(fixedRate = 10000) // Run every 1 minute
-    public void checkAuctionStatus() {
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        // Get auctions whose startDate is close to the current time and status is PENDING
-        List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
-
-        for (Auction auction : pendingAuctions) {
-            // If the auction's startDate is near the current time, update its status to LIVE
-            auction.setStatus(Status.LIVE);
-//            auctionContainer.getComingAuctions().remove(auction);
-//            auctionContainer.getLiveAuctions().add(auction);
-            auctionContainer.moveAuctionToList(auction, Status.LIVE);
-            auctionRepository.save(auction);
-        }
-    }
-
-
-    private List<Auction> getPendingAuctionsStartingAfter(LocalDateTime startTime, Status status) {
-        return auctionContainer.getComingAuctions().stream()
-                .filter(auction -> auction.getStartDate().isAfter(startTime) && auction.getStatus() == status)
-                .collect(Collectors.toList());
+    @Override
+    @Transactional
+    public AuctionResponse DeteleById(Long id) throws DataNotFoundException {
+        Auction auction = auctionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found user_controller.")
+        );
+        auction.setDeleted(true);
+        AuctionResponse response = auctionMapper.toResponse(auction);
+        return response;
     }
 
 
