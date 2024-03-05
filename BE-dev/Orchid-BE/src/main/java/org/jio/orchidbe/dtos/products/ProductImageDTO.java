@@ -25,7 +25,7 @@ public class ProductImageDTO {
     @JsonProperty("image_code")
     private String imageCode;
 
-    @JsonProperty("is_deleted")
-    private Boolean deleted;
+   /* @JsonProperty("is_deleted")
+    private Boolean deleted;*/
 
 }

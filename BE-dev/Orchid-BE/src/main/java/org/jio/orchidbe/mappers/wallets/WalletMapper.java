@@ -7,7 +7,7 @@ package org.jio.orchidbe.mappers.wallets;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
-import org.jio.orchidbe.dtos.Wallet.WalletDTOResponse;
+import org.jio.orchidbe.dtos.wallets.WalletDTOResponse;
 import org.jio.orchidbe.models.wallets.Wallet;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

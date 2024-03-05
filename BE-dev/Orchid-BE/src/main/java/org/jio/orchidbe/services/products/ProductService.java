@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -130,37 +131,44 @@ public class ProductService implements IProductService {
             if (request.getProductImages() != null &&
                     !request.getProductImages().isEmpty()
             ) {
-                List<ProductImage> imageList = new ArrayList<>();
+                List<ProductImage> imageList = productImageRepository.findByProduct_Id(id);
+                List<String> codeList = new ArrayList<>();
+                List<ProductImage> saveImgList = new ArrayList<>();
                 request.getProductImages().forEach(img -> {
+                    codeList.add(img.getImageCode());
                     Optional<ProductImage> entity = productImageRepository.findByImageCode(img.getImageCode());
-                    if (img.getDeleted() != null &&
-                            img.getDeleted() == true && entity.isPresent()) {
-                        productImageRepository.delete(entity.get());
+
+                    if (!entity.isPresent()) {
+                        ProductImage newImg = productImageMapper.toEntity(img);
+                        newImg.setProduct(ob);
+                        saveImgList.add(
+                                newImg
+                        );
                     } else {
-                        if (!entity.isPresent()) {
-                            ProductImage newImg = productImageMapper.toEntity(img);
-                            newImg.setProduct(ob);
-                            imageList.add(
-                                    newImg
-                            );
-                        } else {
-                            ProductImage newImg = entity.get();
-                            if(img.getImageCode()!= null){
-                                newImg.setImageCode(img.getImageCode());
-                            }
-
-                            if(img.getImageUrl()!= null){
-                                newImg.setImageUrl(img.getImageUrl());
-                            }
-
-                            imageList.add(newImg);
+                        ProductImage newImg = entity.get();
+                        if(img.getImageCode()!= null){
+                            newImg.setImageCode(img.getImageCode());
                         }
+
+                        if(img.getImageUrl()!= null){
+                            newImg.setImageUrl(img.getImageUrl());
+                        }
+
+                        saveImgList.add(newImg);
                     }
 
-
                 });
-                productImageRepository.saveAll(imageList);
-                ob.setProductImages(imageList);
+
+                List<ProductImage> deleteImgList =  imageList.stream()
+                        .filter(img -> !codeList.contains(img.getImageCode()))
+                        .collect(Collectors.toList());
+
+
+                productImageRepository.deleteAll(deleteImgList);
+
+
+                productImageRepository.saveAll(saveImgList);
+                ob.setProductImages(saveImgList);
             }
 
             productDTOResponse = productMapper.toResponseDetails(ob);
