@@ -69,7 +69,7 @@ const CheckoutForm = () => {
     // Gọi API để lấy danh sách quận, huyện dựa trên tỉnh, thành phố đã chọn
     axios
       .get(
-        `https://provinces.open-api.vn/api/p/${selectedProvinceCode}?depth=2`
+        `https://vapi.vnappmob.com/api/province/district/${selectedProvinceCode}`
       )
       .then((response) => {
         setDistricts(response.data.districts);

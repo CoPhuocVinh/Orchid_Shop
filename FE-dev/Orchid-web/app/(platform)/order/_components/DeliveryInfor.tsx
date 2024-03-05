@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import GetListProvince from "./_lib_component/GetListProvince";
 import { Input } from "@/components/ui/input";
+import GetApi_Province from "./_lib_component/GetApi_Province";
 function DeliveryInfor() {
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -89,22 +90,9 @@ function DeliveryInfor() {
                   Province
                 </label>
 
-                <GetListProvince />
+                <GetApi_Province />
               </div>
-              <div className="grid gap-2  mt-8 ">
-                <label
-                  htmlFor="Ward"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Ward
-                </label>
-                <Input
-                  id="Ward"
-                  value={ward}
-                  placeholder="Enter your Ward"
-                  onChange={(e) => setWard(e.target.value)}
-                />
-              </div>
+
               <div>
                 <label className="block text-gray-700 font-bold mb-2  mt-8 ">
                   Delivery
