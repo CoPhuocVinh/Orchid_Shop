@@ -30,6 +30,10 @@ public class ProductImage extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(name = "image_code", length = 300)
+    @JsonProperty("image_code")
+    private String imageCode;
+
 
     @Column(name = "image_url", length = 300)
     @JsonProperty("image_url")

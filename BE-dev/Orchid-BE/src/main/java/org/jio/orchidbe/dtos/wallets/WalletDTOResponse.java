@@ -1,4 +1,4 @@
-package org.jio.orchidbe.dtos.Wallet;/*  Welcome to Jio word
+package org.jio.orchidbe.dtos.wallets;/*  Welcome to Jio word
     @author: Jio
     Date: 3/3/2024
     Time: 11:29 PM
@@ -24,6 +24,5 @@ public class WalletDTOResponse {
 
     private Long userId;
     private Long id;
-
     private Float balance;
 }

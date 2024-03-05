@@ -18,7 +18,7 @@ public interface IProductService {
 
     Page<ProductDTOResponse> getAllProduct(GetAllPoductDTORequest getAllPoductDTORequest);
 
-    ProductDTOResponse update(Long id, ProductDTORequest request, BindingResult result) throws DataNotFoundException;
+    ProductDetailDTOResponse update(Long id, ProductDTORequest request, BindingResult result) throws DataNotFoundException;
 
     ProductDetailDTOResponse getById(Long id) throws DataNotFoundException;
 

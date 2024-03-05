@@ -8,6 +8,8 @@ package org.jio.orchidbe.dtos.products;/*  Welcome to Jio word
 */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -16,7 +18,14 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ProductImageDTO {
+    @NotBlank(message = "url is required")
     @JsonProperty("image_url")
     private String imageUrl;
+    @NotBlank(message = "code is required")
+    @JsonProperty("image_code")
+    private String imageCode;
+
+   /* @JsonProperty("is_deleted")
+    private Boolean deleted;*/
 
 }

@@ -41,7 +41,19 @@ public class AuctionContainer {
         throw new DataNotFoundException(
                 "Cannot find auction with id: " + id);
     }
+
+    public Boolean removeOnAuctionListById(Long id) throws DataNotFoundException {
+        for (Auction auction : auctions) {
+            if (auction.getId().equals(id)) {
+                auctions.remove(auction);
+                return true;
+            }
+        }
+        throw new DataNotFoundException(
+                "Cannot find auction with id: " + id);
+    }
     public void removeAuctionFromList(Auction auction, Status statusToRemoveFrom) {
+
         switch (statusToRemoveFrom) {
             case WAITING:
                 if (waitingAuctions.contains(auction)) {
@@ -72,6 +84,22 @@ public class AuctionContainer {
                 break;
             case LIVE:
                 liveAuctions.add(auction);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void removeOnStatusLists(Auction auction) {
+        switch (auction.getStatus()) {
+            case WAITING:
+                waitingAuctions.remove(auction);
+                break;
+            case COMING:
+                comingAuctions.remove(auction);
+                break;
+            case LIVE:
+                liveAuctions.remove(auction);
                 break;
             default:
                 break;

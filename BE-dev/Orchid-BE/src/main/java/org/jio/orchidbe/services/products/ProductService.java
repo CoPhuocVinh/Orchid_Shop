@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.dtos.products.*;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
+import org.jio.orchidbe.mappers.products.ProductImageMapper;
 import org.jio.orchidbe.mappers.products.ProductMapper;
 import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.products.Product;
@@ -30,7 +31,11 @@ import org.springframework.validation.BindingResult;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +44,8 @@ public class ProductService implements IProductService {
     private final ProductMapper productMapper;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;
+    private final ProductImageMapper productImageMapper;
+
     @Override
     public ProductDetailDTOResponse createProduct(@Valid ProductDTOCreateRequest productDTORequest) throws DataNotFoundException {
         Category existingCategory = categoryRepository
@@ -86,11 +93,11 @@ public class ProductService implements IProductService {
 
     @Override
     @Transactional
-    public ProductDTOResponse update(Long id, ProductDTORequest request, BindingResult result) throws DataNotFoundException {
+    public ProductDetailDTOResponse update(Long id, ProductDTORequest request, BindingResult result) throws DataNotFoundException {
         Product ob = productRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found Product by id : ." + id)
         );
-        ProductDTOResponse productDTOResponse = null;
+        ProductDetailDTOResponse productDTOResponse = null;
         try {
             // đổ data theo field
             ReflectionUtils.doWithFields(request.getClass(), field -> {
@@ -98,16 +105,73 @@ public class ProductService implements IProductService {
                 Object newValue = field.get(request);
                 if (newValue != null) { // lấy các giá trị ko null
                     String fieldName = field.getName();
-                    Field existingField = ReflectionUtils.findField(ob.getClass(), fieldName);
-                    if (existingField != null) {
-                        existingField.setAccessible(true);
-                        ReflectionUtils.setField(existingField, ob, newValue);
+
+                    if (!fieldName.equals("productImages")) {
+                        Field existingField = ReflectionUtils.findField(ob.getClass(), fieldName);
+                        if (existingField != null) {
+                            existingField.setAccessible(true);
+                            ReflectionUtils.setField(existingField, ob, newValue);
+                        }
                     }
+
 
                 }
             });
 
-            productDTOResponse = productMapper.toResponse(ob);
+            if (request.getCategoryId() != null && request.getCategoryId() >= 0) {
+                Category existingCategory = categoryRepository
+                        .findById(request.getCategoryId())
+                        .orElseThrow(() ->
+                                new DataNotFoundException(
+                                        "Cannot find category with id: " + request.getCategoryId()));
+
+                ob.setCategory(existingCategory);
+            }
+
+            if (request.getProductImages() != null &&
+                    !request.getProductImages().isEmpty()
+            ) {
+                List<ProductImage> imageList = productImageRepository.findByProduct_Id(id);
+                List<String> codeList = new ArrayList<>();
+                List<ProductImage> saveImgList = new ArrayList<>();
+                request.getProductImages().forEach(img -> {
+                    codeList.add(img.getImageCode());
+                    Optional<ProductImage> entity = productImageRepository.findByImageCode(img.getImageCode());
+
+                    if (!entity.isPresent()) {
+                        ProductImage newImg = productImageMapper.toEntity(img);
+                        newImg.setProduct(ob);
+                        saveImgList.add(
+                                newImg
+                        );
+                    } else {
+                        ProductImage newImg = entity.get();
+                        if(img.getImageCode()!= null){
+                            newImg.setImageCode(img.getImageCode());
+                        }
+
+                        if(img.getImageUrl()!= null){
+                            newImg.setImageUrl(img.getImageUrl());
+                        }
+
+                        saveImgList.add(newImg);
+                    }
+
+                });
+
+                List<ProductImage> deleteImgList =  imageList.stream()
+                        .filter(img -> !codeList.contains(img.getImageCode()))
+                        .collect(Collectors.toList());
+
+
+                productImageRepository.deleteAll(deleteImgList);
+
+
+                productImageRepository.saveAll(saveImgList);
+                ob.setProductImages(saveImgList);
+            }
+
+            productDTOResponse = productMapper.toResponseDetails(ob);
 
 
         } catch (OptimisticLockingFailureException ex) {
@@ -131,7 +195,7 @@ public class ProductService implements IProductService {
         Product entity = productRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found .")
         );
-        if (entity.isDeleted() == true){
+        if (entity.isDeleted() == true) {
             throw new DataNotFoundException("Is deteted.");
         }
         ProductDetailDTOResponse response = productMapper.toResponseDetails(entity);

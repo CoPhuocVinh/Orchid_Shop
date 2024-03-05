@@ -9,11 +9,9 @@ package org.jio.orchidbe.controller.payments;/*  Welcome to Jio word
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.jio.orchidbe.dtos.Wallet.WalletDTORequest;
-import org.jio.orchidbe.dtos.Wallet.WalletDTOResponse;
+import org.jio.orchidbe.dtos.wallets.WalletDTORequest;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
-import org.jio.orchidbe.dtos.users.UserDTORequest;
-import org.jio.orchidbe.dtos.users.UserDTOResponse;
+import org.jio.orchidbe.dtos.wallets.WalletDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.services.products.IWallerService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -25,12 +23,12 @@ import org.springframework.web.bind.annotation.*;
 import java.io.UnsupportedEncodingException;
 
 @RestController
-@RequestMapping("${api.prefix}/wallet")
+@RequestMapping("${api.prefix}/wallets")
 @RequiredArgsConstructor
 public class WalletController {
     private final ValidatorUtil validatorUtil;
     private final IWallerService wallerService;
-    @PostMapping("/recharge-wallet/{id}")
+    @PostMapping("/recharge-wallet-by-userId/{id}")
     public ResponseEntity<?> rechargeWallet(
             @PathVariable Long id,
             @Valid @RequestBody WalletDTORequest dto,
@@ -47,4 +45,15 @@ public class WalletController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
 
     }
+
+    //get balance
+    @GetMapping("/get-balance-by-userId/{id}")
+    public ResponseEntity<?> getBalanceByUserId(@PathVariable Long id) throws DataNotFoundException {
+        ApiResponse apiResponse = new ApiResponse();
+        WalletDTOResponse response = wallerService.getBalanceByUserId(id);
+        apiResponse.ok(response);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+
 }

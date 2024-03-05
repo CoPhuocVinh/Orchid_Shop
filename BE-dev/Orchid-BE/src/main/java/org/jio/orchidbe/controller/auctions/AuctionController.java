@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 import org.jio.orchidbe.dtos.products.ProductDTOResponse;
 import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
@@ -123,6 +124,16 @@ public class AuctionController {
         AuctionResponse response = auctionService.DeteleById(id);
         apiResponse.ok(response);
         apiResponse.setMessage("Delete successfully with auction id: " + id);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    // register
+    @PostMapping("/register-by-autionId/{id}")
+    public ResponseEntity<?> registerAuctionById(@PathVariable Long id,
+        @Valid @RequestBody RegisterAuctionDTO dto) throws DataNotFoundException {
+        ApiResponse apiResponse = new ApiResponse();
+        Boolean response = auctionService.registerAuction(id,dto);
+        apiResponse.ok(response);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

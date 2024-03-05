@@ -4,10 +4,15 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.models.auctions.Bid;
+import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.models.wallets.Wallet;
 import org.jio.orchidbe.repositorys.products.BidRepository;
+import org.jio.orchidbe.repositorys.products.WalletRepository;
+import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.responses.AuctionContainer;
@@ -39,6 +44,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
@@ -63,8 +69,11 @@ public class AuctionService implements IAuctionService {
     private OrderService orderService;
     @Autowired
     private AuctionContainer auctionContainer;
+    @Autowired
+    private UserRepository userRepository;
 
-
+    @Autowired
+    private WalletRepository walletRepository;
 
     @Override
     public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
@@ -126,12 +135,12 @@ public class AuctionService implements IAuctionService {
         }
 
         Auction auction = auctionContainer.getAuctionById(id);
-
+        auctionContainer.removeOnAuctionListById(id);
+        auctionContainer.removeOnStatusLists(auction);
         try {
             if(updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null){
                 throw  new BadRequestException("Fill the reason reject");
             }
-
             // Update auction fields
             ReflectionUtils.doWithFields(updateAuctionRequest.getClass(), field -> {
                 field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
@@ -145,31 +154,23 @@ public class AuctionService implements IAuctionService {
                     }
                 }
             });
-
             // Handle status updates
             if (updateAuctionRequest.getStatus() == null) {
                 // Xử lý việc cập nhật trạng thái dựa trên các trường khác
                 if (updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null) {
-                    if (auction.isRejected() && !auction.isApproved()) {
+                    if (auction.isRejected()) {
                         auctionContainer.removeAuctionFromList(auction, Status.WAITING);
                         auction.setStatus(Status.END);
                     } else if (auction.isApproved() && !auction.isRejected()) {
-
                         auction.setStatus(Status.COMING);
-                        auctionContainer.removeAuctionFromList(auction, Status.WAITING);
-                        auctionContainer.moveAuctionToList(auction, Status.COMING);
-                    } else if (auction.isRejected() && auction.isApproved()) {
-                        auctionContainer.removeAuctionFromList(auction, Status.WAITING);
-                        auction.setStatus(Status.END);
                     }
                 }
             } else if (updateAuctionRequest.getStatus().equals(Status.LIVE)) {
-                auctionContainer.moveAuctionToList(auction, Status.LIVE);
-                auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+
                 auction.setStatus(Status.LIVE);
 
             } else if (updateAuctionRequest.getStatus().equals(Status.END)) {
-                auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+
                 auction.setStatus(Status.END);
             }
             auctionRepository.save(auction);
@@ -209,6 +210,32 @@ public class AuctionService implements IAuctionService {
             AuctionResponse response = auctionMapper.toResponse(auction);
             return response;
 
+    }
+
+    @Override
+    public Boolean registerAuction(Long id, RegisterAuctionDTO dto) throws DataNotFoundException {
+
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(
+                () -> new DataNotFoundException("Not found user_controller.")
+        );
+
+        Wallet wallet = walletRepository.findByUser_Id(user.getId()).orElseThrow(
+                () -> new DataNotFoundException("Not found wallet.")
+        );
+
+        Auction auction = auctionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found auction.")
+        );
+
+        if (wallet.getBalance() >= auction.getDepositPrice()){
+            Float newBalance = wallet.getBalance() - auction.getDepositPrice();
+            wallet.setBalance(newBalance) ;
+            walletRepository.save(wallet);
+        }else {
+            throw new NotAcceptableStatusException("Insufficient balance in wallet.");
+        }
+
+        return true;
     }
 
 

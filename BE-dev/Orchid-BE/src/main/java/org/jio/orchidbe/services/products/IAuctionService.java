@@ -2,6 +2,7 @@ package org.jio.orchidbe.services.products;
 
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
+import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.requests.Request;
@@ -30,4 +31,6 @@ public interface IAuctionService {
     AuctionResponse deleteAuction(Long id) throws DataNotFoundException;
 
     AuctionResponse getById(Long id) throws DataNotFoundException;
+
+    Boolean registerAuction(Long id, RegisterAuctionDTO dto) throws DataNotFoundException;
 }
