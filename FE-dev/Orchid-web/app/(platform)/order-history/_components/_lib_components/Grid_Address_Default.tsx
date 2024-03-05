@@ -152,7 +152,7 @@ function Grid_Address_Default() {
               <label
                 className=" bg-white relative inline-flex items-center 
               justify-center gap-2 text-sm font-medium
-                 h-9 rounded-md px-3 border border-red-500 text-red-600"
+                 h-9 rounded-md px-3 border border-gray-500 text-gray-500"
               >
                 Mặc định
               </label>
@@ -196,7 +196,7 @@ function Grid_Address_Default() {
               <label
                 className=" bg-white relative inline-flex items-center 
               justify-center gap-2 text-sm font-medium
-                 h-9 rounded-md px-3 border border-red-500 text-red-600"
+                 h-9 rounded-md px-3 border border-gray-500 text-gray-500"
               >
                 Mặc định
               </label>
