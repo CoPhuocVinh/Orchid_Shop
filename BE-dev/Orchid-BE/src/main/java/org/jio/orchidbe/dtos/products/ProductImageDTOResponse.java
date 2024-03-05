@@ -19,4 +19,8 @@ public class ProductImageDTOResponse {
     private Long id;
     @JsonProperty("image_url")
     private String imageUrl;
+
+
+    @JsonProperty("image_code")
+    private String imageCode;
 }

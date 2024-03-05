@@ -36,5 +36,5 @@ public class ProductDTOCreateRequest {
 
     private boolean active = true;
 
-    private List<ProductImageDTO> productImages;
+    private List<ProductImageDTOCreate> productImages;
 }

@@ -73,7 +73,7 @@ public class ProductController {
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
-        ProductDTOResponse updated = productService.update(id,request,result);
+        ProductDetailDTOResponse updated = productService.update(id,request,result);
         apiResponse.ok( updated);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
