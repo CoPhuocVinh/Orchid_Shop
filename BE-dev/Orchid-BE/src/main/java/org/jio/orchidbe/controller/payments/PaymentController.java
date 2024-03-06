@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.configs.PaymentConfig;
+import org.jio.orchidbe.services.products.IPaymentService;
 import org.jio.orchidbe.services.products.PaymentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    private final PaymentService paymentService;
+    private final IPaymentService paymentService;
 
     @GetMapping("/create_payment")
     public String payment(HttpSession session, HttpServletResponse response

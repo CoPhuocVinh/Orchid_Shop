@@ -1,5 +1,6 @@
 package org.jio.orchidbe.services.products;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
@@ -26,6 +27,7 @@ import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
+import org.jio.orchidbe.responses.OrderContainer;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.jio.orchidbe.utils.GenerateCodeUtils;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -40,6 +42,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,7 +65,17 @@ public class OrderService implements IOrderService {
     @Autowired
     private WalletRepository walletRepository;
     @Autowired
-    private PaymentService paymentService;
+    private IPaymentService paymentService;
+    @Autowired
+    private OrderContainer orderContainer;
+
+    @PostConstruct
+    public void initializeOrders() {
+        List<Order> pendingOrders = orderRepository.findByStatus(OrderStatus.PENDING);
+        for (Order order : pendingOrders) {
+            orderContainer.addOrder(order);
+        }
+    }
 
 
     public OrderResponse createOrder(CreateOrderRequest createOrderRequest) throws DataNotFoundException, BadRequestException {
@@ -315,6 +328,8 @@ public class OrderService implements IOrderService {
         orderRepository.save(existingOrder);
         return orderMapper.toResponse(existingOrder);
     }
+
+
 
 
 //    public void validateOrder(String auctionTitle) throws BadRequestException {

@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class PaymentService {
+public class PaymentService implements IPaymentService{
 
     @Autowired
     private OrderRepository orderRepository;
@@ -33,6 +33,7 @@ public class PaymentService {
     @Autowired
     private WalletRepository walletRepository;
 
+    @Override
     public String createPayment(Float total, String context, Long id) throws UnsupportedEncodingException {
         String orderType = "billpayment";
 
@@ -91,6 +92,7 @@ public class PaymentService {
         return paymentUrl;
     }
 
+    @Override
     @Transactional
     public String processPayment(String amount, String bankCode,
                                  String responseCode, String orderInfo, String bankTranNo,
@@ -225,6 +227,7 @@ public class PaymentService {
             throw new Exception("Error at processPayment: " + e.getMessage());
         }
     }
+
 
     private String failed(HttpServletResponse response, String msg,Transaction transaction, String bankTranNo) throws IOException {
         transaction.setStatus(OrderStatus.FAILED);

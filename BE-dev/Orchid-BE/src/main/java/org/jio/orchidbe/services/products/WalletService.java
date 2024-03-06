@@ -27,7 +27,7 @@ public class WalletService implements IWallerService {
     @Autowired
     private WalletRepository walletRepository;
     @Autowired
-    private PaymentService paymentService;
+    private IPaymentService paymentService;
     @Autowired
     private UserRepository userRepository;
     @Autowired

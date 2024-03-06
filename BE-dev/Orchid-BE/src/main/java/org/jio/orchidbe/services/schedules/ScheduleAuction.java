@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class Schedule {
+public class ScheduleAuction {
     @Autowired
     private AuctionContainer auctionContainer;
     @Autowired
@@ -25,18 +25,18 @@ public class Schedule {
 
 
 //    @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
-//    public void checkAuctionEndings() throws DataNotFoundException {
-//        LocalDateTime currentTime = LocalDateTime.now();
-//        List<Auction> auctions = getAuctionsEndingBefore(currentTime, Status.LIVE);
-//
-//        for (Auction auction : auctions) {
-//            // Truyền số lượng vào phương thức endAuction
-//            auctionService.endAuction(auction.getId(), auction.getQuantity());
-//        }
-//    }
+    public void checkAuctionEndings() throws DataNotFoundException {
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<Auction> auctions = getAuctionsEndingBefore(currentTime, Status.LIVE);
+
+        for (Auction auction : auctions) {
+            // Truyền số lượng vào phương thức endAuction
+            auctionService.endAuction(auction.getId(), auction.getQuantity());
+        }
+    }
     private List<Auction> getAuctionsEndingBefore(LocalDateTime endTime, Status status) {
         return auctionContainer.getLiveAuctions().stream()
-                .filter(auction -> auction.getEndDate().isBefore(endTime) && auction.getStatus() == status)
+                .filter(auction -> endTime.isAfter(auction.getEndDate()) && auction.getStatus() == status)
                 .collect(Collectors.toList());
     }
 
@@ -81,4 +81,6 @@ public class Schedule {
                 .filter(auction -> startTime.isAfter(auction.getStartDate()) && auction.getStatus() == status)
                 .collect(Collectors.toList());
     }
+
+
 }
