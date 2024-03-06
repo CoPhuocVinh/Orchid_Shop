@@ -56,7 +56,7 @@ public class Schedule {
 
     private List<Auction> getPendingAuctionsStartingAfter(LocalDateTime startTime, Status status) {
         return auctionContainer.getComingAuctions().stream()
-                .filter(auction -> auction.getStartDate().isEqual(startTime) && auction.getStatus() == status)
+                .filter(auction -> startTime.isAfter(auction.getStartDate()) && auction.getStatus() == status)
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +78,7 @@ public class Schedule {
 
     private List<Auction> getWaitingAuctionsStartingAt(LocalDateTime startTime, Status status) {
         return auctionContainer.getWaitingAuctions().stream()
-                .filter(auction -> auction.getStartDate().isEqual(startTime) && auction.getStatus() == status)
+                .filter(auction -> startTime.isAfter(auction.getStartDate()) && auction.getStatus() == status)
                 .collect(Collectors.toList());
     }
 }
