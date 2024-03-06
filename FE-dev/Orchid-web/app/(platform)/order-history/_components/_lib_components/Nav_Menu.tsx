@@ -11,16 +11,10 @@ import Grid_DashBoard_table from "./Grid_DashBoard_table";
 import Grid_My_Profile from "./Grid_My_Profile";
 import Grid_Order_Data_Table from "./Grid_Order_Data_Table";
 
-//import Fillter_Table from "./_component_fillter/Fillter_Table";
 import Test from "./Test";
 import Grid_Address_Default from "./Grid_Address_Default";
 
 function Nav_Menu() {
-  const [activeTab, setActiveTab] = useState("dashboard");
-
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-  };
   const [openTab, setOpenTab] = React.useState(1);
   return (
     <div className="flex flex-row">

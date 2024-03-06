@@ -1,25 +1,13 @@
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import GetListProvince from "./_lib_component/GetListProvince";
-import { Input } from "@/components/ui/input";
-import GetApi_Province from "./_lib_component/GetApi_Province";
+
+import GetApi_Province from "@/app/(platform)/order/_components/_lib_component/GetApi_Province";
 function DeliveryInfor() {
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
 
   const [delivery, setDelivery] = useState("office");
-
-  const [ward, setWard] = useState("");
 
   return (
     <div className="flex items-center justify-center w-full">

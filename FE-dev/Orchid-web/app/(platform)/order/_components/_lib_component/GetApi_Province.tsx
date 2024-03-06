@@ -8,8 +8,8 @@ function GetApi_Province() {
   const [selectedWard, setSelectedWard] = useState("");
 
   const [provinces, setProvinces] = useState<any>([]);
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
+  const [districts, setDistricts] = useState<any>([]);
+  const [wards, setWards] = useState<any>([]);
 
   useEffect(() => {
     // Gọi API để lấy danh sách tỉnh, thành phố
@@ -106,10 +106,8 @@ function GetApi_Province() {
               id="billingProvince"
               onChange={handleProvinceChange}
             >
-              <option value="" placeholder="">
-                Chọn Tỉnh thành
-              </option>
-              {provinces.map((province) => (
+              <option value="">Chọn Tỉnh thành</option>
+              {provinces.map((province: any) => (
                 <option key={province.province_id} value={province.province_id}>
                   {province.province_name}
                 </option>
@@ -122,7 +120,6 @@ function GetApi_Province() {
           className="form-group mb-3 w-100"
           id="district"
           onChange={handleDistrictChange}
-          disabled={!provinces.length}
         >
           <label
             htmlFor="district"
@@ -136,12 +133,13 @@ function GetApi_Province() {
               className="form-control block w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
               id="billingCity"
               onChange={handleDistrictChange}
+              disabled={!provinces.length}
             >
               <option value="" disabled selected>
                 Chọn Quận, huyện
               </option>
               {districts && districts.length > 0 ? (
-                districts.map((district) => (
+                districts.map((district: any) => (
                   <option
                     key={district.district_id}
                     value={district.district_id}
@@ -159,7 +157,6 @@ function GetApi_Province() {
         <div
           className="form-group mb-3 w-100"
           id="ward"
-          disabled={!districts.length}
           onChange={handleWardChange}
         >
           {" "}
@@ -171,6 +168,7 @@ function GetApi_Province() {
           </label>
           <div className="custom_select">
             <select
+              disabled={!districts.length}
               className="form-control block w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
               id="billingDistrict"
             >
@@ -178,7 +176,7 @@ function GetApi_Province() {
                 Chọn phường/xã
               </option>
               {wards && wards.length > 0 ? (
-                wards.map((ward) => (
+                wards.map((ward: any) => (
                   <option key={ward.ward_id} value={ward.ward_id}>
                     {ward.ward_name}
                   </option>
