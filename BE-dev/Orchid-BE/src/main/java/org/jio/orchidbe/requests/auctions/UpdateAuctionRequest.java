@@ -1,6 +1,7 @@
 package org.jio.orchidbe.requests.auctions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,8 @@ public class UpdateAuctionRequest {
     @Min(value = 0, message = "Start Price must be greater than or equal to 0")
     private Float startPrice;
     private Status status;
+    @JsonProperty("image_url")
+    private String imageUrl;
     private Boolean approved;
     private Boolean rejected;
     private String reasonReject;

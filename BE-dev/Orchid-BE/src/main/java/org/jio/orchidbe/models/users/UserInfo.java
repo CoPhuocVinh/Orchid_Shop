@@ -23,6 +23,9 @@ public class UserInfo extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "info_name")
+    private String infoName;
+
     @Column(name = "address")
     private String address;
 

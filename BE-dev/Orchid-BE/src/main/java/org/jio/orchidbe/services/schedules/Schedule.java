@@ -61,7 +61,7 @@ public class Schedule {
     }
 
     @Scheduled(fixedRate = 1000) // Run every 1 minute
-    public void checkAuctionExpired() {
+    public void checkAuctionExpired() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
         List<Auction> expiredAuctions = getWaitingAuctionsStartingAt(currentTime, Status.WAITING);
 
@@ -70,6 +70,8 @@ public class Schedule {
             auction.setRejected(true);
             auction.setRejectReason("The auction is past the approval deadline");
             auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+            auctionContainer.removeOnAuctionListById(auction.getId());
+
             auctionRepository.save(auction);
         }
     }
@@ -79,6 +81,4 @@ public class Schedule {
                 .filter(auction -> auction.getStartDate().isEqual(startTime) && auction.getStatus() == status)
                 .collect(Collectors.toList());
     }
-
-
 }
