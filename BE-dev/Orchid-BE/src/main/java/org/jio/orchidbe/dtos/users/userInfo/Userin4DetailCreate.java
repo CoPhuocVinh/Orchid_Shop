@@ -7,6 +7,8 @@ package org.jio.orchidbe.dtos.users.userInfo;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -31,6 +33,8 @@ public class Userin4DetailCreate {
             , message = "Invalid phone number!")
     private String phone;
 
+    @JsonProperty("info_name")
+    private String infoName;
     private boolean defaulted = false;
 
 }
