@@ -1,12 +1,13 @@
 "use client";
-import bg from "/public/static/images/bg/upgrade-bg.png";
 import logo from "/public/static/images/logo/logo-color.svg";
 import logoW from "/public/static/images/logo/logo-white.svg";
-import profileImg from "/public/static/images/avatar/profile-xs.png";
+
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import { Icons } from "@/components/icons";
+import { signOut } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 function Sidebar({ handleActive }: any) {
   const [activeUser, setActiveUser] = useState(false);
@@ -217,7 +218,7 @@ function Sidebar({ handleActive }: any) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
                       <span className="item-ico ">
-                        <Icons.productSidebarIcon />
+                        <Icons.auctionDashboardIcon />
                       </span>
                       <span className="item-text text-lg font-medium leading-none">
                         Auction
@@ -295,74 +296,33 @@ function Sidebar({ handleActive }: any) {
             </h4>
             <ul className="mt-2.5">
               <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/signin">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.userSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        Signin
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/signup">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.userSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        Signup
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/coming-soon">
-                  <div className="flex items-center space-x-2.5">
-                    <span className="item-ico">
-                      <Icons.commingSoonIcon />
-                    </span>
-                    <span className="item-text text-lg font-medium leading-none">
-                      Coming Soon
-                    </span>
-                  </div>
-                </Link>
-              </li>
-
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="#">
+                <Button  onClick={() => signOut()} className=" bg-white dark:bg-darkblack-600 ">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
                       <span className="item-ico">
                         <Icons.logoutSidebardIcon />
                       </span>
-                      <span className="item-text text-lg font-medium leading-none">
+                      <span className="item-text text-lg font-medium leading-none text-bgray-900 dark:text-white hover:text-green-300">
                         Logout
                       </span>
                     </div>
                   </div>
-                </Link>
+                </Button>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="copy-write-text">
-          <p className="text-sm text-[#969BA0]">© 2023 All Rights Reserved</p>
+          <p className="text-sm text-[#969BA0]">© 2024 All Rights Reserved</p>
           <p className="text-sm font-medium text-bgray-700">
-            Made with ❤️ by
+            Made with ❤️ by 
             <a
               href="#"
               target="_blank"
               className="border-b font-semibold hover:text-blue-600"
             >
-              QuomodoTheme
+              Vinh Nguyễn
             </a>
           </p>
         </div>

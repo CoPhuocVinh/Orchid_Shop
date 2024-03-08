@@ -5,47 +5,47 @@ import {
   apiAuthPrefix,
   publicRoutes,
   authRoutes,
-  DEFAULT_LOGIN_REDIRECT,
+  dashboardRoute,
+  DEFAULT_REDIRECT,
 } from "@/routes";
 
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
+  //change to ADMIN later
+  const isAdminRole =
+    req.auth?.user.role === "CUSTOMER" || req.auth?.user.role === "STAFF";
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  // console.log(isAuthRoute)
-  // console.log(isPublicRoute);
-  // console.log(nextUrl.pathname)
+  function hasMatchingPattern(routeUrl: string, routes: string[]) {
+    return routes.some((route) => {
+      const regex = new RegExp(route);
+      return regex.test(routeUrl);
+    });
+  }
 
-  // console.log(isLoggedIn)
+  const isAuthWithRoute = hasMatchingPattern(nextUrl.pathname, dashboardRoute);
 
+  if (isApiAuthRoute) {
+    return NextResponse.next();
+  }
 
-  // if (isApiAuthRoute) {
-  //   return NextResponse.next();
-  // }
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
 
-  // if ( !isLoggedIn) {
+  if (!isAuthRoute && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/signin", nextUrl));
+  }
 
-  //   return NextResponse.redirect(new URL("/singin", nextUrl));
+  if (isAuthWithRoute && !isAdminRole) {
+    return NextResponse.redirect(new URL(DEFAULT_REDIRECT, nextUrl));
+  }
 
-  // }
-
-  // if (!isPublicRoute && !isLoggedIn) {
-  //   let callBackUrl = nextUrl.pathname;
-  //   if (nextUrl.search) {
-  //     callBackUrl += nextUrl.search;
-  //   }
-
-  //   const encodedCallbackUrl = encodeURIComponent(callBackUrl);
-  //   return Response.redirect(
-  //     new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
-  //   );
-  // }
-
-  // return NextResponse.next();
+  return NextResponse.next();
 });
 
 // Optionally, don't invoke Middleware on some paths

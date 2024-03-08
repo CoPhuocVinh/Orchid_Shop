@@ -8,6 +8,8 @@ interface CustomJWT extends JWT {
   email: string;
   img: string;
   role: string;
+  dob: string;
+  gender:string;
   access_token: string;
   refresh_token: string;
   tokenType: string;
@@ -27,28 +29,33 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const res = await fetch("https://orchid.fams.io.vn/api/v1/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: credentials?.email,
-            password: credentials?.password,
-          }),
-        });
-        const data = await res.json();
-       
-        const userRes = data.payload;
-        const metadata = data.metadata;
-
-        const user = { ...userRes, ...metadata };
-
-        if (user) {
+        try {
+          const res = await fetch("https://orchid.fams.io.vn/api/v1/auth/login", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                  email: credentials?.email,
+                  password: credentials?.password,
+              }),
+          });
+  
+          if (!res.ok) {
+             return null
+          }
+  
+          const data = await res.json();
+         
+          const userRes = data.payload;
+          const metadata = data.metadata;
+  
+          const user = { ...userRes, ...metadata };
+  
           return user;
-        } else {
+      } catch (error) {
           return null;
-        }
+      }
       },
     }),
   ],
@@ -64,6 +71,8 @@ export const authOptions = {
         session.user.name = token.name as string;
         session.user.email = token.email as string;
         session.user.img = token.img as string;
+        session.user.dob = token.dob as string;
+        session.user.gender = token.genger as string;
         session.user.access_token = token.access_token as string;
         session.user.refresh_token = token.refresh_token as string;
         session.user.tokenType = token.tokenType as string;
@@ -72,6 +81,10 @@ export const authOptions = {
       return session;
     },
   },
+  pages: {
+    signIn: "/signin",
+  },
+  secret: process.env.NEXTAUTH_SECRET as string,
 } satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);
