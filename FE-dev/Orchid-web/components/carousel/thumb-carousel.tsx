@@ -70,13 +70,15 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
               <div className="embla__slide__number">
                 <span>{index + 1}</span>
               </div>
+              <div className="relative w-full h-[400px]">
+
               <Image
-                className="embla__slide__img rounded-sm"
+                className=" rounded-sm object-cover md:object-fill "
                 src={imageByIndex(index)}
                 alt="Your alt text"
-                width={600}
-                height={400}
+                fill
               />
+              </div>
             </div>
           ))}
         </div>
