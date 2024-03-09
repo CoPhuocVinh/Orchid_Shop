@@ -47,6 +47,7 @@
     "lucide-react": "^0.314.0",
     "moment": "^2.30.1",
     "next": "14.0.4",
+    "next-auth": "^5.0.0-beta.13",
     "next-cloudinary": "^6.0.1",
     "next-themes": "^0.2.1",
     "quilljs": "^0.18.1",
@@ -67,7 +68,9 @@
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "tw-elements": "^1.1.0",
-    "zod": "^3.22.4"
+    "vaul": "^0.9.0",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.20.1",

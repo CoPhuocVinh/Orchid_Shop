@@ -90,7 +90,7 @@ const MassagePopup= ({ active, handlePopup }: MassagePopupProps) => {
                           <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border border-white bg-bgray-300"></div>
                         </div>
                         <div className="flex-1">
-                          <p className="mb-1 text-base font-bold text-bgray-900 dark:text-white dark:text-white">
+                          <p className="mb-1 text-base font-bold text-bgray-900 dark:text-white">
                             James Eusobio
                           </p>
                           <p className="text-sm font-medium text-bgray-500 dark:text-bgray-50">

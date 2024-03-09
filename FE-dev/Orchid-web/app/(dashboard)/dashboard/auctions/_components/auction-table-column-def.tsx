@@ -28,10 +28,13 @@ import { Button } from "@/components/ui/button";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import { deleteAuction, updateStatusAuction } from "@/lib/actions/auction";
+import { Edit } from "lucide-react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export function fetchAutionsTableColumnDefs(
   isPending: boolean,
-  startTransition: React.TransitionStartFunction
+  startTransition: React.TransitionStartFunction,
+  router: AppRouterInstance
 ): ColumnDef<IAuction, unknown>[] {
   return [
     {
@@ -192,12 +195,12 @@ export function fetchAutionsTableColumnDefs(
                 className="mr-2 size-4 text-muted-foreground"
                 aria-hidden="true"
               />
-            ) : status === "LIVE" ? (
+            ) : status === "COMMING" ? (
               <BsGenderMale
                 className="mr-2 size-4 text-muted-foreground"
                 aria-hidden="true"
               />
-            ) : status === "APPROVE" ? (
+            ) : status === "LIVE" ? (
               <BsGenderMale
                 className="mr-2 size-4 text-muted-foreground"
                 aria-hidden="true"
@@ -236,6 +239,14 @@ export function fetchAutionsTableColumnDefs(
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[160px]">
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(`/dashboard/auctions/${row.original.id}`)
+              }
+            >
+              <span>Chỉnh sửa </span>
+              <Edit className="ml-auto h-4 w-4" />
+            </DropdownMenuItem>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
@@ -258,18 +269,16 @@ export function fetchAutionsTableColumnDefs(
                     });
                   }}
                 >
-                  {["WAITING", "LIVE", "APPROVE", "END", "COMING"].map(
-                    (status) => (
-                      <DropdownMenuRadioItem
-                        key={status}
-                        value={status}
-                        className="capitalize"
-                        // disabled={isPending}
-                      >
-                        {status}
-                      </DropdownMenuRadioItem>
-                    )
-                  )}
+                  {["WAITING", "COMING", "LIVE", "END"].map((status) => (
+                    <DropdownMenuRadioItem
+                      key={status}
+                      value={status}
+                      className="capitalize"
+                      // disabled={isPending}
+                    >
+                      {status}
+                    </DropdownMenuRadioItem>
+                  ))}
                 </DropdownMenuRadioGroup>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
@@ -279,9 +288,9 @@ export function fetchAutionsTableColumnDefs(
                 startTransition(() => {
                   row.toggleSelected(false);
                   toast.promise(
-                    deleteAuction({
-                      id: row.original.id,
-                    }),
+                    deleteAuction(
+                      row.original.id.toString()
+                    ),
                     {
                       loading: "Deleting...",
                       success: () => "Auction deleted successfully.",
@@ -306,7 +315,7 @@ export const filterableColumns: DataTableFilterableColumn<IAuction>[] = [
   {
     id: "status",
     title: "status",
-    options: ["WAITING", "LIVE", "APPROVE", "END", "COMING"].map((status) => ({
+    options: ["WAITING", "COMING", "LIVE", "END"].map((status) => ({
       label: status[0]?.toUpperCase() + status.slice(1),
       value: status,
     })),
@@ -315,7 +324,7 @@ export const filterableColumns: DataTableFilterableColumn<IAuction>[] = [
 
 export const searchableColumns: DataTableSearchableColumn<IAuction>[] = [
   {
-    id: "productName",
-    title: "productName",
+    id: "productCode",
+    title: "productCode",
   },
 ];

@@ -4,7 +4,9 @@ import AuctionHeader from "@/components/platform/header/auction-header";
 
 export default function ListingDetailsLayout({
   children,
-}: React.PropsWithChildren<{}>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       {/* <ListingDetailsHeader /> */}

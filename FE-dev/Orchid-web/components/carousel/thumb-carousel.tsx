@@ -1,54 +1,65 @@
-'use client'
-import React, { useState, useEffect, useCallback } from 'react'
-import { EmblaOptionsType } from 'embla-carousel'
-import useEmblaCarousel from 'embla-carousel-react'
-import { Thumb } from './thumb-btn-carousel'
-import Image from 'next/image'
+"use client";
+import React, { useState, useEffect, useCallback } from "react";
+import { EmblaOptionsType } from "embla-carousel";
+import useEmblaCarousel from "embla-carousel-react";
+import { Thumb } from "./thumb-btn-carousel";
+import Image from "next/image";
 
 type TProduct = {
   id: number;
-  images: []
-}
+  productImages: TImage[];
+};
+
+type TImage = {
+  id: number;
+  image_url: string;
+};
 
 type PropType = {
-  slides: number[]
-  options?: EmblaOptionsType
-  product: TProduct
-}
+  slides: number[];
+  options?: EmblaOptionsType;
+  product: TProduct;
+};
 
 const EmblaCarousel: React.FC<PropType> = (props) => {
-  const { slides, options, product } = props
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options)
+  const { slides, options, product } = props;
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
-    containScroll: 'keepSnaps',
-    dragFree: true
-  })
+    containScroll: "keepSnaps",
+    dragFree: true,
+  });
 
-const images: string[] = product.images
+  const images: TImage[] = product.productImages;
 
-const imageByIndex = (index: number): string => images[index % images.length];
+  const imageByIndex = (index: number): string => {
+    if (images.length > 0) {
+      return images[index % images.length].image_url;
+    }
+    return "";
+  };
 
   const onThumbClick = useCallback(
     (index: number) => {
-      if (!emblaMainApi || !emblaThumbsApi) return
-      emblaMainApi.scrollTo(index)
+      if (!emblaMainApi || !emblaThumbsApi) return;
+      emblaMainApi.scrollTo(index);
     },
     [emblaMainApi, emblaThumbsApi]
-  )
+  );
 
   const onSelect = useCallback(() => {
-    if (!emblaMainApi || !emblaThumbsApi) return
-    setSelectedIndex(emblaMainApi.selectedScrollSnap())
-    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap())
-  }, [emblaMainApi, emblaThumbsApi, setSelectedIndex])
+    if (!emblaMainApi || !emblaThumbsApi) return;
+    setSelectedIndex(emblaMainApi.selectedScrollSnap());
+    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap());
+  }, [emblaMainApi, emblaThumbsApi, setSelectedIndex]);
 
   useEffect(() => {
-    if (!emblaMainApi) return
-    onSelect()
-    emblaMainApi.on('select', onSelect)
-    emblaMainApi.on('reInit', onSelect)
-  }, [emblaMainApi, onSelect])
+    if (!emblaMainApi) return;
+    onSelect();
+    emblaMainApi.on("select", onSelect);
+    emblaMainApi.on("reInit", onSelect);
+  }, [emblaMainApi, onSelect]);
 
   return (
     <div className="embla">
@@ -59,13 +70,15 @@ const imageByIndex = (index: number): string => images[index % images.length];
               <div className="embla__slide__number">
                 <span>{index + 1}</span>
               </div>
+              <div className="relative w-full h-[400px]">
+
               <Image
-                className="embla__slide__img rounded-sm"
+                className=" rounded-sm object-cover md:object-fill "
                 src={imageByIndex(index)}
                 alt="Your alt text"
-                width={600} 
-                height={400} 
+                fill
               />
+              </div>
             </div>
           ))}
         </div>
@@ -87,7 +100,7 @@ const imageByIndex = (index: number): string => images[index % images.length];
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EmblaCarousel
+export default EmblaCarousel;

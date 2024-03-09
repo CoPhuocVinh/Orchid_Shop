@@ -1,12 +1,14 @@
 "use server";
 
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
-import { IAuction } from "@/types/dashboard";
+import {
+  AuctionStatus,
+  IAuction,
+  IAuctionCreateField,
+} from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { fetchListData, fetchListDataWithSearchParam } from "@/lib/generics";
 import { api } from "../api-interceptor/api";
-
-let BASE_URL = "https://orchid.fams.io.vn/api/v1";
 
 export async function getAuctions(): Promise<{ data: IAuction[] }> {
   noStore();
@@ -15,7 +17,32 @@ export async function getAuctions(): Promise<{ data: IAuction[] }> {
   return await fetchListData(url);
 }
 
+export async function getAuctionsWithStatus(
+  status: AuctionStatus
+): Promise<{ data: IAuction[] }> {
+  noStore();
 
+  const url = `/auctions/list?page=1&per_page=8&status=${status}`;
+
+  return await fetchListData(url);
+}
+
+export async function getAuctionByID(
+  params: string
+): Promise<{ data: IAuction | null }> {
+  noStore();
+  const url = `/auctions/${params}`;
+
+  try {
+    const res = await api.get(url);
+
+    return { data: res.data.payload };
+  } catch (error) {
+    return { data: null };
+  }
+
+  // return await fetchDataByID(url);
+}
 
 export async function getTableAuctions(
   searchParams: SearchParams
@@ -27,7 +54,7 @@ export async function getTableAuctions(
 }
 
 interface AuctionStatusUpdate {
-  id: string;
+  id: number;
   status: string;
 }
 export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
@@ -40,12 +67,43 @@ export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
   }
 }
 
-export async function deleteAuction({ id }: { id: string }) {
+export async function deleteAuction(params: string) {
   try {
-    await api.post(`/auctions/delete-auction`, { id });
+    await api.delete(`/auctions/${params}`);
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {
     console.log("Fail to delete: ", error);
+  }
+}
+
+export async function updateAuctionDetail(
+  params: string,
+  data: IAuctionCreateField
+): Promise<void> {
+  noStore();
+  const url = `/auctions/update-auction/${params}`;
+
+  try {
+    await api.put(url, data);
+
+    revalidatePath("/dashboard/auctions");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function createAuction(data: IAuctionCreateField): Promise<void> {
+  noStore();
+  const url = `/auctions/create`;
+
+  try {
+    await api.post(url, data);
+
+    revalidatePath("/dashboard/auctions");
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }

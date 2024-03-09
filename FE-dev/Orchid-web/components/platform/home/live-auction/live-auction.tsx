@@ -6,10 +6,11 @@ import Section from "@/components/platform/section";
 import SeeMore from "@/components/platform/see-more";
 import ListingCardLoader from "@/components/loader/listing-card-loader";
 import ListingCard from "./live-auction-card";
-import { useGetLiveAuction } from "@/lib/react-query/queries";
+import { useGetAuctionsWithStatus } from "@/lib/react-query/queries";
+import { AuctionStatus } from "@/types/dashboard";
 
 function AuctionGrid() {
-  const { data: liveAuction, isLoading } = useGetLiveAuction();
+  const { data: liveAuction, isLoading } = useGetAuctionsWithStatus(AuctionStatus.END);
   if (isLoading) {
     return <ListingCardLoader />;
   }
@@ -33,6 +34,7 @@ function AuctionGrid() {
           created_at= {item.created_at}
           updated_at= {item.updated_at}
           remindAt= {item.remindAt}
+          image_url={item.image_url}
         />
         // <ListingCard
         //   key={`top-boat-grid-${index}`}

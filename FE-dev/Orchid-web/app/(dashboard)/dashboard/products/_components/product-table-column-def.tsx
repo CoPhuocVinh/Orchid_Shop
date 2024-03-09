@@ -28,6 +28,8 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Edit } from "lucide-react";
+import { toast } from "sonner";
+import { deleteProductByID } from "@/lib/actions";
 
 export function fetchProductsTableColumnDefs(
   isPending: boolean,
@@ -136,18 +138,18 @@ export function fetchProductsTableColumnDefs(
               <Edit className="mr-2 h-4 w-4" /> Chỉnh sửa
             </DropdownMenuItem>
 
-            {/* <DropdownMenuSeparator /> */}
-            {/* <DropdownMenuItem
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
               onClick={() => {
                 startTransition(() => {
                   row.toggleSelected(false);
                   toast.promise(
-                    deleteAuction({
-                      id: row.original.id,
-                    }),
+                    deleteProductByID(
+                       row.original.id.toString(),
+                    ),
                     {
                       loading: "Deleting...",
-                      success: () => "Auction deleted successfully.",
+                      success: () => "Product deleted successfully.",
                       // error: (err: unknown) => catchError(err),
                       error: () => "Dellete error",
                     }
@@ -157,7 +159,7 @@ export function fetchProductsTableColumnDefs(
             >
               Delete
               <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-            </DropdownMenuItem> */}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),

@@ -1,5 +1,5 @@
 export type ICategory = {
-  id: string;
+  id: number;
   type: string;
   color: string;
   code: string;
@@ -7,6 +7,6 @@ export type ICategory = {
 
 
 export type ICategoryForm = {
-    category_id: string;
+    category_id: number;
     type: string;
   };

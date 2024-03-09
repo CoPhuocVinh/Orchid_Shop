@@ -1,22 +1,10 @@
 "use client";
 
-import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-import type { ListingItemTypes } from "@/types/platform";
-
-import {
-  Swiper,
-  SwiperSlide,
-  Navigation,
-  Pagination,
-} from "@/components/platform/slider-custom/slider";
-
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import ActionIcon from "../action-icon";
 
 interface ListingCardProps {
-  id: string;
+  id: number;
   productName: string;
   productCode: string;
   startPrice: number;
@@ -28,7 +16,8 @@ interface ListingCardProps {
   created_at: Date;
   updated_at: Date;
   remindAt: Date;
-  idCss: string
+  idCss: string;
+  image_url?: string;
 }
 
 export default function ListingCard({
@@ -44,72 +33,29 @@ export default function ListingCard({
   created_at,
   updated_at,
   remindAt,
-  idCss
+  idCss,
+  image_url,
 }: ListingCardProps) {
-  const slides = [
-    "/images/hoa-lan/hoa-lan-dep_1.jpg",
-    "/images/hoa-lan/hoa-lan-dep_1.jpg",
-    "/images/hoa-lan/hoa-lan-dep_1.jpg",
-    "/images/hoa-lan/hoa-lan-dep_1.jpg",
-    "/images/hoa-lan/hoa-lan-dep_1.jpg",
-  ];
   return (
     <>
       <div className="listing-card group/item relative inline-flex w-full flex-col">
         <div className="relative w-full overflow-hidden rounded-xl">
           <Link href={`/auction/${id}`}>
             <div className="listing-item after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-1/4 after:w-full after:bg-gradient-to-t after:from-black/25">
-              <Swiper
-                className="!static"
-                modules={[Pagination, Navigation]}
-                pagination={{
-                  clickable: true,
-                }}
-                slidesPerView={1}
-                navigation={{
-                  nextEl: `.${idCss}-listing-item-button-next`,
-                  prevEl: `.${idCss}-listing-item-button-prev`,
-                }}
-              >
-                {slides?.map((slide, index) => (
-                  <SwiperSlide key={`slide-${index}`}>
-                    <Image
-                      className="aspect-[34/25] bg-gray-lighter"
-                      src={slide}
-                      width={816}
-                      height={600}
-                      alt="boat"
-                      priority
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <ActionIcon
-                rounded="full"
-                color="light"
-                size="sm"
-                className={clsx(
-                  "absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 shadow-md !transition-all focus:!ring-0 md:invisible md:flex md:disabled:hidden md:group-hover/item:visible",
-                  `${idCss}-listing-item-button-prev`
-                )}
-              >
-                <ChevronLeftIcon className="-ml-0.5 h-auto w-[7px]" />
-              </ActionIcon>
-              <ActionIcon
-                rounded="full"
-                size="sm"
-                color="light"
-                className={clsx(
-                  "absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 opacity-80 shadow-md !transition-all duration-300 focus:!ring-0 md:invisible md:flex md:disabled:hidden md:group-hover/item:visible md:group-hover/item:opacity-100",
-                  `${idCss}-listing-item-button-next`
-                )}
-              >
-                <ChevronRightIcon className="-mr-0.5 h-auto w-[7px]" />
-              </ActionIcon>
+              <Image
+                className="aspect-[34/25] bg-gray-lighter transition-all duration-500 group-hover/item:scale-110"
+                src={
+                  image_url ? image_url : "/images/hoa-lan/hoa-lan-dep_1.jpg"
+                }
+                width={816}
+                height={600}
+                alt="auction"
+                priority
+              />
             </div>
           </Link>
         </div>
-        <Link href="/">
+        <Link href={`/auction/${id}`}>
           <div className="content pt-3">
             <div className="mb-1 flex items-center gap-5">
               <span className="relative flex items-center font-bold text-gray-dark before:absolute before:-right-3 before:block before:h-1 before:w-1 before:rounded-full before:bg-gray-dark">
@@ -117,7 +63,9 @@ export default function ListingCard({
               </span>
               <span className="font-bold">{productName}</span>
             </div>
-            <h4 className="text-ellipsis text-gray-dark 2xl:mb-1.5">{productCode}</h4>
+            <h4 className="text-ellipsis text-gray-dark 2xl:mb-1.5">
+              {productCode}
+            </h4>
             <p className="mb-3 text-gray-light xl:mb-3">{depositPrice}</p>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-gray-light">

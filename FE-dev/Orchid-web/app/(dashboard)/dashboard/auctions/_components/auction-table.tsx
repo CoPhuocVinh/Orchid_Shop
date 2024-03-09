@@ -13,6 +13,7 @@ import {
   filterableColumns,
 } from "./auction-table-column-def";
 import { getTableAuctions } from "@/lib/actions/auction";
+import { useRouter } from "next/navigation";
 
 interface AutionsTableProps {
   auctionPromise: ReturnType<typeof getTableAuctions>;
@@ -21,10 +22,11 @@ interface AutionsTableProps {
 export function AuctionTable({ auctionPromise }: AutionsTableProps) {
   const { data, pageCount } = React.use(auctionPromise);
   const [isPending, startTransition] = React.useTransition();
+  const router = useRouter();
   // console.log(data)
   const columns = React.useMemo<ColumnDef<IAuction, unknown>[]>(
-    () => fetchAutionsTableColumnDefs(isPending, startTransition),
-    [isPending]
+    () => fetchAutionsTableColumnDefs(isPending, startTransition, router),
+    [isPending, router]
   );
 
   const { dataTable } = useDataTable({

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
-import { AuthProvider } from "@/context/auth-context";
 import { Toaster } from "@/components/ui/sonner";
-
+import SessionProviders from "@/providers/session-provider";
+import { ModalProvider } from "@/providers/modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,12 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
+        <SessionProviders>
           <QueryProvider>
+            <ModalProvider />
             {children}
             <Toaster />
           </QueryProvider>
-        </AuthProvider>
+        </SessionProviders>
       </body>
     </html>
   );

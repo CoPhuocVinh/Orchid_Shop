@@ -1,7 +1,8 @@
 import { fetchListDataWithSearchParam } from "@/lib/generics";
 import { IUser } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
-import { unstable_noStore as noStore } from "next/cache";
+import { unstable_noStore as noStore, revalidatePath } from "next/cache";
+import { api } from "../api-interceptor/api";
 
 let BASE_URL = "https://orchid.fams.io.vn/api/v1"
 
@@ -29,5 +30,22 @@ export async function getUserWithRoleStaff(
   } catch (error) {
     console.error('Failed to fetch data', error);
     throw error;
+  }
+}
+
+
+export async function updateUserInfo(
+  params: string,
+  data: any
+): Promise<{ success: boolean; message?: string }> {
+  noStore();
+  const url = `/users/${params}`;
+
+  try {
+    const response = await api.put(url, data);
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Something went wrong!" };
   }
 }

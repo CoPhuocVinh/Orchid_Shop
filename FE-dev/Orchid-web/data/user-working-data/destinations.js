@@ -4,7 +4,7 @@ export const destinations = [
     // slug: "/explore?location=Miami",
     slug: "/auction/1",
     location: "Long Island city",
-    thumbnail: "/images/destinations/miami.png"
+    thumbnail: "/images/hoa-lan/hoa-lan-dep_1.jpg"
   },
   {
     name: "Seattle Beach",

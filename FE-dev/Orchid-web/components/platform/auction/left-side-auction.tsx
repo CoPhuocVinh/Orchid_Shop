@@ -3,24 +3,25 @@
 import EmblaCarousel from "@/components/carousel/thumb-carousel";
 import React, { useEffect, useState } from "react";
 import { EmblaOptionsType } from "embla-carousel";
-import axios from "axios";
 import ContentLoader from "react-content-loader";
-import { useParams } from "next/navigation";
+import { api } from "@/lib/api-interceptor/api";
 
-const LeftSideAuction = () => {
+interface LeftSideAuctionProps {
+  productId: number;
+}
+const LeftSideAuction = ({ productId }: LeftSideAuctionProps) => {
   const OPTIONS: EmblaOptionsType = {};
   // const SLIDE_COUNT = 10;
   // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
-  const params = useParams()
 
   const [product, setProduct] = useState<any>({});
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchAPI = async () => {
       try {
-        const res = await axios.get(`https://dummyjson.com/products/${params.auctionId}`);
+        const res = await api.get(`/products/${productId}`);
 
-        setProduct(res.data);
+        setProduct(res.data.payload);
       } catch (error) {
         console.log(error);
       } finally {
@@ -29,16 +30,16 @@ const LeftSideAuction = () => {
     };
 
     fetchAPI();
-  }, [params.auctionId]);
+  }, [productId]);
 
   if (loading) {
-    return <ContentLoader className="w-full md:w-2/3"/>;
+    return <ContentLoader className="w-full md:w-2/3" />;
   }
 
   return (
     <div className="w-full md:w-2/3">
       <EmblaCarousel
-        slides={Array.from(Array(product.images.length).keys())}
+        slides={Array.from(Array(product.productImages.length).keys())}
         options={OPTIONS}
         product={product}
       />
