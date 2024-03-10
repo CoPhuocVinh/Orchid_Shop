@@ -25,7 +25,11 @@ public interface AuctionMapper {
 
     GetAuctionResponse toAllResponse(Auction auction);
 
+
     Auction toEntity(UpdateAuctionRequest request);
+
+    @Mapping(source = "auction.product.id", target = "productID")
+
     AuctionDetailResponse toResponseDetail(Auction auction);
 
 

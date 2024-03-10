@@ -114,11 +114,11 @@ public class AuctionService implements IAuctionService {
 
             // Tạo entity Order từ auctionID bằng cách sử dụng OrderMapper
             Order order = orderMapper.toEntity(auction.getId());
-
+            Long userId = bid.getUser().getId();
             // Lấy thông tin user từ bid và userInfo
-            User user = userRepository.findById(bid.getUser().getId())
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new DataNotFoundException("User not found with ID: " + bid.getUser().getId()));
-            UserInfo userInfo = userInfoRepository.findById(bid.getUser().getId())
+            UserInfo userInfo = userInfoRepository.findById(userId)
                     .orElseThrow(() -> new DataNotFoundException("User information not found with ID: " + bid.getUser().getId()));
 
             // Set các thuộc tính cho order

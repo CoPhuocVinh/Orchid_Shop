@@ -46,12 +46,16 @@ public class ScheduleAuction {
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
 
         for (Auction auction : pendingAuctions) {
-            auction.setStatus(Status.LIVE);
-            auctionContainer.removeAuctionFromList(auction, Status.COMING);
             auctionContainer.removeOnAuctionListById(auction.getId());
-            auctionContainer.moveAuctionToList(auction, Status.LIVE);
+            auctionContainer.removeOnStatusLists(auction);
+
+            auction.setStatus(Status.LIVE);
             auctionRepository.save(auction);
+
+            auction = auctionRepository.findById(auction.getId()).get();
+            auctionContainer.addAuction(auction);
         }
+
     }
 
 

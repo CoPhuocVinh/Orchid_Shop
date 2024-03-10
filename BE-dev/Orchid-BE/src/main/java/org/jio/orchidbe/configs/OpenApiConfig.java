@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
                 @Server(url = "http://orchid-be.azurewebsites.net", description = "Azure Server"),
                 @Server(url = "http://128.199.185.211:8099", description = "Production Server"),
                 @Server(url = "https://orchid.fams.io.vn", description = "Production Server with ssl"),
-
         }
 )
 

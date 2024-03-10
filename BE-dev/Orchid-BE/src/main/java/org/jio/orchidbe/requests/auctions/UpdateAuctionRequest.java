@@ -21,6 +21,7 @@ public class UpdateAuctionRequest {
     private Float biddingPrice;
     @Min(value = 0, message = "Deposit Price must be greater than or equal to 0")
     private Float depositPrice;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'", shape = JsonFormat.Shape.STRING)
     private String endDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'", shape = JsonFormat.Shape.STRING)
@@ -34,8 +35,10 @@ public class UpdateAuctionRequest {
 //    @NotBlank(message = "Product Name is required")
 //    @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters")
 //    private String productName;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'", shape = JsonFormat.Shape.STRING)
     private LocalDateTime remindAt;
+
     @Min(value = 0, message = "Start Price must be greater than or equal to 0")
     private Float startPrice;
     private Status status;
