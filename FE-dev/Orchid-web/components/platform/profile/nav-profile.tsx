@@ -7,12 +7,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import Grid_DashBoard_table from "./Grid_DashBoard_table";
-import Grid_My_Profile from "./Grid_My_Profile";
-import Grid_Order_Data_Table from "./Grid_Order_Data_Table";
+import Grid_DashBoard_table from "./dashboard-profile";
+import Grid_My_Profile from "./my-profile";
+import Grid_Order_Data_Table from "./table-orders";
 
-import Test from "./Test";
-import Grid_Address_Default from "./Grid_Address_Default";
+import Grid_Address_Default from "./my-address";
 
 function Nav_Menu() {
   const [openTab, setOpenTab] = React.useState(1);
@@ -55,9 +54,9 @@ function Nav_Menu() {
                         </AccordionContent>
                         <AccordionContent>
                           <button
-                            onClick={() => setOpenTab(5)}
+                            onClick={() => setOpenTab(4)}
                             className={`hover:bg-green-500 w-full ${
-                              openTab === 5
+                              openTab === 4
                                 ? "bg-green-400 text-black "
                                 : "bg-white"
                             } inline-block px-4 py-2 text-gray-600 bg-green-500  rounded `}
@@ -80,12 +79,7 @@ function Nav_Menu() {
                     </button>
                   </li>
                   <li>
-                    <button
-                      onClick={() => setOpenTab(4)}
-                      className={`hover:bg-green-500 w-full ${
-                        openTab === 4 ? "bg-green-400 text-black " : "bg-white"
-                      } inline-block px-4 py-2 text-gray-600 bg-green-500  rounded `}
-                    >
+                    <button className="hover:bg-green-500 text-black  bg-white inline-block px-4 py-2 w-full rounded-md">
                       Logout
                     </button>
                   </li>
@@ -101,10 +95,7 @@ function Nav_Menu() {
                     {openTab === 3 && <Grid_Order_Data_Table />}
                   </div>
                   <div className={openTab === 4 ? "block " : "hidden"}>
-                    {openTab === 4 && <Test />}
-                  </div>
-                  <div className={openTab === 5 ? "block " : "hidden"}>
-                    {openTab === 5 && <Grid_Address_Default />}
+                    {openTab === 4 && <Grid_Address_Default />}
                   </div>
                 </div>
               </div>

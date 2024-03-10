@@ -2,7 +2,6 @@
 
 import * as React from "react";
 
-import Fillter_Table from "./_component_fillter/Fillter_Table";
 
 interface Order {
   id: string;
@@ -30,7 +29,6 @@ function Grid_Order_Data_Table() {
         </div>
         <div>
           <h1 className="text-xl font-semibold mb-4">Filter</h1>
-          <Fillter_Table />
         </div>
       </div>
 

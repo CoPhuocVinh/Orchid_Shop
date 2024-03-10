@@ -10,26 +10,9 @@ import { AuctionStatus } from "@/types/dashboard";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-
 const AuctionPage = () => {
   const { data: liveAuction, isLoading: auctionLoading } =
-    useGetAuctionsWithStatus(AuctionStatus.END);
-
-  // call api
-  // axios.get("/actions?${searchParams}")
-
-  // 1 filter theo array data lấy ra rồi
-  // console.log(liveAuction?.data)
-
-  // optimitic
-  // 2 filter ở đây rồi truyền xuống cho be filter
-  
-  //  note  cho phân optimic
-  // a/ searchParams
-  // console.log(searchParams);
-  // const router = useRouter()
-
-  // router. 
+    useGetAuctionsWithStatus(AuctionStatus.COMING);
 
   return (
     <>

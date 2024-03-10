@@ -18,7 +18,7 @@ export async function getAuctions(): Promise<{ data: IAuction[] }> {
 }
 
 export async function getAuctionsWithStatus(
-  status: AuctionStatus
+  status: string
 ): Promise<{ data: IAuction[] }> {
   noStore();
 

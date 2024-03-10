@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./query-keys";
 import {
   getProducts,
+  getUserAddressInfo,
   getUserWithRoleCustomer,
   getUserWithRoleStaff,
 } from "../actions";
@@ -23,6 +24,13 @@ export const useGetUsers = (searchTerm: SearchParams) => {
   return useQuery<{ data: IUser[]; pageCount: number }>({
     queryKey: [QUERY_KEYS.GET_USERS, searchTerm],
     queryFn: () => getUserWithRoleCustomer(searchTerm),
+  });
+};
+
+export const useGetAddress = (params: string) => {
+  return useQuery<{ data: any}>({
+    queryKey: [QUERY_KEYS.GET_USERS, params],
+    queryFn: () => getUserAddressInfo(params),
   });
 };
 

@@ -1,12 +1,16 @@
 'use client';
 
-import { DestinationTypes } from '@/types/platform';
 import { Swiper, SwiperSlide, Navigation } from '@/components/platform/slider-custom/slider';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import DestinationCard from './top-auction-card';
+import DestinationCard from './live-auction-card';
 import ActionIcon from '../action-icon';
+import { IAuction } from '@/types/dashboard';
 
-export default function DestinationCarousel({ data }: any) {
+interface LiveAuctionsProps {
+  data: IAuction[]
+}
+
+export default function DestinationCarousel({ data }: LiveAuctionsProps) {
   return (
     <div className="group/section relative">
       <Swiper
@@ -44,13 +48,14 @@ export default function DestinationCarousel({ data }: any) {
           },
         }}
       >
-        {data?.map((item: DestinationTypes, index: number) => (
+        {data?.map((item: IAuction, index: number) => (
           <SwiperSlide key={`destinaion-${index}`}>
             <DestinationCard
-              slug={item.slug}
-              name={item.name}
-              location={item.location}
-              thumbnail={item.thumbnail}
+              id={item.id}
+              productName={item.productName}
+              productCode={item.productCode}
+              image_url={item.image_url}
+              endDate={item.endDate!}
             />
           </SwiperSlide>
         ))}

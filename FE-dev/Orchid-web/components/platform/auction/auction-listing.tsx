@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { topBoats } from '@/data/user-working-data/top-boats';
-import ListingCard from '../home/live-auction/live-auction-card';
+import ListingCard from '../home/comming-auction/comming-auction-card';
 import { Button } from '@/components/ui/button';
-import { useGetAuctionsWithStatus } from '@/lib/react-query/queries';
+
 import { AuctionStatus, IAuction } from '@/types/dashboard';
 
 

@@ -3,6 +3,7 @@ export enum QUERY_KEYS {
     //User key
     GET_USERS = "GET_USERS",
     GET_STAFFS = "GET_STAFFS",
+    GET_ADDRESS_INTO = "GET_ADDRESS_INTO",
 
     //Product key
     GET_PRODUCTS = "GET_PRODUCTS",

@@ -18,7 +18,23 @@ import UserAvatar from "../user-avatar";
 // import Button from '@/components/ui/button';
 // import Logo from '@/components/ui/logo';
 // import { useIsMounted } from '@/hooks/use-is-mounted';
-
+const menuItems = [
+  {
+    id: 1,
+    label: "Home",
+    path: "/",
+  },
+  {
+    id: 2,
+    label: "Auction",
+    path: "/auction",
+  },
+  {
+    id: 3,
+    label: "profile",
+    path: "/profile",
+  },
+];
 export default function AuctionHeader() {
   //   const mounted = useIsMounted();
   //   const { openModal } = useModal();
@@ -44,7 +60,18 @@ export default function AuctionHeader() {
             LOGO
           </Link>
         </div>
-        <Searchbox className="hidden lg:block" />
+        <ul className="hidden flex-wrap md:flex w-full max-w-sm xl:max-w-[600px] justify-center">
+        {menuItems.map((item) => (
+          <li key={item.id}>
+            <Link
+              href={item.path}
+              className="px-5 capitalize text-black font-bold"
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
         <div className="flex items-center justify-end gap-5">
           <SearchIconBtn className="hidden" />
           {/* {mounted ? ( */}
