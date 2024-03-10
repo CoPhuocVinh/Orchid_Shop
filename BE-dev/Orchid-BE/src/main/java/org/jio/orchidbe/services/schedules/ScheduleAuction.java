@@ -32,7 +32,6 @@ public class ScheduleAuction {
         for (Auction auction : auctions) {
             // Truyền số lượng vào phương thức endAuction
             auctionService.endAuction(auction);
-
         }
     }
     private List<Auction> getAuctionsEndingBefore(LocalDateTime endTime, Status status) {

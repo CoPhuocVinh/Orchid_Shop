@@ -127,15 +127,12 @@ public class AuctionService implements IAuctionService {
             order.setAddress(userInfo.getAddress());
             order.setProductCode(auction.getProductCode());
             order.setProductName(auction.getProductName());
-            order.setAuction(bid.getAuction());
             order.setAuction(auction);
             order.setUser(user);
             order.setStatus(OrderStatus.PENDING);
             // Thêm order vào container và lưu order
             orderContainer.addOrder(order);
             orderRepository.save(order);
-
-
             auctionRepository.save(auction);
         } else {
             // Xử lý khi phiên đấu giá không ở trạng thái hoạt động

@@ -1,7 +1,10 @@
 package org.jio.orchidbe.mappers.auctions;
 
+import org.jio.orchidbe.dtos.users.UserDTORequest;
 import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.requests.auctions.CreateAuctionResquest;
+import org.jio.orchidbe.requests.auctions.UpdateAuctionRequest;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.GetAuctionResponse;
@@ -22,6 +25,7 @@ public interface AuctionMapper {
 
     GetAuctionResponse toAllResponse(Auction auction);
 
+    Auction toEntity(UpdateAuctionRequest request);
     AuctionDetailResponse toResponseDetail(Auction auction);
 
 
