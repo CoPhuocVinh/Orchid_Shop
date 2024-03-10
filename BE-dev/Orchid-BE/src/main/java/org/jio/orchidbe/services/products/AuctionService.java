@@ -5,10 +5,16 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
+
 import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
+
+import org.jio.orchidbe.exceptions.OptimisticException;
+import org.jio.orchidbe.mappers.bids.BiddingMapper;
+import org.jio.orchidbe.models.BidingStatus;
+
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.users.User;
@@ -20,16 +26,20 @@ import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.responses.AuctionContainer;
+
 import org.jio.orchidbe.responses.GetAuctionResponse;
 import org.jio.orchidbe.responses.OrderContainer;
+
+import org.jio.orchidbe.responses.AuctionDetailResponse;
+
 import org.jio.orchidbe.utils.ValidatorUtil;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
+
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,7 +53,10 @@ import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.models.products.Product;
-import org.springframework.data.crossstore.ChangeSetPersister;
+
+import org.jio.orchidbe.repositorys.products.AuctionRepository;
+import org.jio.orchidbe.repositorys.products.ProductRepository;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +64,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.text.ParseException;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +76,8 @@ public class AuctionService implements IAuctionService {
     private ValidatorUtil validatorUtil;
     @Autowired
     private AuctionMapper auctionMapper;
+    @Autowired
+    private BiddingMapper biddingMapper;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -136,7 +149,7 @@ public class AuctionService implements IAuctionService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
         LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate(), formatter);
         LocalDateTime startDate = LocalDateTime.parse(createAuctionResquest.getStartDate(), formatter);
-        validateDate(startDate,endDate);
+        validateDate(startDate, endDate);
         //map
         Product product = productRepository.findById(createAuctionResquest.getProductID())
                 .orElseThrow(() ->
@@ -193,8 +206,8 @@ public class AuctionService implements IAuctionService {
         auctionContainer.removeOnAuctionListById(id);
         auctionContainer.removeOnStatusLists(auction);
         try {
-            if(updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null){
-                throw  new BadRequestException("Fill the reason reject");
+            if (updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null) {
+                throw new BadRequestException("Fill the reason reject");
             }
             // Update auction fields
             ReflectionUtils.doWithFields(updateAuctionRequest.getClass(), field -> {
@@ -248,7 +261,7 @@ public class AuctionService implements IAuctionService {
 
 
     @Override
-    public AuctionResponse deleteAuction(Long  id) throws DataNotFoundException {
+    public AuctionResponse deleteAuction(Long id) throws DataNotFoundException {
         Optional<Auction> aution = auctionRepository.findById(id);
         Auction existingAuction = aution.orElseThrow(() -> new DataNotFoundException("Auction not found with id: " + id));
         existingAuction.setDeleted(true);
@@ -257,18 +270,22 @@ public class AuctionService implements IAuctionService {
     }
 
     @Override
-    public AuctionResponse getById(Long id) throws DataNotFoundException {
+    public AuctionDetailResponse getById(Long id) throws DataNotFoundException {
 
-            Auction auction = auctionRepository.findById(id).orElseThrow(
-                    () -> new DataNotFoundException("Not found user_controller.")
-            );
-            AuctionResponse response = auctionMapper.toResponse(auction);
-            return response;
+        Auction auction = auctionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found user_controller.")
+        );
+        List<Bid> bids = bidRepository.findByAuction_Id(auction.getId());
+
+        AuctionDetailResponse response = auctionMapper.toResponseDetail(auction);
+        response.setBidList(bids.stream().map(biddingMapper::toResponse).toList());
+        return response;
 
     }
 
     @Override
-    public Boolean registerAuction(Long id, RegisterAuctionDTO dto) throws DataNotFoundException {
+    @Transactional
+    public Boolean registerAuction(Long id, RegisterAuctionDTO dto) throws DataNotFoundException, BadRequestException {
 
         User user = userRepository.findById(dto.getUserId()).orElseThrow(
                 () -> new DataNotFoundException("Not found user_controller.")
@@ -282,13 +299,29 @@ public class AuctionService implements IAuctionService {
                 () -> new DataNotFoundException("Not found auction.")
         );
 
-        if (wallet.getBalance() >= auction.getDepositPrice()){
-            Float newBalance = wallet.getBalance() - auction.getDepositPrice();
-            wallet.setBalance(newBalance) ;
-            walletRepository.save(wallet);
-        }else {
-            throw new NotAcceptableStatusException("Insufficient balance in wallet.");
+        if (auction.getStatus().equals(Status.COMING)
+                && !bidRepository.existsBidByAuction_IdAndUser_Id(auction.getId(), user.getId())) {
+            if (wallet.getBalance() >= auction.getDepositPrice()) {
+                Float newBalance = wallet.getBalance() - auction.getDepositPrice();
+                wallet.setBalance(newBalance);
+                walletRepository.save(wallet);
+
+                Bid bid = Bid.builder()
+                        .auction(auction)
+                        .user(user)
+                        .biddingPrice(auction.getDepositPrice())
+                        .status(BidingStatus.OPEN)
+                        .ratings(0)
+                        .build();
+                bidRepository.save(bid);
+            } else {
+                throw new NotAcceptableStatusException("Insufficient balance in wallet.");
+            }
+
+        } else {
+            throw new BadRequestException("auction register failed by user was registered or auction not COMING to register!!!");
         }
+
 
         return true;
     }
@@ -312,7 +345,6 @@ public class AuctionService implements IAuctionService {
         AuctionResponse response = auctionMapper.toResponse(auction);
         return response;
     }
-
 
 
 }

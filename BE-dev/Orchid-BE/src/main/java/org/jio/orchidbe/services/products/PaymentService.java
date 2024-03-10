@@ -21,6 +21,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -56,12 +59,27 @@ public class PaymentService implements IPaymentService{
         vnp_Params.put("vnp_ReturnUrl", PaymentConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", PaymentConfig.vnp_IpAddr);
 
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(cld.getTime());
+        //Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        // Tạo một LocalDateTime từ thời gian hiện tại và múi giờ GMT+7
+//        LocalDateTime now = LocalDateTime.now(ZoneId.of("Etc/GMT+7"));
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+//        String vnp_CreateDate = formatter.format(cld.getTime());
+        // Tạo một LocalDateTime từ thời gian hiện tại và múi giờ GMT+7
+        LocalDateTime nowU = LocalDateTime.now(ZoneId.of("Etc/GMT"));
+
+        LocalDateTime nowV1 = LocalDateTime.now();
+
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Etc/GMT-7"));
+
+        // Định dạng thời gian theo yêu cầu "yyyyMMddHHmmss"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String vnp_CreateDate = now.format(formatter);
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-        cld.add(Calendar.MINUTE, 15);
-        String vnp_ExpireDate = formatter.format(cld.getTime());
+        // Thêm thời gian vào 15 phút
+        LocalDateTime later = now.plusMinutes(15);
+        String vnp_ExpireDate = later.format(formatter);
+        //cld.add(Calendar.MINUTE, 15);
+        //String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
         List fieldNames = new ArrayList(vnp_Params.keySet());
@@ -122,7 +140,7 @@ public class PaymentService implements IPaymentService{
             if (existingTrans.getStatus().equals(OrderStatus.CONFIRMED)){
                 //throw new BadRequestException("transaction id " + existingTrans.getId() + " not true by status CONFIRMED");
                 failed(response,"transaction id " + existingTrans.getId() + " not true by status CONFIRMED"
-                        ,existingTrans, bankTranNo);
+                        ,existingTrans);
                 return "error";
             }
 
@@ -169,14 +187,14 @@ public class PaymentService implements IPaymentService{
                             } else {
                                 // error
 
-                                failed(response,"amount not true",existingTrans, bankTranNo);
+                                failed(response,"amount not true",existingTrans);
                                 return "error";
                             }
                         } else {
                             //throw new BadRequestException("order id " + existingOrder.getId() + " not true by status CONFIRMED");
 
                             failed(response,"order id " + existingOrder.getId() + " not true by status CONFIRMED"
-                                    ,existingTrans, bankTranNo);
+                                    ,existingTrans);
                             return "error";
                         }
 
@@ -197,8 +215,8 @@ public class PaymentService implements IPaymentService{
                     }
 
                     System.out.println("Thanh toán thành công");
-
-
+                    String url = BaseConstants.RETURN_PAYMENT_SUCCESS;
+                    response.sendRedirect(url);
                     return "win"; // Redirect về trang FrontEnd
                     // https://orchid-shop-iota.vercel.app/
 
@@ -219,7 +237,7 @@ public class PaymentService implements IPaymentService{
                 }
 
             }
-            failed(response,"error can not hash",existingTrans,bankTranNo);
+            failed(response,"error can not hash",existingTrans);
             return "error";
 
 
@@ -229,9 +247,9 @@ public class PaymentService implements IPaymentService{
     }
 
 
-    private String failed(HttpServletResponse response, String msg,Transaction transaction, String bankTranNo) throws IOException {
+    private String failed(HttpServletResponse response, String msg,Transaction transaction) throws IOException {
         transaction.setStatus(OrderStatus.FAILED);
-        transaction.setResource(bankTranNo);
+        //transaction.setResource(bankTranNo);
         transaction.setFailedReason(msg);
         String url = BaseConstants.RETURN_PAYMENT_FAILED+"&msg="+msg;
         response.sendRedirect(url);

@@ -8,6 +8,8 @@ package org.jio.orchidbe.dtos.auctions;/*  Welcome to Jio word
 */
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -16,6 +18,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class RegisterAuctionDTO {
-//    @NotBlank(message = "userId is required")
+
+    @NotNull(message = "userId is required")
     private Long userId;
 }

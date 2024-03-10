@@ -16,6 +16,7 @@ import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.GetAuctionResponse;
 import org.jio.orchidbe.services.products.IAuctionService;
@@ -93,27 +94,27 @@ public class AuctionController {
 //        return auctionMapper.toResponseList(waitingAuctions);
 //    }
 //
-    @GetMapping("/auctions/coming")
-    public List<AuctionResponse> getComingAuctions() {
-        // Lấy danh sách các phiên đấu giá có trạng thái COMING từ AuctionContainer
-        List<Auction> comingAuctions = auctionContainer.getComingAuctions();
-        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-        return auctionMapper.toResponseList(comingAuctions);
-    }
-
-    @GetMapping("/auctions/live")
-    public List<AuctionResponse> getLiveAuctions() {
-        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
-        List<Auction> liveAuctions = auctionContainer.getLiveAuctions();
-        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-        return auctionMapper.toResponseList(liveAuctions);
-    }
+//    @GetMapping("/auctions/coming")
+//    public List<AuctionResponse> getComingAuctions() {
+//        // Lấy danh sách các phiên đấu giá có trạng thái COMING từ AuctionContainer
+//        List<Auction> comingAuctions = auctionContainer.getComingAuctions();
+//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+//        return auctionMapper.toResponseList(comingAuctions);
+//    }
+//
+//    @GetMapping("/auctions/live")
+//    public List<AuctionResponse> getLiveAuctions() {
+//        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
+//        List<Auction> liveAuctions = auctionContainer.getLiveAuctions();
+//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+//        return auctionMapper.toResponseList(liveAuctions);
+//    }
 
     @GetMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<?> findAuctionById(@PathVariable Long id) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
-        AuctionResponse response = auctionService.getById(id);
+        AuctionDetailResponse response = auctionService.getById(id);
         apiResponse.ok(response);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
@@ -131,7 +132,7 @@ public class AuctionController {
     // register
     @PostMapping("/register-by-autionId/{id}")
     public ResponseEntity<?> registerAuctionById(@PathVariable Long id,
-        @Valid @RequestBody RegisterAuctionDTO dto) throws DataNotFoundException {
+        @Valid @RequestBody RegisterAuctionDTO dto) throws DataNotFoundException, BadRequestException {
         ApiResponse apiResponse = new ApiResponse();
         Boolean response = auctionService.registerAuction(id,dto);
         apiResponse.ok(response);

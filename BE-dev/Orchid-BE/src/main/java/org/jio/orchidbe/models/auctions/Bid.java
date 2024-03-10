@@ -32,7 +32,7 @@ public class Bid extends BaseEntity {
     private Long id;
 
     @Column(name = "bidding_price")
-    private Float biddingPrice;
+    private Float biddingPrice = 0f;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -42,6 +42,6 @@ public class Bid extends BaseEntity {
     private boolean top1 = false;
 
     @Column(name = "ratings")
-    private Integer ratings;
+    private Integer ratings = 0;
 
 }

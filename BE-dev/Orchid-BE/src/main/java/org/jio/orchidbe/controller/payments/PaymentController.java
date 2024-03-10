@@ -131,7 +131,7 @@ public class PaymentController {
                                  @RequestParam("vnp_BankCode") String bankCode,
                                  @RequestParam("vnp_ResponseCode") String responseCode,
                                  @RequestParam("vnp_OrderInfo") String order,
-                                 @RequestParam("vnp_BankTranNo") String bankTranNo,
+                                 @RequestParam(value = "vnp_BankTranNo", defaultValue = "no_value") String bankTranNo,
                                  HttpServletResponse response,
                                  HttpServletRequest request) throws Exception {
 

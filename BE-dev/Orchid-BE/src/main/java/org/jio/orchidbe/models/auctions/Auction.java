@@ -10,8 +10,10 @@ import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.models.products.Product;
+import org.jio.orchidbe.models.users.UserInfo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Builder
@@ -89,6 +91,5 @@ public class Auction extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
 
 }

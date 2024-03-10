@@ -2,6 +2,7 @@ package org.jio.orchidbe.mappers.auctions;
 
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.requests.auctions.CreateAuctionResquest;
+import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.GetAuctionResponse;
 import org.mapstruct.Mapper;
@@ -18,7 +19,11 @@ public interface AuctionMapper {
     AuctionResponse toResponse(Auction auction);
 
     @Mapping(source = "auction.product.id", target = "productID")
+
     GetAuctionResponse toAllResponse(Auction auction);
+
+    AuctionDetailResponse toResponseDetail(Auction auction);
+
 
     @Mapping(target = "product", ignore = true)
     Auction toEntity(CreateAuctionResquest createAuctionResquest);

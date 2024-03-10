@@ -98,11 +98,11 @@ public class OrderController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/list/pending")
-    public List<OrderResponse> getLiveAuctions() {
-        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
-        List<Order> pendingOrders = orderContainer.getOrders();
-        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-        return orderMapper.toResponseList(pendingOrders);
-    }
+//    @GetMapping("/list/pending")
+//    public List<OrderResponse> getLiveAuctions() {
+//        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
+//        List<Order> pendingOrders = orderContainer.getOrders();
+//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+//        return orderMapper.toResponseList(pendingOrders);
+//    }
 }

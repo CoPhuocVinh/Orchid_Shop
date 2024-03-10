@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 @Component
 public interface BiddingMapper {
+    @Mapping(source = "bid.auction.id", target = "auctionID")
+    @Mapping(source = "bid.user.id", target = "userID")
     BiddingResponse toResponse(Bid bid);
 
     Bid toEntity(CreateBidRequest createBidRequest);
