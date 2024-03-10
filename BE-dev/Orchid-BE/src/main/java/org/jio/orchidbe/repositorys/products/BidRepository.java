@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,8 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     Bid findByTop1TrueAndAuction_Id(Long auctionId);
 
     Optional<Bid> findByUser_Id(Long id);
+
+    List<Bid> findByAuction_Id(Long auctionId);
+
+    Boolean existsBidByAuction_IdAndUser_Id(Long auctionId, Long userId);
 }

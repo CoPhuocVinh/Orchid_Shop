@@ -16,6 +16,7 @@ import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.services.products.IAuctionService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -112,7 +113,7 @@ public class AuctionController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<?> findAuctionById(@PathVariable Long id) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
-        AuctionResponse response = auctionService.getById(id);
+        AuctionDetailResponse response = auctionService.getById(id);
         apiResponse.ok(response);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
@@ -130,7 +131,7 @@ public class AuctionController {
     // register
     @PostMapping("/register-by-autionId/{id}")
     public ResponseEntity<?> registerAuctionById(@PathVariable Long id,
-        @Valid @RequestBody RegisterAuctionDTO dto) throws DataNotFoundException {
+        @Valid @RequestBody RegisterAuctionDTO dto) throws DataNotFoundException, BadRequestException {
         ApiResponse apiResponse = new ApiResponse();
         Boolean response = auctionService.registerAuction(id,dto);
         apiResponse.ok(response);

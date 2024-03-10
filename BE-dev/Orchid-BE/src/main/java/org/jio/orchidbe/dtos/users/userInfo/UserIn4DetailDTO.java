@@ -7,6 +7,7 @@ package org.jio.orchidbe.dtos.users.userInfo;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -31,6 +32,7 @@ public class UserIn4DetailDTO {
     @Pattern(regexp = "^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$"
             , message = "Invalid phone number!")
     private String phone;
-
+    @JsonProperty("info_name")
+    private String infoName;
     private boolean defaulted = false;
 }

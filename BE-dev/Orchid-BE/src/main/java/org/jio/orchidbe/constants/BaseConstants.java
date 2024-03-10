@@ -24,8 +24,8 @@ public class BaseConstants {
 
     public static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.DESC;
 
-    public static final String HOST_RETURN = "http://localhost:8088/api/v1";
-
+    public static final String HOST_RETURN = "https://orchid.fams.io.vn/api/v1";
+    //public static final String HOST_RETURN = "http://localhost:8088/api/v1";
     public static final String RETURN_PAYMENT_SUCCESS = "http://localhost:3000/test-success?test=1";
     public static final String RETURN_PAYMENT_FAILED = "http://localhost:3000/test-failed?test=1";
 

@@ -115,6 +115,12 @@ public class UserService implements IUserService{
                 }
             });
 
+            if(userDTO.getPassword() != null && !userDTO.getPassword().isBlank()){
+                String password = userDTO.getPassword();
+                String encodedPassword = passwordEncoder.encode(password);
+                user.setPassword(encodedPassword);
+
+            }
 
             userDTOResponse = userMapper.toResponse(user);
 

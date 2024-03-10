@@ -16,6 +16,7 @@ import org.jio.orchidbe.dtos.users.userInfo.Userin4DetailCreate;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.users.UserInfoMapper;
+import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
@@ -48,10 +49,10 @@ public class UserInfoService implements IUserInfoService{
 
     @Override
     @Transactional
-    public UserIn4DetailDTO updateUserIn4ById(Long userId, UserIn4DetailDTO userDTO, BindingResult result) throws DataNotFoundException {
+    public UserIn4DetailDTO updateUserIn4ById(Long Id, UserIn4DetailDTO userDTO, BindingResult result) throws DataNotFoundException {
 
-        isUserExistsById(userId);
-        UserInfo userin4 = userInfoRepository.findById(userDTO.getId()).orElseThrow(
+        //isUserExistsById(userId);
+        UserInfo userin4 = userInfoRepository.findById(Id).orElseThrow(
                 () -> new DataNotFoundException("Not found userinfo.")
         );
         if (userin4.isDeleted() == true){
@@ -101,7 +102,11 @@ public class UserInfoService implements IUserInfoService{
 
     @Override
     public UserIn4DetailDTO CreateUserIn4DefaultById(Long id, @Valid Userin4DetailCreate userDTO) throws Exception {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found user by id: " + id)
+        );
         UserInfo newUserIn4 = userInfoMapper.toEntity(userDTO);
+        newUserIn4.setUser(user);
         try {
             userInfoRepository.save(newUserIn4);
         } catch (DataIntegrityViolationException e) {
