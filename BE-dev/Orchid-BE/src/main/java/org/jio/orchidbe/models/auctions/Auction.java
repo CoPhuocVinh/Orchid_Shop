@@ -29,7 +29,7 @@ public class Auction extends BaseEntity {
     @Column(name = "end_date")
     private LocalDateTime endDate;
 
-    @Column(name = "start_time")
+    @Column(name = "start_date")
     private LocalDateTime startDate;
 
     @Column(name = "status")

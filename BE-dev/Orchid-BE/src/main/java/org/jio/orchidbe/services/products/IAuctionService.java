@@ -8,6 +8,7 @@ import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionResponse;
+import org.jio.orchidbe.responses.GetAuctionResponse;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,9 @@ import java.util.List;
 
 public interface IAuctionService {
     AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException;
-    Page<AuctionResponse> getAllAuctions(GetAllAuctionResquest getAllAuctionResquest);
+    Page<GetAuctionResponse> getAllAuctions(GetAllAuctionResquest getAllAuctionResquest);
 
-    void endAuction(long auctionID,int quantity) throws DataNotFoundException;
+    void endAuction(Auction auction) throws DataNotFoundException;
 
     AuctionResponse DeteleById(Long id) throws DataNotFoundException;
 

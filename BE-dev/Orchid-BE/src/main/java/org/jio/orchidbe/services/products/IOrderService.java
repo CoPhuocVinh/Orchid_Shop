@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.requests.Request;
+import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
@@ -14,9 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
 public interface IOrderService {
-    //OrderResponse createOrder(CreateOrderRequest createOrderRequest) throws DataNotFoundException, BadRequestException;
+//    OrderResponse createOrder(CreateOrderRequest createOrderRequest) throws DataNotFoundException, BadRequestException;
     Page<OrderResponse> getAllOrders(GetAllOrderRequest getAllOrderRequest);
-    OrderResponse deleteOrder(Request request) throws DataNotFoundException;
+    OrderResponse deleteOrder(Long id) throws DataNotFoundException;
     @Transactional
     ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id,
                                BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException;

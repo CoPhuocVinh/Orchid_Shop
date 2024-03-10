@@ -24,14 +24,15 @@ public class ScheduleAuction {
     private AuctionService auctionService;
 
 
-//    @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
+    @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
     public void checkAuctionEndings() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
         List<Auction> auctions = getAuctionsEndingBefore(currentTime, Status.LIVE);
 
         for (Auction auction : auctions) {
             // Truyền số lượng vào phương thức endAuction
-            auctionService.endAuction(auction.getId(), auction.getQuantity());
+            auctionService.endAuction(auction);
+
         }
     }
     private List<Auction> getAuctionsEndingBefore(LocalDateTime endTime, Status status) {
@@ -41,13 +42,14 @@ public class ScheduleAuction {
     }
 
     @Scheduled(fixedRate = 10000) // Run every 1 minute
-    public void checkAuctionStatus() {
+    public void checkAuctionStatus() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
 
         for (Auction auction : pendingAuctions) {
             auction.setStatus(Status.LIVE);
             auctionContainer.removeAuctionFromList(auction, Status.COMING);
+            auctionContainer.removeOnAuctionListById(auction.getId());
             auctionContainer.moveAuctionToList(auction, Status.LIVE);
             auctionRepository.save(auction);
         }

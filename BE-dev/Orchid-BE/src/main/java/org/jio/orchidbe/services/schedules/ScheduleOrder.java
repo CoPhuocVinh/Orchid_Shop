@@ -20,28 +20,34 @@ import java.util.stream.Collectors;
 public class ScheduleOrder {
 
     @Autowired
-    private OrderService orderService;
-    @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private OrderContainer orderContainer;
 
     @Scheduled(fixedRate = 1000) // Run every 1 minute
-    public void checkAuctionExpired() throws DataNotFoundException {
+    public void checkOrderExpired() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
-        List<Order> expiredOrders = getOrderPending(currentTime, OrderStatus.PENDING);
+        List<Order> expiredAuctions = getExpireOrdersStartingAt(currentTime, OrderStatus.PENDING);
 
-        for (Order order : expiredOrders) {
+        for (Order order : expiredAuctions) {
             order.setStatus(OrderStatus.FAILED);
             order.setExpired(true);
+
             orderContainer.removeOrderById(order.getId());
+
             orderRepository.save(order);
         }
     }
 
-    private List<Order> getOrderPending(LocalDateTime expire, OrderStatus status) {
+    private List<Order> getExpireOrdersStartingAt(LocalDateTime expire, OrderStatus status) {
         return orderContainer.getOrders().stream()
-                .filter(order -> expire.isAfter(order.getExpiredAt()) && order.getStatus() == status)
+                .filter(order -> {
+                    LocalDateTime orderExpiredAt = order.getExpiredAt();
+                    return orderExpiredAt != null && expire.isAfter(orderExpiredAt); // Kiểm tra null trước khi gọi phương thức isAfter()
+                })
+                .filter(order -> order.getStatus() == status) // Lọc theo trạng thái
                 .collect(Collectors.toList());
     }
+
+
 }

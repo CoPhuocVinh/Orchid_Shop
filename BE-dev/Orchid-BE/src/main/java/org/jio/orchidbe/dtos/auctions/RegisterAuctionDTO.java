@@ -16,6 +16,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class RegisterAuctionDTO {
-    @NotBlank(message = "userId is required")
+//    @NotBlank(message = "userId is required")
     private Long userId;
 }

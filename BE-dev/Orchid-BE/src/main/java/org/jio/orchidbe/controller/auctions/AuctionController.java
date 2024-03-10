@@ -17,6 +17,7 @@ import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionResponse;
+import org.jio.orchidbe.responses.GetAuctionResponse;
 import org.jio.orchidbe.services.products.IAuctionService;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -79,19 +80,19 @@ public class AuctionController {
     public ResponseEntity<?> getAuction(@ModelAttribute GetAllAuctionResquest getAllAuctionResquest){
         ApiResponse apiResponse = new ApiResponse();
 
-        Page<AuctionResponse> auctionPage = auctionService.getAllAuctions(getAllAuctionResquest);
+        Page<GetAuctionResponse> auctionPage = auctionService.getAllAuctions(getAllAuctionResquest);
         apiResponse.ok(auctionPage);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/auctions/waiting")
-    public List<AuctionResponse> getWaitingAuctions() {
-        // Lấy danh sách các phiên đấu giá có trạng thái WAITING từ AuctionContainer
-        List<Auction> waitingAuctions = auctionContainer.getWaitingAuctions();
-        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-        return auctionMapper.toResponseList(waitingAuctions);
-    }
-
+//    @GetMapping("/auctions/waiting")
+//    public List<AuctionResponse> getWaitingAuctions() {
+//        // Lấy danh sách các phiên đấu giá có trạng thái WAITING từ AuctionContainer
+//        List<Auction> waitingAuctions = auctionContainer.getWaitingAuctions();
+//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+//        return auctionMapper.toResponseList(waitingAuctions);
+//    }
+//
     @GetMapping("/auctions/coming")
     public List<AuctionResponse> getComingAuctions() {
         // Lấy danh sách các phiên đấu giá có trạng thái COMING từ AuctionContainer

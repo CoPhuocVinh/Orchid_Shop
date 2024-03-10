@@ -14,7 +14,9 @@ import java.util.Optional;
 public interface BidRepository extends JpaRepository<Bid, Long> {
     Page<Bid> findAll(Specification<Bid> specification, Pageable pageable);
 
-    Bid findByTop1TrueAndAuction_Id(Long auctionId);
+    Bid findByAuctionIdAndTop1(Long auctionId, boolean top1);
 
     Optional<Bid> findByUser_Id(Long id);
+
+
 }

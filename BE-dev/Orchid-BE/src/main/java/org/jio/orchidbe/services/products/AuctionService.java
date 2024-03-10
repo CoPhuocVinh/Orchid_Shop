@@ -6,16 +6,22 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
+import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.exceptions.OptimisticException;
+import org.jio.orchidbe.mappers.orders.OrderMapper;
 import org.jio.orchidbe.models.auctions.Bid;
+import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.models.wallets.Wallet;
-import org.jio.orchidbe.repositorys.products.BidRepository;
-import org.jio.orchidbe.repositorys.products.WalletRepository;
+import org.jio.orchidbe.repositorys.products.*;
+import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.responses.GetAuctionResponse;
+import org.jio.orchidbe.responses.OrderContainer;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ReflectionUtils;
@@ -37,8 +43,6 @@ import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.models.products.Product;
-import org.jio.orchidbe.repositorys.products.AuctionRepository;
-import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -68,12 +72,63 @@ public class AuctionService implements IAuctionService {
     @Autowired
     private OrderService orderService;
     @Autowired
+    private OrderContainer orderContainer;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
     private AuctionContainer auctionContainer;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private OrderMapper orderMapper;
 
     @Autowired
     private WalletRepository walletRepository;
+    @Autowired
+    private OrderRepository orderRepository;
+
+
+    @Transactional
+    @Override
+    public void endAuction(Auction auction) throws DataNotFoundException {
+
+        Bid bid = bidRepository.findByAuctionIdAndTop1(auction.getId(), true);
+        if (auction.getStatus() == Status.LIVE) {
+            // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
+            auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+            auction.setStatus(Status.END);
+           // auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+
+            // Tạo entity Order từ auctionID bằng cách sử dụng OrderMapper
+            Order order = orderMapper.toEntity(auction.getId());
+
+            // Lấy thông tin user từ bid và userInfo
+            User user = userRepository.findById(bid.getUser().getId())
+                    .orElseThrow(() -> new DataNotFoundException("User not found with ID: " + bid.getUser().getId()));
+            UserInfo userInfo = userInfoRepository.findById(bid.getUser().getId())
+                    .orElseThrow(() -> new DataNotFoundException("User information not found with ID: " + bid.getUser().getId()));
+
+            // Set các thuộc tính cho order
+            order.setPhone(userInfo.getPhone());
+            order.setExpiredAt(LocalDateTime.now().plusHours(24));
+            order.setAddress(userInfo.getAddress());
+            order.setProductCode(auction.getProductCode());
+            order.setProductName(auction.getProductName());
+            order.setAuction(bid.getAuction());
+            order.setAuction(auction);
+            order.setUser(user);
+            order.setStatus(OrderStatus.PENDING);
+            // Thêm order vào container và lưu order
+            orderContainer.addOrder(order);
+            orderRepository.save(order);
+
+
+            auctionRepository.save(auction);
+        } else {
+            // Xử lý khi phiên đấu giá không ở trạng thái hoạt động
+            // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
+        }
+    }
 
     @Override
     public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
@@ -118,9 +173,9 @@ public class AuctionService implements IAuctionService {
 
 
     @Override
-    public Page<AuctionResponse> getAllAuctions(GetAllAuctionResquest request) {
+    public Page<GetAuctionResponse> getAllAuctions(GetAllAuctionResquest request) {
         return auctionRepository.findAll(request.getSpecification(), request.getPageable())
-                .map(auctionMapper::toResponse);
+                .map(auctionMapper::toAllResponse);
     }
 
 
@@ -245,38 +300,7 @@ public class AuctionService implements IAuctionService {
         }
     }
 
-    @Override
-    public void endAuction(long auctionID, int quantity) throws DataNotFoundException {
-        Optional<Auction> auction1 = auctionRepository.findById(auctionID);
-        Auction auction = auction1.get();
 
-        Bid bid = bidRepository.findByTop1TrueAndAuction_Id(auctionID);
-        if (auction.getStatus() == Status.LIVE) {
-            // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
-            auction.setStatus(Status.END);
-            auctionContainer.removeAuctionFromList(auction, Status.LIVE);
-            auction.setEndPrice(bid.getBiddingPrice());
-
-            // Tạo đơn hàng mới từ thông tin của phiên đấu giá
-            CreateOrderRequest createOrderRequest = new CreateOrderRequest();
-            createOrderRequest.setAuctionID(auctionID);
-            createOrderRequest.setUserID(bid.getUser().getId());
-            createOrderRequest.setQuantity(quantity);
-
-            try {
-                orderService.createOrder(createOrderRequest);
-            } catch (DataNotFoundException | BadRequestException e) {
-                // Xử lý nếu có lỗi xảy ra khi tạo đơn hàng
-                e.printStackTrace();
-                // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
-            }
-            auctionContainer.getLiveAuctions().remove(auction);
-            auctionRepository.save(auction);
-        } else {
-            // Xử lý khi phiên đấu giá không ở trạng thái hoạt động
-            // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
-        }
-    }
 
     @Override
     @Transactional

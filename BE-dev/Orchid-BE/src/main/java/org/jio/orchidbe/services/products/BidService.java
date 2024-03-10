@@ -15,6 +15,7 @@ import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.bids.CreateBidRequest;
 import org.jio.orchidbe.requests.bids.GetAllBidRequest;
 import org.jio.orchidbe.requests.bids.UpdateBiddingRequest;
+import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,10 @@ public class BidService implements IBidService{
     @Transactional
     public BiddingResponse Bidding(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException {
 
-
+        Auction auction = auctionRepository.findById(createBidRequest.getAuctionID())
+                .orElseThrow(() ->
+                        new DataNotFoundException(
+                                "Cannot find auction with id: "+ createBidRequest.getAuctionID()));
         // check user register auction
         Bid userBid = bidRepository.findByUser_Id(createBidRequest.getUserID())
                 .orElseThrow(() ->
@@ -57,12 +61,7 @@ public class BidService implements IBidService{
                                 "Cannot find user with id: "+ createBidRequest.getUserID()));
 
 
-        Auction auction = auctionRepository.findById(createBidRequest.getAuctionID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find product with id: "+ createBidRequest.getAuctionID()));
-
-        Bid top1Bid = bidRepository.findByTop1TrueAndAuction_Id(createBidRequest.getAuctionID());
+        Bid top1Bid = bidRepository.findByAuctionIdAndTop1(createBidRequest.getAuctionID(), true);
         if (top1Bid == null){
             // thg dau tien dau gia
             // > start price of auction + ..
@@ -153,7 +152,7 @@ public class BidService implements IBidService{
     }
 
     @Override
-    public BiddingResponse deleteBidding(Long id) throws DataNotFoundException {
+    public BiddingResponse deleteBidding(Long  id) throws DataNotFoundException {
         Optional<Bid> bid = bidRepository.findById(id);
         Bid existingBid = bid.orElseThrow(() -> new DataNotFoundException("Bidding not found with id: " + id));
         existingBid.setDeleted(true);

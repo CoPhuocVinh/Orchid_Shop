@@ -10,16 +10,14 @@ import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
-import org.jio.orchidbe.repositorys.products.AuctionRepository;
-import org.jio.orchidbe.repositorys.products.OrderRepository;
-import org.jio.orchidbe.repositorys.products.TransactionRepository;
-import org.jio.orchidbe.repositorys.products.WalletRepository;
+import org.jio.orchidbe.repositorys.products.*;
 import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.Request;
@@ -27,6 +25,8 @@ import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
+import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.OrderContainer;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.jio.orchidbe.utils.GenerateCodeUtils;
@@ -42,6 +42,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +60,8 @@ public class OrderService implements IOrderService {
     @Autowired
     private AuctionRepository auctionRepository;
     @Autowired
+    private BidRepository bidRepository;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserInfoRepository userInfoRepository;
@@ -68,6 +71,9 @@ public class OrderService implements IOrderService {
     private IPaymentService paymentService;
     @Autowired
     private OrderContainer orderContainer;
+    @Autowired
+    private AuctionContainer auctionContainer;
+
 
     @PostConstruct
     public void initializeOrders() {
@@ -78,36 +84,45 @@ public class OrderService implements IOrderService {
     }
 
 
-    public OrderResponse createOrder(CreateOrderRequest createOrderRequest) throws DataNotFoundException, BadRequestException {
-        Order order1 = orderMapper.toEntity(createOrderRequest);
-//        validateOrder(createOrderRequest.getAuctionTitle());
+////    @Override
+//
+//public OrderResponse createOrder(Long auctionID) throws DataNotFoundException, BadRequestException {
+//    // Retrieve the auction from the database
+//    Optional<Auction> auctionOptional = auctionRepository.findById(auctionID);
+//    Auction auction = auctionOptional.get();
+//    // Create a new order entity
+//    Order order = new Order();
+//    LocalDateTime currentTime = LocalDateTime.now();
+//    LocalDateTime expireTime = currentTime.plusHours(24);
+//
+//    // Retrieve user information from the order
+//    Bid bid = bidRepository.findByAuction_Id(auctionID);
+//
+//    User user = userRepository.findById(bid.getUser().getId())
+//            .orElseThrow(() -> new DataNotFoundException("User not found with ID: " + bid.getUser().getId()));
+//    Order finalOrder1 = order;
+//    UserInfo userInfo = userInfoRepository.findById(bid.getUser().getId())
+//            .orElseThrow(() -> new DataNotFoundException("User information not found with ID: " + bid.getUser().getId()));
+//
+//    // Set order details
+//    order.setPhone(userInfo.getPhone());
+//    order.setExpiredAt(expireTime);
+//    order.setAddress(userInfo.getAddress());
+//    order.setProductCode(auction.getProductCode());
+//    order.setProductName(auction.getProductName());
+//    order.setUser(user);
+//    order.setAuction(auction);
+//    order.setStatus(OrderStatus.PENDING);
+//    orderContainer.addOrder(order);
+//
+//    // Save the order to the database
+//    order = orderRepository.save(order);
+//
+//    // Map the order entity to a response DTO and return it
+//    return orderMapper.toResponse(order);
+//}
+//
 
-        Auction auction = auctionRepository.findById(createOrderRequest.getAuctionID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find product with id: " + createOrderRequest.getAuctionID()));
-        User user = userRepository.findById(createOrderRequest.getUserID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find product with id: " + createOrderRequest.getUserID()));
-        UserInfo userInfo = userInfoRepository.findById(createOrderRequest.getUserID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find product with id: " + createOrderRequest.getUserID()));
-        if (createOrderRequest.getQuantity() > auction.getQuantity()) {
-            throw new BadRequestException("Quantity of auction must be less than or equal to product quantity.");
-        }
-
-        order1.setPhone(userInfo.getPhone());
-        order1.setAddress(userInfo.getAddress());
-        order1.setProductCode(auction.getProductCode());
-        order1.setProductName(auction.getProductName());
-        order1.setUser(user);
-        order1.setStatus(OrderStatus.PENDING);
-        orderRepository.save(order1);
-
-        return orderMapper.toResponse(order1);
-    }
 
     @Override
     public Page<OrderResponse> getAllOrders(GetAllOrderRequest getAllOrderRequest) {
@@ -116,81 +131,13 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderResponse deleteOrder(Request request) throws DataNotFoundException {
-        Optional<Order> order1 = orderRepository.findById(request.getId());
-        Order existingOrder = order1.orElseThrow(() -> new DataNotFoundException("Order not found with id: " + request.getId()));
+    public OrderResponse deleteOrder(Long  id) throws DataNotFoundException {
+        Optional<Order> order = orderRepository.findById(id);
+        Order existingOrder = order.orElseThrow(() -> new DataNotFoundException("Order not found with id: " + id));
         existingOrder.setDeleted(true);
-        existingOrder.setModifiedBy(request.getBy());
         Order updatedOrder = orderRepository.save(existingOrder);
         return orderMapper.toResponse(updatedOrder);
     }
-
-//    @Override
-//    @Transactional
-//    public ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id, BindingResult bindingResult) throws ChangeSetPersister.NotFoundException {
-//        ApiResponse apiResponse = new ApiResponse();
-//        if (bindingResult.hasErrors()) {
-//            apiResponse.error(validatorUtil.handleValidationErrors(bindingResult.getFieldErrors()));
-//            return ResponseEntity.badRequest().body(apiResponse);
-//        }
-//
-//        final Order order = orderRepository.findById(id).orElseThrow(
-//                () -> new ChangeSetPersister.NotFoundException()
-//        );
-//        //create new Transaction -> OrderStatus = Pending
-//        //check payment method
-//
-//        // if payment method = wallet
-//
-//            //check số dư > order.TOtal
-//                //
-//                //true : số dư = số dư - order total
-//                // set status Transaction = confirmed
-//                //set Status của Order = confirmed
-//                //return successful
-//
-//                //false: set status Transaction = failed
-//                //set Status của Order = Pending
-//                //Return Failed vì số dư không   đủ
-//
-//        // if payment method == vnpay
-//            // gọi service Translate url của vnpay truyền tham số "auction-" + id của order
-//            // return url
-//            //
-//
-//
-//
-//        try {
-//            // đổ data theo field
-////            validateOrder(updateOrderRequest.getProductName());
-//            ReflectionUtils.doWithFields(updateOrderRequest.getClass(), field -> {
-//                field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
-//                Object newValue = field.get(updateOrderRequest);
-//                if (newValue != null) { // lấy các giá trị không null
-//                    String fieldName = field.getName();
-//                    Field existingField = ReflectionUtils.findField(order.getClass(), fieldName);
-//                    if (existingField != null) {
-//                        existingField.setAccessible(true);
-//                        ReflectionUtils.setField(existingField, order, newValue);
-//                    }
-//                }
-//            });
-//
-//            Order updateOrder = orderRepository.save(order);
-//
-//            OrderResponse orderResponse = orderMapper.toResponse(updateOrder);
-//            apiResponse.ok(orderResponse);
-//            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-//        } catch (OptimisticLockingFailureException ex) {
-//            throw new OptimisticException("Data is updated by another user!");
-//        } catch (DataIntegrityViolationException e) {
-//            if (bindingResult.hasErrors()) {
-//                apiResponse.error(validatorUtil.handleValidationErrors(bindingResult.getFieldErrors()));
-//                return ResponseEntity.badRequest().body(apiResponse);
-//            }
-//            throw new DataIntegrityViolationException("Contract data");
-//        }
-//    }
 
 
     @Override

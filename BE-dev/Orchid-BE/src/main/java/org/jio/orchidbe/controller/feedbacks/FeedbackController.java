@@ -63,7 +63,7 @@ public class FeedbackController {
 
     }
 
-    @DeleteMapping("/delete-feedback/{id}") // Sử dụng @DeleteMapping thay vì @PostMapping
+    @DeleteMapping("/delete-feedback/{id}")
     public ResponseEntity<?> deleteFeedback(
             @PathVariable("id") Long id
     ) throws DataNotFoundException {

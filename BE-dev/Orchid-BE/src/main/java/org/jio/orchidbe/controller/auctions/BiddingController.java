@@ -1,5 +1,7 @@
 package org.jio.orchidbe.controller.auctions;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -12,6 +14,7 @@ import org.jio.orchidbe.requests.bids.UpdateBiddingRequest;
 import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
+import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.jio.orchidbe.services.products.IBidService;
@@ -30,7 +33,7 @@ public class BiddingController {
     private final IBidService bidService;
     private final ValidatorUtil validatorUtil;
 
-    @PostMapping("create")
+    @PostMapping("bid")
     public ResponseEntity<?> createBidding(
             @Valid @RequestBody CreateBidRequest createBidRequest,
             BindingResult result
@@ -65,23 +68,15 @@ public class BiddingController {
 
     }
 
-    @PostMapping("delete-bidding")
-    public ResponseEntity<?> deleteBidding(
-            @Valid @RequestBody Long id,
-            BindingResult result
-    ) throws DataNotFoundException {
+    @DeleteMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> DeleteById(@PathVariable Long id) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
-        if (result.hasErrors()) {
-            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-            return ResponseEntity.badRequest().body(apiResponse);
-        }
-
-        BiddingResponse newBidding = bidService.deleteBidding(id);
-
-        apiResponse.ok(newBidding);
+        BiddingResponse response = bidService.deleteBidding(id);
+        apiResponse.ok(response);
+        apiResponse.setMessage("Delete successfully with auction id: " + id);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-
 //    @PostMapping("isTop1")
 //    public ResponseEntity<?> isTop1Bidding(
 //            @Valid @RequestBody Long id,

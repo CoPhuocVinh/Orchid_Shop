@@ -1,14 +1,21 @@
 package org.jio.orchidbe.controller.orders;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
+import org.jio.orchidbe.mappers.orders.OrderMapper;
+import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.requests.Request;
+import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
+import org.jio.orchidbe.responses.AuctionResponse;
+import org.jio.orchidbe.responses.OrderContainer;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.jio.orchidbe.services.products.IOrderService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -19,12 +26,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("${api.prefix}/orders")
 @RequiredArgsConstructor
 public class OrderController {
     private final IOrderService orderService;
     private final ValidatorUtil validatorUtil;
+    private final OrderContainer orderContainer;
+    private final OrderMapper orderMapper;
 
 //    @PostMapping("create")
 //    public ResponseEntity<?> createOrder(
@@ -51,20 +62,13 @@ public class OrderController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("delete-order")
-    public ResponseEntity<?> deleteOrder(
-            @Valid @RequestBody Request deleteOrderRequest,
-            BindingResult result
-    ) throws DataNotFoundException {
+    @DeleteMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> DeleteById(@PathVariable Long id) throws DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
-        if (result.hasErrors()) {
-            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-            return ResponseEntity.badRequest().body(apiResponse);
-        }
-
-        OrderResponse newOrder = orderService.deleteOrder(deleteOrderRequest);
-
-        apiResponse.ok(newOrder);
+        OrderResponse response = orderService.deleteOrder(id);
+        apiResponse.ok(response);
+        apiResponse.setMessage("Delete successfully with auction id: " + id);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
@@ -94,4 +98,11 @@ public class OrderController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/list/pending")
+    public List<OrderResponse> getLiveAuctions() {
+        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
+        List<Order> pendingOrders = orderContainer.getOrders();
+        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+        return orderMapper.toResponseList(pendingOrders);
+    }
 }
