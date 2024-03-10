@@ -21,7 +21,7 @@ public interface AuctionMapper {
     @Mapping(source = "auction.product.id", target = "productID")
 
     GetAuctionResponse toAllResponse(Auction auction);
-
+    @Mapping(source = "auction.product.id", target = "productID")
     AuctionDetailResponse toResponseDetail(Auction auction);
 
 

@@ -94,21 +94,21 @@ public class AuctionController {
 //        return auctionMapper.toResponseList(waitingAuctions);
 //    }
 //
-//    @GetMapping("/auctions/coming")
-//    public List<AuctionResponse> getComingAuctions() {
-//        // Lấy danh sách các phiên đấu giá có trạng thái COMING từ AuctionContainer
-//        List<Auction> comingAuctions = auctionContainer.getComingAuctions();
-//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-//        return auctionMapper.toResponseList(comingAuctions);
-//    }
+    @GetMapping("/auctions/coming")
+    public List<AuctionResponse> getComingAuctions() {
+        // Lấy danh sách các phiên đấu giá có trạng thái COMING từ AuctionContainer
+        List<Auction> comingAuctions = auctionContainer.getComingAuctions();
+        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+        return auctionMapper.toResponseList(comingAuctions);
+    }
 //
-//    @GetMapping("/auctions/live")
-//    public List<AuctionResponse> getLiveAuctions() {
-//        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
-//        List<Auction> liveAuctions = auctionContainer.getLiveAuctions();
-//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-//        return auctionMapper.toResponseList(liveAuctions);
-//    }
+    @GetMapping("/auctions/live")
+    public List<AuctionResponse> getLiveAuctions() {
+        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
+        List<Auction> liveAuctions = auctionContainer.getLiveAuctions();
+        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+        return auctionMapper.toResponseList(liveAuctions);
+    }
 
     @GetMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
