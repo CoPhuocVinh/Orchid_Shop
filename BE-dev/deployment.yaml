@@ -1,0 +1,114 @@
+#scp -pr /Users/hoangnd/Documents/code/udemy/ShopApp/sql root@45.117.179.175:/root/
+# scp -pr D:/workspace/SWD/Orchid_Shop/BE-dev/sql root@128.199.185.211:/root/
+#scp -pr /Users/hoangnd/Documents/code/udemy/ShopApp/shopapp-backend root@45.117.179.175:/root/
+# scp -pr D:/workspace/SWD/Orchid_Shop/BE-dev/Orchid-BE root@128.199.185.211:/root/
+
+#scp -pr /Users/hoangnd/Documents/code/udemy/ShopApp/shopapp-backend/src/main/resources/application.yaml root@45.117.179.175:/root/shopapp-backend/src/main/resources/
+#scp -pr /Users/hoangnd/Documents/code/udemy/ShopApp/shopapp-backend/pom.xml root@45.117.179.175:/root/shopapp-backend/pom.xml
+#scp -pr /Users/hoangnd/Documents/code/udemy/ShopApp/deployment.yaml root@45.117.179.175:/root/
+# scp -pr /Users/hoangnd/Documents/code/udemy/ShopApp/DockerfileJavaSpring root@45.117.179.175:/root/
+# scp -pr D:/workspace/SWD/Orchid_Shop/BE-dev/deployment.yaml root@128.199.185.211:/root/
+
+# D:\workspace\SWD\Orchid_Shop\BE-dev\Orchid-BE\src\main\resources\application.yml
+#         D:\workspace\SWD\Orchid_Shop\BE-dev\Orchid-BE\src\main\resources
+# scp -pr D:/workspace/SWD/Orchid_Shop/BE-dev/Orchid-BE/src/main/resources/application.yml root@128.199.185.211:/root/Orchid-BE/src/main/resources/
+# scp -pr D:/workspace/SWD/Orchid_Shop/BE-dev/Orchid-BE/src/main/java/org/jio/orchidbe/configs/OpenApiConfig.java  root@128.199.185.211:/root/Orchid-BE/src/main/java/org/jio/orchidbe/configs/
+
+# scp -pr D:/workspace/SWD/Orchid_Shop/BE-dev/Orchid-BE/target/Orchid-BE-0.0.1-SNAPSHOT.jar root@128.199.185.211:/root/Orchid-BE/target/
+#Deploy angular app
+#copy angular code to server
+#rm -rf /Users/hoangnd/Documents/code/udemy/ShopApp/shopapp-angular/node_modules
+#scp -r /Users/hoangnd/Documents/code/udemy/ShopApp/shopapp-angular root@45.117.179.175:/root/
+#scp -r /Users/hoangnd/Documents/code/udemy/ShopApp/shopapp-angular/src/app/environments/environment.ts root@45.117.179.175:/root/shopapp-angular/src/app/environments/
+#scp -pr /Users/hoangnd/Documents/code/udemy/ShopApp/DockerfileAngular root@45.117.179.175:/root/
+#scp -pr /Users/hoangnd/Documents/code/udemy/ShopApp/deployment.yaml root@45.117.179.175:/root/
+
+version: "3.7"
+services:
+  mysql8-container:
+    container_name: mysql8-container
+    image: mysql:8.2.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Abc123456789@
+      MYSQL_DATABASE: ShopApp
+    ports:
+      - 3307:3306
+    volumes:
+      - ./sql/shopapp.sql:/docker-entrypoint-initdb.d/init-script.sql
+    networks:
+      - shopapp-network
+
+  redis-container:
+    image: docker.io/redis:7.2.3
+    container_name: redis-container
+    restart: always
+    ports:
+      - "6379:6379" # Port mapping for Redis, you can change the host port as needed
+    volumes:
+      - ./redis-data:/data # Mount a volume for Redis data persistence
+    networks:
+      - shopapp-network
+
+  beapp-spring-container:
+    container_name: beapp-spring-container
+    build:
+      context: .
+      dockerfile: DockerfileJavaSpring
+      #docker tag <image_id> shopapp-spring:1.0.0
+    ports:
+      - 8099:8088
+    environment:
+      #SPRING_DATASOURCE_URL: jdbc:mysql://mysql8-container:3306/ShopApp?serverTimezone=UTC&allowPublicKeyRetrieval=true
+      # SPRING_DATASOURCE_URL: jdbc:mysql://mysql8-container:3306/ShopApp?serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://128.199.185.211:3307/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True
+      SPRING_DATASOURCE_PASSWORD: Abc123456789@
+      # MYSQL_ROOT_PASSWORD: Abc123456789@
+      REDIS_HOST: redis-container
+      REDIS_PORT: 6379
+    #depends_on only waits for the container to start, not for the service inside the container to be fully operational
+    # depends_on:
+    #   - mysql8-container
+    networks:
+      - shopapp-network
+    healthcheck:
+      #test: ["CMD-SHELL", "curl --fail http://localhost:8088/healthcheck/health || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail http://localhost:8088/api/v1/actuator/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s #20s after container created, health check
+
+networks:
+  shopapp-network:
+    name: shopapp-network
+    driver: bridge
+#docker-compose -f ./deployment.yaml down
+
+#docker-compose -f ./deployment.yaml rm -s -f mysql8-container
+#docker-compose -f ./deployment.yaml up -d mysql8-container
+
+#docker-compose -f ./deployment.yaml rm -s -f phpmyadmin8-container
+#docker-compose -f ./deployment.yaml up -d phpmyadmin8-container
+
+#docker-compose -f ./deployment.yaml rm -s -f beapp-spring-container
+#docker-compose -f ./deployment.yaml up -d beapp-spring-container --build
+#docker logs shopapp-spring-container
+
+#docker-compose -f ./deployment.yaml rm -s -f shopapp-angular-container
+#docker-compose -f ./deployment.yaml up -d shopapp-angular-container
+#docker logs shopapp-angular-container
+
+#docker-compose -f ./deployment.yaml rm -s -f redis-container
+#docker-compose -f ./deployment.yaml up -d redis-container
+
+#docker-compose -f ./deployment.yaml rm -s -f debezium-kafka-container
+#docker-compose -f ./deployment.yaml up -d debezium-kafka-container
+#docker-compose -f ./deployment.yaml up -d debezium-connect-container
+
+# SPRING_DATASOURCE_URL: jdbc:mysql://mysql8-container:3306/db_orchid?serverTimezone=UTC&allowPublicKeyRetrieval=true
+# SPRING_DATASOURCE_PASSWORD: Abc123456789@
