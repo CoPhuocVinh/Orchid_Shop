@@ -7,7 +7,6 @@ import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
-import org.jio.orchidbe.models.BidingStatus;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
@@ -16,8 +15,10 @@ import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.bids.CreateBidRequest;
 import org.jio.orchidbe.requests.bids.GetAllBidRequest;
 import org.jio.orchidbe.requests.bids.UpdateBiddingRequest;
+
 import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionResponse;
+
 import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,7 @@ public class BidService implements IBidService{
         }
 
         userBid.setBiddingPrice(createBidRequest.getBiddingPrice());
-        userBid.setStatus(BidingStatus.OPEN);
+
         auction.setModifiedBy(userBid.getUser().getName());
         // repository
         auctionRepository.save(auction);
@@ -103,7 +104,6 @@ public class BidService implements IBidService{
         // container
         auctionContainer.removeOnAuctionListById(auction.getId());
         auctionContainer.removeOnStatusLists(auction);
-
 
         return biddingMapper.toResponse(userBid);
     }

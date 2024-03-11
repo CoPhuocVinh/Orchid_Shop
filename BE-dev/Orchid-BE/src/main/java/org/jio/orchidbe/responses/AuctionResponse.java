@@ -11,6 +11,7 @@ import org.jio.orchidbe.dtos.api_response.BaseResponse;
 import org.jio.orchidbe.enums.Status;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor

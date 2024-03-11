@@ -9,8 +9,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jio.orchidbe.enums.Status;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,10 +23,11 @@ public class UpdateAuctionRequest {
     private Float biddingPrice;
     @Min(value = 0, message = "Deposit Price must be greater than or equal to 0")
     private Float depositPrice;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private String endDate;
+    private LocalDateTime endDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private String startDate;
+    private LocalDateTime startDate;
     @Min(value = 0, message = "Quantity must be greater than or equal to 0")
     @Max(value = 1000, message = "Quantity must be less than or equal to 1000")
     private Integer quantity;
@@ -34,8 +37,10 @@ public class UpdateAuctionRequest {
 //    @NotBlank(message = "Product Name is required")
 //    @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters")
 //    private String productName;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private String remindAt;
+    private LocalDateTime remindAt;
+
     @Min(value = 0, message = "Start Price must be greater than or equal to 0")
     private Float startPrice;
     private Status status;
