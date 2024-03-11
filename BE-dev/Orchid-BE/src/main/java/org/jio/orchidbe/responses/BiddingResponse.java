@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jio.orchidbe.models.BidingStatus;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +12,7 @@ import org.jio.orchidbe.models.BidingStatus;
 public class BiddingResponse {
     private Long id;
     private Integer ratings;
-    private BidingStatus status;
+
     private Float biddingPrice;
     private boolean top1;
     private Long auctionID;

@@ -17,24 +17,21 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 @Component
 public interface AuctionMapper {
-    //@Mapping(source = "isReject", target = "isReject")
     @Mapping(source = "auction.product.id", target = "productID")
     AuctionResponse toResponse(Auction auction);
+
+    @Mapping(target = "product", ignore = true)
+    Auction toEntity(CreateAuctionResquest createAuctionResquest);
 
     @Mapping(source = "auction.product.id", target = "productID")
 
     GetAuctionResponse toAllResponse(Auction auction);
-
-
-    Auction toEntity(UpdateAuctionRequest request);
 
     @Mapping(source = "auction.product.id", target = "productID")
 
     AuctionDetailResponse toResponseDetail(Auction auction);
 
 
-    @Mapping(target = "product", ignore = true)
-    Auction toEntity(CreateAuctionResquest createAuctionResquest);
     List<AuctionResponse> toResponseList(List<Auction> auctions);
 
 

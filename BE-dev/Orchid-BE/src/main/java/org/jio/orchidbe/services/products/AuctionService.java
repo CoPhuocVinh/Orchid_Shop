@@ -6,17 +6,15 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 
-import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
 
-import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
-import org.jio.orchidbe.models.BidingStatus;
 
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.orders.Order;
+import org.jio.orchidbe.models.orders.PaymentMethod;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.models.wallets.Wallet;
@@ -24,7 +22,6 @@ import org.jio.orchidbe.repositorys.products.*;
 import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.auctions.*;
-import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.responses.AuctionContainer;
 
 import org.jio.orchidbe.responses.GetAuctionResponse;
@@ -106,7 +103,9 @@ public class AuctionService implements IAuctionService {
     public void endAuction(Auction auction) throws DataNotFoundException {
 
         Bid bid = bidRepository.findByAuctionIdAndTop1(auction.getId(), true);
+
         if (auction.getStatus() == Status.LIVE) {
+            if (bid != null) {
             // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
             auctionContainer.removeAuctionFromList(auction, Status.LIVE);
             auction.setStatus(Status.END);
@@ -121,6 +120,7 @@ public class AuctionService implements IAuctionService {
             UserInfo userInfo = userInfoRepository.findById(userId)
                     .orElseThrow(() -> new DataNotFoundException("User information not found with ID: " + bid.getUser().getId()));
 
+
             // Set các thuộc tính cho order
             order.setPhone(userInfo.getPhone());
             order.setExpiredAt(LocalDateTime.now().plusHours(24));
@@ -128,11 +128,20 @@ public class AuctionService implements IAuctionService {
             order.setProductCode(auction.getProductCode());
             order.setProductName(auction.getProductName());
             order.setAuction(auction);
+            order.setTotal(bid.getBiddingPrice());
+            order.setPaymentMethod(PaymentMethod.CARD);
+            order.setQuantity(auction.getQuantity());
+            order.setUserName(user.getUsername());
             order.setUser(user);
             order.setStatus(OrderStatus.PENDING);
             // Thêm order vào container và lưu order
             orderContainer.addOrder(order);
             orderRepository.save(order);
+            } else {
+                // Nếu không có bid, chỉ cần cập nhật trạng thái của phiên đấu giá thành đã kết thúc
+                auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+                auction.setStatus(Status.END);
+            }
             auctionRepository.save(auction);
         } else {
             // Xử lý khi phiên đấu giá không ở trạng thái hoạt động
@@ -307,7 +316,6 @@ public class AuctionService implements IAuctionService {
                         .auction(auction)
                         .user(user)
                         .biddingPrice(auction.getDepositPrice())
-                        .status(BidingStatus.OPEN)
                         .ratings(0)
                         .build();
                 bidRepository.save(bid);

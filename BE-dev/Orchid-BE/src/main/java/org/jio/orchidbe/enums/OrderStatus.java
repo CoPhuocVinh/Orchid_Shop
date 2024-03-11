@@ -4,5 +4,4 @@ public enum OrderStatus {
     PENDING,
     CONFIRMED,
     FAILED
-
 }
