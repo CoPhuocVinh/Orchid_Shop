@@ -1,11 +1,20 @@
 package org.jio.orchidbe.constants;
 
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
+@Configuration
 public class BaseConstants {
-
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        HOST_RETURN = environment.getProperty("HOST.URL");
+    }
     public static final String SESSION_MESSAGE = "message";
 
     public static final String SESSION_ERROR = "error";
@@ -23,11 +32,18 @@ public class BaseConstants {
     public static final String DEFAULT_SORT_BY = "createdAt";
 
     public static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.DESC;
+    @Value("${HOST.URL}")
+    public String HOST_URL;
 
-    public static final String HOST_RETURN = "https://orchid.fams.io.vn/api/v1";
+
+
+    private static String HOST_RETURN ;
     //public static final String HOST_RETURN = "http://localhost:8088/api/v1";
     public static final String RETURN_PAYMENT_SUCCESS = "http://localhost:3000/test-success?test=1";
     public static final String RETURN_PAYMENT_FAILED = "http://localhost:3000/test-failed?test=1";
 
 
+    public static String getHostReturn() {
+        return HOST_RETURN;
+    }
 }

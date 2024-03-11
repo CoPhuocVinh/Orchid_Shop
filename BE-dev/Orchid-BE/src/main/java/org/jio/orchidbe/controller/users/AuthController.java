@@ -54,8 +54,8 @@ public class AuthController {
         // Kiểm tra thông tin đăng nhập và sinh token
         String token = tokenService.login(
                 userLoginDTO.getEmail(),
-                userLoginDTO.getPassword()
-
+                userLoginDTO.getPassword(),
+                request
         );
         String userAgent = request.getHeader("User-Agent");
         User userDetail = tokenService.getUserDetailsFromToken(token);

@@ -130,7 +130,7 @@ public class AuctionController {
     }
 
     // register
-    @PostMapping("/register-by-autionId/{id}")
+    @PostMapping("/register-by-auctionId/{id}")
     public ResponseEntity<?> registerAuctionById(@PathVariable Long id,
         @Valid @RequestBody RegisterAuctionDTO dto) throws DataNotFoundException, BadRequestException {
         ApiResponse apiResponse = new ApiResponse();
