@@ -104,48 +104,53 @@ public class AuctionService implements IAuctionService {
 
         Bid bid = bidRepository.findByAuctionIdAndTop1(auction.getId(), true);
         if (bid != null) {
-        if (auction.getStatus() == Status.LIVE) {
+            if (auction.getStatus() == Status.LIVE) {
 
-            // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
-            auctionContainer.removeAuctionFromList(auction, Status.LIVE);
-            auction.setModifiedBy("System");
-            auction.setStatus(Status.END);
-           // auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+                // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
+                auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+                auction.setModifiedBy("System");
+                auction.setStatus(Status.END);
+                // auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+                Order orderExisted = orderRepository.findByAuction(auction);
+                // Tạo entity Order từ auctionID bằng cách sử dụng OrderMapper
+                if (orderExisted != null) {
 
-            // Tạo entity Order từ auctionID bằng cách sử dụng OrderMapper
-            Order order = orderMapper.toEntity(auction.getId());
-            Long userId = bid.getUser().getId();
-            // Lấy thông tin user từ bid và userInfo
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new DataNotFoundException("User not found with ID: " + bid.getUser().getId()));
-            UserInfo userInfo = userInfoRepository.findById(userId)
-                    .orElseThrow(() -> new DataNotFoundException("User information not found with ID: " + bid.getUser().getId()));
+                } else if (orderExisted == null) {
+                    Order order = new Order();
+                    Long userId = bid.getUser().getId();
+                    // Lấy thông tin user từ bid và userInfo
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new DataNotFoundException("User not found with ID: " + bid.getUser().getId()));
+                    UserInfo userInfo = userInfoRepository.findById(userId)
+                            .orElseThrow(() -> new DataNotFoundException("User information not found with ID: " + bid.getUser().getId()));
 
-            // Set các thuộc tính cho order
-            order.setPhone(userInfo.getPhone());
-            order.setExpiredAt(LocalDateTime.now().plusHours(24));
-            order.setAddress(userInfo.getAddress());
-            order.setProductCode(auction.getProductCode());
-            order.setProductName(auction.getProductName());
-            order.setAuction(auction);
-            order.setTotal(bid.getBiddingPrice());
-            order.setPaymentMethod(PaymentMethod.CARD);
-            order.setQuantity(auction.getQuantity());
-            order.setUserName(user.getUsername());
-            order.setUser(user);
-            order.setStatus(OrderStatus.PENDING);
-            // Thêm order vào container và lưu order
-            orderContainer.addOrder(order);
-            orderRepository.save(order);
+                    // Set các thuộc tính cho order
+                    order.setPhone(userInfo.getPhone());
+                    order.setExpiredAt(LocalDateTime.now().plusHours(24));
+                    order.setAddress(userInfo.getAddress());
+                    order.setProductCode(auction.getProductCode());
+                    order.setProductName(auction.getProductName());
+                    order.setAuction(auction);
+                    order.setCreatedBy("System");
+                    order.setTotal(bid.getBiddingPrice());
+                    order.setPaymentMethod(PaymentMethod.CARD);
+                    order.setQuantity(auction.getQuantity());
+                    order.setUserName(user.getUsername());
+                    order.setUser(user);
+                    order.setStatus(OrderStatus.PENDING);
+                    // Thêm order vào container và lưu order
+                    orderContainer.addOrder(order);
+                    orderRepository.save(order);
+                } else {
+
+                }
+
             } else {
+                // Nếu không có bid, chỉ cần cập nhật trạng thái của phiên đấu giá thành đã kết thúc
+                auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+                auction.setStatus(Status.END);
 
             }
-
-        } else {
-            // Nếu không có bid, chỉ cần cập nhật trạng thái của phiên đấu giá thành đã kết thúc
-            auctionContainer.removeAuctionFromList(auction, Status.LIVE);
-            auction.setStatus(Status.END);
-
         }
         auctionRepository.save(auction);
     }
@@ -202,7 +207,7 @@ public class AuctionService implements IAuctionService {
     @Override
     @Transactional
     public ResponseEntity updateAuction(UpdateAuctionRequest updateAuctionRequest, Long id,
-                                        BindingResult bindingResult) throws DataNotFoundException {
+                                        BindingResult bindingResult) throws BadRequestException, DataNotFoundException {
         ApiResponse apiResponse = new ApiResponse();
         if (bindingResult.hasErrors()) {
             apiResponse.error(validatorUtil.handleValidationErrors(bindingResult.getFieldErrors()));
@@ -234,8 +239,13 @@ public class AuctionService implements IAuctionService {
                 // Xử lý việc cập nhật trạng thái dựa trên các trường khác
                 if (updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null) {
                     if (auction.isRejected()) {
-                        auctionContainer.removeAuctionFromList(auction, Status.WAITING);
-                        auction.setStatus(Status.END);
+                        if(updateAuctionRequest.getReasonReject() != null && !updateAuctionRequest.getReasonReject().isBlank()) {
+                            auction.setRejectReason(updateAuctionRequest.getReasonReject());
+                            auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+                            auction.setStatus(Status.END);
+                        }else if (updateAuctionRequest.getReasonReject() == null || updateAuctionRequest.getReasonReject().isBlank()){
+                            throw new BadRequestException("Fill in the reason for reject");
+                        }
                     } else if (auction.isApproved() && !auction.isRejected()) {
                         auction.setStatus(Status.COMING);
                     }

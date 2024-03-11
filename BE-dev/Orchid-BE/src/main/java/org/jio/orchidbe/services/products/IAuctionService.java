@@ -26,7 +26,7 @@ public interface IAuctionService {
 
     @Transactional
     ResponseEntity updateAuction(UpdateAuctionRequest updateAuctionRequest, Long id,
-                                 BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException;
+                                 BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException;
 
     AuctionResponse deleteAuction(Long id) throws DataNotFoundException;
 

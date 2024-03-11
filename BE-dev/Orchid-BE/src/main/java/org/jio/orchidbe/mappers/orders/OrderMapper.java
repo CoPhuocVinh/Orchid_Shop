@@ -22,7 +22,7 @@ public interface OrderMapper {
 
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "auction", ignore = true)
-    Order toEntity(Long auctionID);
+    Order toEntity(CreateOrderRequest createOrderRequest);
 
     List<OrderResponse> toResponseList(List<Order> orders);
 }

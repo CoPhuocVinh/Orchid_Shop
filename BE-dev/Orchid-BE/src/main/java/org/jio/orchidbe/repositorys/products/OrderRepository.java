@@ -1,6 +1,7 @@
 package org.jio.orchidbe.repositorys.products;
 
 import org.jio.orchidbe.enums.OrderStatus;
+import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.orders.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
     List<Order> findByStatus(OrderStatus orderStatus);
+
+    Order findByAuction(Auction auction);
 }
