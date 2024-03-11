@@ -27,5 +27,7 @@ public interface IBidService {
                                  BindingResult bindingResult) throws ChangeSetPersister.NotFoundException;
 
     BiddingResponse deleteBidding(Long id) throws DataNotFoundException;
+
+    ResponseEntity biddingAuction(UpdateBiddingRequest updateBiddingRequest, Long id, BindingResult bindingResult) throws DataNotFoundException, BadRequestException;
 //    BiddingResponse isTop1(Long id) throws DataNotFoundException;
 }

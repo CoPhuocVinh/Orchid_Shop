@@ -3,6 +3,7 @@ package org.jio.orchidbe.services.products;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
@@ -15,6 +16,7 @@ import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.bids.CreateBidRequest;
 import org.jio.orchidbe.requests.bids.GetAllBidRequest;
 import org.jio.orchidbe.requests.bids.UpdateBiddingRequest;
+import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -45,21 +47,20 @@ public class BidService implements IBidService{
     private AuctionRepository auctionRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private AuctionContainer auctionContainer;
     @Override
     @Transactional
     public BiddingResponse Bidding(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException {
 
-        Auction auction = auctionRepository.findById(createBidRequest.getAuctionID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find auction with id: "+ createBidRequest.getAuctionID()));
-        // check user register auction
-        Bid userBid = bidRepository.findByUser_Id(createBidRequest.getUserID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find user with id: "+ createBidRequest.getUserID()));
+        Auction auction = auctionContainer.getAuctionOnStatusById(createBidRequest.getAuctionID(), Status.LIVE);
+        //* THAY THẾ = LIST LIVE AUCTION TRONG AUCTION CONTAINER
 
+        // check user register auction
+        Bid userBid = bidRepository.findByUser_IdAndAuction_Id(createBidRequest.getUserID(),createBidRequest.getAuctionID())
+                .orElseThrow(
+                        () -> new BadRequestException("user must register to bidding")
+                );
 
         Bid top1Bid = bidRepository.findByAuctionIdAndTop1(createBidRequest.getAuctionID(), true);
         if (top1Bid == null){
@@ -95,6 +96,14 @@ public class BidService implements IBidService{
 
         userBid.setBiddingPrice(createBidRequest.getBiddingPrice());
         userBid.setStatus(BidingStatus.OPEN);
+        auction.setModifiedBy(userBid.getUser().getName());
+        // repository
+        auctionRepository.save(auction);
+
+        // container
+        auctionContainer.removeOnAuctionListById(auction.getId());
+        auctionContainer.removeOnStatusLists(auction);
+
 
         return biddingMapper.toResponse(userBid);
     }
@@ -158,6 +167,22 @@ public class BidService implements IBidService{
         existingBid.setDeleted(true);
         Bid updatedBidding = bidRepository.save(existingBid);
         return biddingMapper.toResponse(updatedBidding);
+    }
+
+    @Override
+    public ResponseEntity biddingAuction(UpdateBiddingRequest updateBiddingRequest, Long id, BindingResult bindingResult) throws DataNotFoundException, BadRequestException {
+        ApiResponse apiResponse = new ApiResponse();
+        if (bindingResult.hasErrors()) {
+            apiResponse.error(validatorUtil.handleValidationErrors(bindingResult.getFieldErrors()));
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        Bid bid = bidRepository.findByUser_IdAndAuction_Id(updateBiddingRequest.getUserId(),id).orElseThrow(
+                () -> new BadRequestException("user must register to bidding")
+        );
+
+
+        return null;
     }
 
 //    @Override

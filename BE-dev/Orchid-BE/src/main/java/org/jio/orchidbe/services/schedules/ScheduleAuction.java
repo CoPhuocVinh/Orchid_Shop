@@ -45,6 +45,9 @@ public class ScheduleAuction {
     public void checkAuctionStatus() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
+        List<Auction> remindingAuctions = getAuctionsRemindingAfter(currentTime, Status.COMING);
+
+
 
         for (Auction auction : pendingAuctions) {
             auctionContainer.removeOnAuctionListById(auction.getId());
@@ -63,6 +66,12 @@ public class ScheduleAuction {
     private List<Auction> getPendingAuctionsStartingAfter(LocalDateTime startTime, Status status) {
         return auctionContainer.getComingAuctions().stream()
                 .filter(auction -> startTime.isAfter(auction.getStartDate()) && auction.getStatus() == status)
+                .collect(Collectors.toList());
+    }
+
+    private List<Auction> getAuctionsRemindingAfter(LocalDateTime startTime, Status status) {
+        return auctionContainer.getComingAuctions().stream()
+                .filter(auction -> startTime.isAfter(auction.getRemindAt()))
                 .collect(Collectors.toList());
     }
 

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class UpdateBiddingRequest {
-    private Integer ratings;
+    private Long userId;
     private Float biddingPrice;
 }

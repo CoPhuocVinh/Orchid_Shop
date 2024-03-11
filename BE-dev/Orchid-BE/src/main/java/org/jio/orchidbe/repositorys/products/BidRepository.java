@@ -19,7 +19,7 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     Optional<Bid> findByUser_Id(Long id);
 
-
+    Optional<Bid> findByUser_IdAndAuction_Id(Long userId, Long auctionId);
     List<Bid> findByAuction_Id(Long auctionId);
 
     Boolean existsBidByAuction_IdAndUser_Id(Long auctionId, Long userId);
