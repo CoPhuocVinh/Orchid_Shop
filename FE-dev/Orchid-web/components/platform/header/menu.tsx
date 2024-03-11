@@ -6,6 +6,9 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import FormPopoverUser from "../popover-user-info";
 import UserAvatar from "../user-avatar";
+import { Plus, Wallet } from "lucide-react";
+import FormPopover from "@/components/form/form-popover";
+import { useGetWallet } from "@/lib/react-query/queries";
 
 const menuItems = [
   {
@@ -24,11 +27,19 @@ const menuItems = [
     path: "/order",
   },
 ];
+import { WalletSkeleton } from "@/components/loader/wallet_loader";
 
 export default function Menu() {
   const { data: session } = useSession();
 
   const isAuthorized = session?.user;
+  const isCustomer = session?.user.role === "CUSTOMER";
+
+  const { data: wallet, isLoading: walletLoading } = useGetWallet(
+    session?.user.id!
+  );
+
+  if (walletLoading) return <WalletSkeleton />;
 
   return (
     <nav className="primary-nav hidden items-center justify-between md:flex">
@@ -44,6 +55,18 @@ export default function Menu() {
           </li>
         ))}
       </ul>
+
+      {isAuthorized && isCustomer && (
+        <FormPopover align="start" side="bottom" sideOffset={18}>
+          <div className="bg-gray-200 rounded-lg px-4 py-2 flex items-center cursor-pointer">
+            <div className="mr-2">
+              <Wallet className="text-red-500" />
+            </div>
+            <div className="font-semibold">{wallet?.data?.balance} VNĐ</div>
+          </div>
+        </FormPopover>
+      )}
+
       <>
         {isAuthorized ? (
           <div className="ml-7 flex justify-end dark:text-black">

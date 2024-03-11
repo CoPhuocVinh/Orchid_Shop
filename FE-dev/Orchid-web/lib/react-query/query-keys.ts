@@ -12,5 +12,9 @@ export enum QUERY_KEYS {
 
     //Auction key
     GET_AUCTIONS = "GET_AUCTIONS",
-    GET_TBL_AUCTIONS = "GET_TBL_AUCTIONS"
+    GET_TBL_AUCTIONS = "GET_TBL_AUCTIONS",
+
+
+    //Wallet
+    GET_WALLET = "GET_WALLET"
 }

@@ -14,6 +14,7 @@ export const publicRoutes = ["/"];
 
 export const authRoutes = [
   "/signin",
+  "/signup",
   "/func-login",
   "/dashboard"
   // "/"

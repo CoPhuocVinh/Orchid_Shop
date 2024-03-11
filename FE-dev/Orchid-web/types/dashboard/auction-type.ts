@@ -1,4 +1,14 @@
 
+export type IBidList = {
+  id: number,
+  ratings: number,
+  biddingPrice: number,
+  top1: boolean,
+  userID: number,
+  auctionID: number
+}
+
+
 export type IAuction = {
   id: number;
   productID: number;
@@ -10,6 +20,7 @@ export type IAuction = {
   depositPrice: number;
   description: string;
   // product: IProduct;
+  bidList: IBidList[]
   biddingPrice?: string;
   image_url: string;
   quantity: number;
@@ -19,6 +30,8 @@ export type IAuction = {
   remindAt: Date;
   endDate?: Date;
   startDate?: Date;
+  rejected: boolean;
+  approved: boolean
 };
 export type IAuctionCreateField = {
   quantity: number;

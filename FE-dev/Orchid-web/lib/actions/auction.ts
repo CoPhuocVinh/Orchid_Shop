@@ -9,6 +9,7 @@ import {
 import { SearchParams } from "@/types/table";
 import { fetchListData, fetchListDataWithSearchParam } from "@/lib/generics";
 import { api } from "../api-interceptor/api";
+import axios from "axios";
 
 export async function getAuctions(): Promise<{ data: IAuction[] }> {
   noStore();
@@ -105,5 +106,40 @@ export async function createAuction(data: IAuctionCreateField): Promise<void> {
   } catch (error) {
     console.log(error);
     throw error;
+  }
+}
+
+export async function registerAttendAuction(userId: string, auctionId: string) {
+  const url = `/auctions/register-by-autionId/${auctionId}`;
+
+  try {
+    const res = await api.post(url, userId);
+
+    if (res.status === 200) {
+      console.log('Registration successful');
+      revalidatePath(`/auction/${auctionId}`);
+      return { success: true, successFull: "Đăng kí đấu giá thành công"};
+    } else {
+      const errorMessage = res.data.error.errorMessage;
+      return { success: false, error: errorMessage };
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const { response } = error;
+
+      if (response && response.status === 406) {
+        console.error('Insufficient balance in wallet.');
+        return { success: false, error: 'Không đủ xèng trong ví vui lòng nạp tiền nhé' };
+      } else if (response && response.status === 400) {
+        console.error('Auction status is not COMING and user has already registered.');
+        return { success: false, error: 'Buổi đấu giá chưa diễn ra!' };
+      } else {
+        console.error('An unexpected error occurred:', error.message);
+        return { success: false, error: 'An unexpected error occurred' };
+      }
+    } else {
+      console.error('An unexpected error occurred:', error);
+      return { success: false, error: 'An unexpected error occurred' };
+    }
   }
 }

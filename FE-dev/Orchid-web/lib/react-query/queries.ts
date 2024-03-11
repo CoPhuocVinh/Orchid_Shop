@@ -11,6 +11,7 @@ import {
 import { SearchParams } from "@/types/table";
 import { AuctionStatus, IAuction, IProduct,IUser } from "@/types/dashboard";
 import { getAuctions, getAuctionsWithStatus } from "../actions/auction";
+import { getWalletByUserId } from "../actions/wallet";
 
 // USER
 export const useGetStaff = (searchTerm: SearchParams) => {
@@ -61,5 +62,14 @@ export const useGetTableAuction = () => {
   return useQuery<{ data: IAuction[]}>({
     queryKey: [QUERY_KEYS.GET_TBL_AUCTIONS],
     queryFn: () => getAuctions(),
+  });
+};
+
+
+// WALLET
+export const useGetWallet = (params: string) => {
+  return useQuery<{ data: IWallet | null}>({
+    queryKey: [QUERY_KEYS.GET_WALLET, params],
+    queryFn: () => getWalletByUserId(params),
   });
 };

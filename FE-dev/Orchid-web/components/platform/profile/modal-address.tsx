@@ -89,7 +89,8 @@ const GetApi_Province: React.FC = () => {
   // Handle form submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const fullAddress = `${selectedProvince}, ${selectedDistrict}, ${selectedWard}, ${address}`;
+    // const fullAddress = `${selectedProvince}, ${selectedDistrict}, ${selectedWard}, ${address}`;
+    const fullAddress = `${address}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince} `;
     const value = { phone: phoneNumber, address: fullAddress };
     console.log(value); // You can replace this with your desired action like API call
   };

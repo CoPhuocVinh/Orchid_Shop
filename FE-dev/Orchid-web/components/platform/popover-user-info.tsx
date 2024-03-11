@@ -71,7 +71,7 @@ const FormPopoverUser = ({
         <div className="pt-6  text-neutral-500 space-y-2">
           {/* fix role lai sau */}
 
-          {!isAdmin && (
+          {isAdmin && (
             <Button variant="ghost" className="flex items-center gap-x-3 group w-full justify-start" onClick={() => router.push("/dashboard")}>
              
                 <LayoutDashboard className="h-6 w-6 " />

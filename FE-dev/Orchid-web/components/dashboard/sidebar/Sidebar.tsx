@@ -17,23 +17,16 @@ function Sidebar({ handleActive }: any) {
   return (
     <aside className="sidebar-wrapper fixed top-0 z-30 block h-full w-[308px] bg-white dark:bg-darkblack-600 sm:hidden xl:block">
       <div className="sidebar-header relative z-30 flex h-[108px] w-full items-center border-b border-r border-b-[#F7F7F7] border-r-[#F7F7F7] pl-[50px] dark:border-darkblack-400">
-        <Link href="/">
+        <Link href="/" className="flex items-center font-bold dark:text-blue-200  ">
           <Image
-            priority={true}
-            height={logo.height}
-            width={logo.width}
-            src={logo.src}
-            className="block dark:hidden"
             alt="logo"
-          />
-          <Image
+            src="/images/logo-white.svg"
+            height={40}
+            width={40}
             priority={true}
-            height={logoW.height}
-            width={logoW.width}
-            src={logoW.src}
-            className="hidden dark:block"
-            alt="logo"
+            className=""
           />
+          <span className="text-2xl ml-2 font-bold">Orchid</span>
         </Link>
         <button
           aria-label="none"
@@ -296,7 +289,10 @@ function Sidebar({ handleActive }: any) {
             </h4>
             <ul className="mt-2.5">
               <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Button  onClick={() => signOut()} className=" bg-white dark:bg-darkblack-600 ">
+                <Button
+                  onClick={() => signOut()}
+                  className=" bg-white dark:bg-darkblack-600 "
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
                       <span className="item-ico">
@@ -316,7 +312,7 @@ function Sidebar({ handleActive }: any) {
         <div className="copy-write-text">
           <p className="text-sm text-[#969BA0]">© 2024 All Rights Reserved</p>
           <p className="text-sm font-medium text-bgray-700">
-            Made with ❤️ by 
+            Made with ❤️ by
             <a
               href="#"
               target="_blank"

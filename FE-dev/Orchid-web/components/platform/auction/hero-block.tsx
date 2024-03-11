@@ -85,7 +85,7 @@ export default function ListingDetailsHeroBlock({
   }, [countdownToStart]);
 
   return (
-    <div className="flex justify-between border-b border-gray-lighter pb-6 md:pb-8 2xl:pb-10">
+    <div className="flex justify-between border-b border-gray-lighter pb-6 md:pb-8 2xl:pb-10 mt-2">
       <div>
         <div className="py-4">
           {showCountdownToStart && (

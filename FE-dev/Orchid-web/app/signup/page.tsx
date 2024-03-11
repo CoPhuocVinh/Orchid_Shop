@@ -7,7 +7,6 @@ import Image from "next/image";
 import SignUpForm from "@/components/dashboard/forms/sign-up-form";
 import RightSide from "@/components/dashboard/signin/RightSide";
 
-
 function SignUp() {
   return (
     <section className="bg-white dark:bg-darkblack-500">
@@ -15,23 +14,19 @@ function SignUp() {
         {/* Left */}
         <div className="lg:w-1/2 px-5 xl:pl-12 pt-10">
           <header>
-            <Link href="/" className="">
+            <Link
+              href="/"
+              className="flex items-center font-bold dark:text-blue-200  "
+            >
               <Image
+                alt="logo"
+                src="/images/logo-white.svg"
+                height={40}
+                width={40}
                 priority={true}
-                height={logoColor.height}
-                width={logoColor.width}
-                src={logoColor.src}
-                className="block dark:hidden"
-                alt="Logo"
+                className=""
               />
-              <Image
-                priority={true}
-                height={logoWhite.height}
-                width={logoWhite.width}
-                src={logoWhite.src}
-                className="hidden dark:block"
-                alt="Logo"
-              />
+              <span className="text-2xl ml-2 font-bold">Orchid</span>
             </Link>
           </header>
 

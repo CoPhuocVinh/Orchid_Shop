@@ -10,7 +10,7 @@ import { AuctionStatus } from '@/types/dashboard';
 
 export default function TopAuction() {
   const { state } = useTimeout();
-  const { data: commingAuction, isLoading } = useGetAuctionsWithStatus(AuctionStatus.END);
+  const { data: commingAuction, isLoading } = useGetAuctionsWithStatus(AuctionStatus.LIVE);
   return (
     <Section
       title="Live Auction"
