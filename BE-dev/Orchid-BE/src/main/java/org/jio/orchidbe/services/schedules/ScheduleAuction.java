@@ -3,7 +3,9 @@ package org.jio.orchidbe.services.schedules;
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
+import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.services.products.AuctionService;
 import org.jio.orchidbe.services.products.IAuctionService;
@@ -23,6 +25,8 @@ public class ScheduleAuction {
     private AuctionRepository auctionRepository;
     @Autowired
     private IAuctionService auctionService;
+    @Autowired
+    private ProductRepository productRepository;
 
 
     @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
@@ -87,6 +91,14 @@ public class ScheduleAuction {
             auction.setStatus(Status.END);
             auction.setRejected(true);
             auction.setRejectReason("The auction is past the approval deadline");
+            Product product = productRepository.findById(auction.getProduct().getId())
+                    .orElseThrow(() ->
+                            new DataNotFoundException(
+                                    "Cannot find product with name: " + auction.getProduct().getId()));
+
+            int updatedProductQuantity = product.getQuantity() + auction.getQuantity();
+            product.setQuantity(updatedProductQuantity);
+            productRepository.save(product);
             auctionContainer.removeAuctionFromList(auction, Status.WAITING);
             auctionContainer.removeOnAuctionListById(auction.getId());
 
