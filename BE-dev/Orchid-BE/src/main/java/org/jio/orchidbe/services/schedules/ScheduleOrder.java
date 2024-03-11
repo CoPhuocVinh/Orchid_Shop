@@ -32,7 +32,7 @@ public class ScheduleOrder {
         for (Order order : expiredAuctions) {
             order.setStatus(OrderStatus.FAILED);
             order.setExpired(true);
-
+            order.setModifiedBy("System");
             orderContainer.removeOrderById(order.getId());
 
             orderRepository.save(order);

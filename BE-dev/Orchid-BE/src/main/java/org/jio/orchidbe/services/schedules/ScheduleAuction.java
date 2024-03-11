@@ -6,6 +6,7 @@ import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.services.products.AuctionService;
+import org.jio.orchidbe.services.products.IAuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class ScheduleAuction {
     @Autowired
     private AuctionRepository auctionRepository;
     @Autowired
-    private AuctionService auctionService;
+    private IAuctionService auctionService;
 
 
     @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
@@ -46,9 +47,11 @@ public class ScheduleAuction {
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
 
         for (Auction auction : pendingAuctions) {
+
             auctionContainer.removeOnAuctionListById(auction.getId());
             auctionContainer.removeOnStatusLists(auction);
 
+            auction.setModifiedBy("System");
             auction.setStatus(Status.LIVE);
             auctionRepository.save(auction);
 
@@ -71,6 +74,7 @@ public class ScheduleAuction {
         List<Auction> expiredAuctions = getWaitingAuctionsStartingAt(currentTime, Status.WAITING);
 
         for (Auction auction : expiredAuctions) {
+            auction.setModifiedBy("System");
             auction.setStatus(Status.END);
             auction.setRejected(true);
             auction.setRejectReason("The auction is past the approval deadline");

@@ -103,11 +103,12 @@ public class AuctionService implements IAuctionService {
     public void endAuction(Auction auction) throws DataNotFoundException {
 
         Bid bid = bidRepository.findByAuctionIdAndTop1(auction.getId(), true);
-
+        if (bid != null) {
         if (auction.getStatus() == Status.LIVE) {
-            if (bid != null) {
+
             // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
             auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+            auction.setModifiedBy("System");
             auction.setStatus(Status.END);
            // auctionContainer.removeAuctionFromList(auction, Status.LIVE);
 
@@ -119,7 +120,6 @@ public class AuctionService implements IAuctionService {
                     .orElseThrow(() -> new DataNotFoundException("User not found with ID: " + bid.getUser().getId()));
             UserInfo userInfo = userInfoRepository.findById(userId)
                     .orElseThrow(() -> new DataNotFoundException("User information not found with ID: " + bid.getUser().getId()));
-
 
             // Set các thuộc tính cho order
             order.setPhone(userInfo.getPhone());
@@ -138,15 +138,16 @@ public class AuctionService implements IAuctionService {
             orderContainer.addOrder(order);
             orderRepository.save(order);
             } else {
-                // Nếu không có bid, chỉ cần cập nhật trạng thái của phiên đấu giá thành đã kết thúc
-                auctionContainer.removeAuctionFromList(auction, Status.LIVE);
-                auction.setStatus(Status.END);
+
             }
-            auctionRepository.save(auction);
+
         } else {
-            // Xử lý khi phiên đấu giá không ở trạng thái hoạt động
-            // Có thể gửi thông báo cho người dùng hoặc ghi log tại đây
+            // Nếu không có bid, chỉ cần cập nhật trạng thái của phiên đấu giá thành đã kết thúc
+            auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+            auction.setStatus(Status.END);
+
         }
+        auctionRepository.save(auction);
     }
 
     @Override
