@@ -1,7 +1,6 @@
 package org.jio.orchidbe.services.schedules;
 
 import org.jio.orchidbe.enums.OrderStatus;
-import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.orders.Order;
@@ -9,9 +8,7 @@ import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.OrderRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
-import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.OrderContainer;
-import org.jio.orchidbe.services.products.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

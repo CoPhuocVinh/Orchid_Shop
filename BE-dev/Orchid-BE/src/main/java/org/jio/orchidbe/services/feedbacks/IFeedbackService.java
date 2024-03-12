@@ -1,4 +1,4 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.feedbacks;
 
 import jakarta.transaction.Transactional;
 import org.jio.orchidbe.exceptions.DataNotFoundException;

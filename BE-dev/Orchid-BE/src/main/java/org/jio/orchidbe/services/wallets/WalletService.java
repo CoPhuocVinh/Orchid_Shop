@@ -1,4 +1,4 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.wallets;
 
 import org.jio.orchidbe.dtos.wallets.WalletDTORequest;
 import org.jio.orchidbe.dtos.wallets.WalletDTOResponse;
@@ -7,7 +7,6 @@ import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.mappers.wallets.WalletMapper;
 import org.jio.orchidbe.models.orders.PaymentMethod;
-import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
 import org.jio.orchidbe.repositorys.products.TransactionRepository;
@@ -44,7 +43,7 @@ public class WalletService implements IWallerService {
                 () -> new DataNotFoundException("wallet not found with user id: " + id)
         );
         // Tạo một transaction mới
-        String tranCode = GenerateCodeUtils.generateCode4Transaction(TypeTrans.NT, String.valueOf(wallet.getId()), wallet.getUser().getId());
+        String tranCode = GenerateCodeUtils.generateCode4Transaction(TypeTrans.NT, String.valueOf(wallet.getId()), id);
 
         Transaction transaction = Transaction.builder()
                 .wallet(wallet)

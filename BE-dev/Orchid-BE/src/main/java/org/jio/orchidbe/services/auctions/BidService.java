@@ -1,4 +1,4 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.auctions;
 
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
@@ -17,7 +17,6 @@ import org.jio.orchidbe.requests.bids.GetAllBidRequest;
 import org.jio.orchidbe.requests.bids.UpdateBiddingRequest;
 
 import org.jio.orchidbe.responses.AuctionContainer;
-import org.jio.orchidbe.responses.AuctionResponse;
 
 import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
