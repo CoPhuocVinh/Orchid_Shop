@@ -36,8 +36,9 @@ public class ScheduleAuction {
 
     @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
     public void checkAuctionEndings() throws DataNotFoundException {
-        LocalDateTime currentTime = LocalDateTime.now();
-        convertCurrentToLocalDateTimeWithZone(currentTime);
+        LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
+
+
         List<Auction> auctions = getAuctionsEndingBefore(currentTime, Status.LIVE);
 
         for (Auction auction : auctions) {
@@ -54,13 +55,15 @@ public class ScheduleAuction {
 
     @Scheduled(fixedRate = 10000) // Run every 1 minute
     public void checkAuctionStatus() throws DataNotFoundException {
-        LocalDateTime currentTime = LocalDateTime.now();
-        convertCurrentToLocalDateTimeWithZone(currentTime);
+        LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
+        System.out.println("currentTime : ========== " + currentTime);
+
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
         List<Auction> remindingAuctions = getAuctionsRemindingAfter(currentTime, Status.COMING);
 
 
         for (Auction auction : pendingAuctions) {
+            System.out.println("start time : ========= " + auction.getStartDate());
 
             auctionContainer.removeOnAuctionListById(auction.getId());
             auctionContainer.removeOnStatusLists(auction);
@@ -90,11 +93,12 @@ public class ScheduleAuction {
 
     @Scheduled(fixedRate = 1000) // Run every 1 minute
     public void checkAuctionExpired() throws DataNotFoundException {
-        LocalDateTime currentTime = LocalDateTime.now();
-        convertCurrentToLocalDateTimeWithZone(currentTime);
+        //LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
         List<Auction> expiredAuctions = getWaitingAuctionsStartingAt(currentTime, Status.WAITING);
 
         for (Auction auction : expiredAuctions) {
+
             auction.setModifiedBy("System");
             auction.setStatus(Status.END);
             auction.setRejected(true);
@@ -115,6 +119,7 @@ public class ScheduleAuction {
     }
 
     private List<Auction> getWaitingAuctionsStartingAt(LocalDateTime startTime, Status status) {
+
         return auctionContainer.getWaitingAuctions().stream()
                 .filter(auction -> startTime.isAfter(auction.getStartDate()) && auction.getStatus() == status)
                 .collect(Collectors.toList());
