@@ -247,12 +247,13 @@ public class AuctionService implements IAuctionService {
         }
 
         Auction auction = auctionContainer.getAuctionById(id);
-        auctionContainer.removeOnAuctionListById(id);
-        auctionContainer.removeOnStatusLists(auction);
+
         try {
             if (updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null) {
                 throw new BadRequestException("Fill the reason reject");
             }
+            auctionContainer.removeOnAuctionListById(id);
+            auctionContainer.removeOnStatusLists(auction);
             // Update auction fields
             ReflectionUtils.doWithFields(updateAuctionRequest.getClass(), field -> {
                 field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
