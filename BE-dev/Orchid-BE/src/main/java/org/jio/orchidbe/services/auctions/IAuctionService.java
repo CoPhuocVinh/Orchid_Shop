@@ -1,4 +1,4 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.auctions;
 
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;

@@ -18,7 +18,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
       dialect: org.hibernate.dialect.MySQL8Dialect
@@ -68,3 +68,6 @@ management:
         include: "health, info"
 
 
+#url return payment
+HOST:
+  URL: ${HOST_URL:https://orchid.fams.io.vn/api/v1}

@@ -1,4 +1,4 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.wallets;
 
 import org.jio.orchidbe.dtos.wallets.WalletDTORequest;
 import org.jio.orchidbe.dtos.wallets.WalletDTOResponse;

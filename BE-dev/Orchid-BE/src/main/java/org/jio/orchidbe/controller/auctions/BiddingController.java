@@ -1,25 +1,15 @@
 package org.jio.orchidbe.controller.auctions;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
-import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.bids.CreateBidRequest;
 import org.jio.orchidbe.requests.bids.GetAllBidRequest;
-import org.jio.orchidbe.requests.bids.UpdateBiddingRequest;
-import org.jio.orchidbe.requests.orders.CreateOrderRequest;
-import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
-import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
-import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.BiddingResponse;
-import org.jio.orchidbe.responses.OrderResponse;
-import org.jio.orchidbe.services.products.IBidService;
+import org.jio.orchidbe.services.auctions.IBidService;
 import org.jio.orchidbe.utils.ValidatorUtil;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

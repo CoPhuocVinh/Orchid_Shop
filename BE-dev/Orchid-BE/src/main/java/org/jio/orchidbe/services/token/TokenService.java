@@ -1,6 +1,7 @@
 package org.jio.orchidbe.services.token;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.components.LocalizationUtils;
@@ -16,7 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,6 +44,7 @@ public class TokenService implements ITokenService{
     private final TokenRepository tokenRepository;
     private final JwtTokenUtils jwtTokenUtil;
     private final LocalizationUtils localizationUtils;
+    private final UserDetailsService userDetailsService;
 
     @Transactional
     @Override
@@ -62,7 +68,7 @@ public class TokenService implements ITokenService{
     }
 
     @Override
-    public String login(String email, String password) throws Exception {
+    public String login(String email, String password, HttpServletRequest request) throws Exception {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isEmpty()) {
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_EMAIL_PASSWORD));
@@ -83,13 +89,17 @@ public class TokenService implements ITokenService{
         if(optionalUser.get().isBanned()) {
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
         }
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(existingUser.getUsername());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                email, password,
-                existingUser.getAuthorities()
+                userDetails, null,
+                userDetails.getAuthorities()
         );
-
+        authenticationToken.setDetails(
+                new WebAuthenticationDetailsSource().buildDetails(request)
+        );
         //authenticate with Java Spring security
-        authenticationManager.authenticate(authenticationToken);
+        //authenticationManager.authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         return jwtTokenUtil.generateToken(existingUser);
     }
 

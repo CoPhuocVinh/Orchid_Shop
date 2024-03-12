@@ -13,7 +13,7 @@ import org.jio.orchidbe.dtos.wallets.WalletDTORequest;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.wallets.WalletDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
-import org.jio.orchidbe.services.products.IWallerService;
+import org.jio.orchidbe.services.wallets.IWallerService;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
