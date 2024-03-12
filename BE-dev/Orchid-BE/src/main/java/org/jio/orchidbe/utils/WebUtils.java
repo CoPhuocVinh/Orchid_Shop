@@ -13,11 +13,9 @@ public class WebUtils {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
-    public static LocalDateTime convertToLocalDateTimeWithZone(String dateTimeString) {
-        return LocalDateTime.now(ZoneId.of("Etc/GMT-7"));
-    }
-    public static LocalDateTime convertCurrentToLocalDateTimeWithZone(LocalDateTime dateTimeString) {
-        return LocalDateTime.now(ZoneId.of("Etc/GMT-7"));
+
+    public static LocalDateTime convertCurrentToLocalDateTimeWithZone() {
+        return ZonedDateTime.now(ZoneId.of("Etc/GMT-7")).toLocalDateTime();
     }
 
 }

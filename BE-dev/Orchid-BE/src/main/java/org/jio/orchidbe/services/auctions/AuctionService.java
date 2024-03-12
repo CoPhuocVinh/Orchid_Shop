@@ -60,7 +60,6 @@ import org.springframework.web.util.WebUtils;
 import java.text.ParseException;
 import java.util.*;
 
-import static org.jio.orchidbe.utils.WebUtils.convertToLocalDateTimeWithZone;
 
 @Service
 @RequiredArgsConstructor
@@ -191,9 +190,9 @@ public class AuctionService implements IAuctionService {
     @Override
     public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
         Auction newAuction = auctionMapper.toEntity(createAuctionResquest);
-        LocalDateTime endDate = convertToLocalDateTimeWithZone(createAuctionResquest.getEndDate());
-        LocalDateTime startDate = convertToLocalDateTimeWithZone(createAuctionResquest.getStartDate());
-        LocalDateTime remindAt = convertToLocalDateTimeWithZone(createAuctionResquest.getRemindAt());
+        LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate());
+        LocalDateTime startDate = LocalDateTime.parse(createAuctionResquest.getStartDate());
+
 
         validateDate(startDate, endDate);
         //map
@@ -211,8 +210,6 @@ public class AuctionService implements IAuctionService {
         int updatedProductQuantity = product.getQuantity() - createAuctionResquest.getQuantity();
         product.setQuantity(updatedProductQuantity);
         productRepository.save(product);
-        newAuction.setStartDate(convertToLocalDateTimeWithZone(createAuctionResquest.getStartDate()));
-        newAuction.setEndDate(convertToLocalDateTimeWithZone(createAuctionResquest.getEndDate()));
         newAuction.setProductCode(product.getProductCode());
         newAuction.setProductName(product.getProductName());
         newAuction.setDescription(product.getDescription());

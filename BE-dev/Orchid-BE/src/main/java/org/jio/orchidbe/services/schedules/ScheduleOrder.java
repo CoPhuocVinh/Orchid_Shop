@@ -35,8 +35,8 @@ public class ScheduleOrder {
 
     @Scheduled(fixedRate = 10000) // Run every 1 minute
     public void checkOrderExpired() throws DataNotFoundException {
-        LocalDateTime currentTime = LocalDateTime.now();
-        convertCurrentToLocalDateTimeWithZone(currentTime);
+        LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
+
         List<Order> expiredAuctions = getExpireOrdersStartingAt(currentTime, OrderStatus.PENDING);
         for (Order order : expiredAuctions) {
             order.setStatus(OrderStatus.FAILED);
