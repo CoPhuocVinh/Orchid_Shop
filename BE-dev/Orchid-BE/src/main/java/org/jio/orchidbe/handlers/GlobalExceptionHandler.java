@@ -27,6 +27,7 @@ public class GlobalExceptionHandler {
         error.put("errorCode", "500");
         error.put("errorStatus", "INTERNAL_SERVER_ERROR");
         error.put("errorMessage", exception.getMessage());
+        exception.printStackTrace();
         return ResponseEntity.internalServerError().body(
                 ApiResponse.builder()
                         .error(error)

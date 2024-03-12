@@ -1,6 +1,7 @@
 package org.jio.orchidbe.services.auctions;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.enums.Status;
@@ -30,11 +31,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
 
 @Service
+@Log4j2
 public class BidService implements IBidService{
 
     @Autowired
@@ -53,57 +56,68 @@ public class BidService implements IBidService{
     @Transactional
     public BiddingResponse Bidding(CreateBidRequest createBidRequest) throws DataNotFoundException, BadRequestException {
 
-        Auction auction = auctionContainer.getAuctionOnStatusById(createBidRequest.getAuctionID(), Status.LIVE);
-        //* THAY THẾ = LIST LIVE AUCTION TRONG AUCTION CONTAINER
 
-        // check user register auction
-        Bid userBid = bidRepository.findByUser_IdAndAuction_Id(createBidRequest.getUserID(),createBidRequest.getAuctionID())
-                .orElseThrow(
-                        () -> new BadRequestException("user must register to bidding")
-                );
+            Auction auction = auctionContainer.getAuctionOnStatusById(createBidRequest.getAuctionID(), Status.LIVE);
+            //* THAY THẾ = LIST LIVE AUCTION TRONG AUCTION CONTAINER
 
-        Bid top1Bid = bidRepository.findByAuctionIdAndTop1(createBidRequest.getAuctionID(), true);
-        if (top1Bid == null){
-            // thg dau tien dau gia
-            // > start price of auction + ..
+            // check user register auction
+            Bid userBid = bidRepository.findByUser_IdAndAuction_Id(createBidRequest.getUserID(),createBidRequest.getAuctionID())
+                    .orElseThrow(
+                            () -> new NotAcceptableStatusException("user must register to bidding")
+                    );
 
-            // set top 1
+            Bid top1Bid = bidRepository.findByAuctionIdAndTop1(createBidRequest.getAuctionID(), true);
+            if (top1Bid == null){
+                // thg dau tien dau gia
+                // > start price of auction + ..
 
-            //set rating  =1
+                // set top 1
 
-            // set auction bidding
-            if(createBidRequest.getBiddingPrice() > auction.getStartPrice()){
+                //set rating  =1
 
-                userBid.setTop1(true);
-                userBid.setRatings(1);
-                auction.setBiddingPrice(createBidRequest.getBiddingPrice());
+                // set auction bidding
+                if(createBidRequest.getBiddingPrice() >= auction.getStartPrice()){
 
-            }else {
-                throw new BadRequestException("Bidding price must be greater than the start price.");
-            }
-        } else {
-            // Existing bids, compare with top1 bid
-            if (createBidRequest.getBiddingPrice() > top1Bid.getBiddingPrice() + auction.getDepositPrice()) {
-                // Set the current user as top1 and update previous top1
-                top1Bid.setTop1(false);
-                userBid.setTop1(true);
-                userBid.setRatings(top1Bid.getRatings() + 1);
-                auction.setBiddingPrice(createBidRequest.getBiddingPrice());
+                    userBid.setTop1(true);
+                    userBid.setRatings(1);
+                    auction.setBiddingPrice(createBidRequest.getBiddingPrice());
+
+                }else {
+                    throw new BadRequestException("Bidding price must be greater than the start price.");
+                }
             } else {
-                throw new BadRequestException("Bidding price must be greater than the current top bid plus deposit.");
+                // Existing bids, compare with top1 bid
+                if (createBidRequest.getBiddingPrice() >= top1Bid.getBiddingPrice() + auction.getDepositPrice()) {
+                    if (top1Bid.getId() == userBid.getId()){
+
+                    }else {
+                        // Set the current user as top1 and update previous top1
+                        top1Bid.setTop1(false);
+                        userBid.setTop1(true);
+                    }
+
+                    userBid.setRatings(top1Bid.getRatings() + 1);
+                    auction.setBiddingPrice(createBidRequest.getBiddingPrice());
+                } else {
+                    throw new BadRequestException("Bidding price must be greater than the current top bid plus deposit.");
+                }
             }
+
+            userBid.setBiddingPrice(createBidRequest.getBiddingPrice());
+
+            auction.setModifiedBy(userBid.getUser().getName());
+
+            // container
+            auctionContainer.removeOnAuctionListById(auction.getId());
+            auctionContainer.removeOnStatusLists(auction);
+        try{
+            // repository
+            auctionRepository.save(auction);
+
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+            log.info(ex.getMessage());
         }
-
-        userBid.setBiddingPrice(createBidRequest.getBiddingPrice());
-
-        auction.setModifiedBy(userBid.getUser().getName());
-        // repository
-        auctionRepository.save(auction);
-
-        // container
-        auctionContainer.removeOnAuctionListById(auction.getId());
-        auctionContainer.removeOnStatusLists(auction);
-
         return biddingMapper.toResponse(userBid);
     }
 
