@@ -57,8 +57,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -319,7 +318,10 @@ public class AuctionService implements IAuctionService {
             }
             throw new DataIntegrityViolationException("Contract data");
         } catch (BadRequestException e) {
-            throw new RuntimeException(e);
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("errorMessage", e.getMessage());
+            apiResponse.error(errorMap);
+            return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
         }
     }
 
