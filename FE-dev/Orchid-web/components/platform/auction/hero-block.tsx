@@ -77,12 +77,16 @@ export default function ListingDetailsHeroBlock({
   const [showCountdownToStart, setShowCountdownToStart] = useState(true);
   const [showCountdownToEnd, setShowCountdownToEnd] = useState(false);
 
+  const isStatusLive = auction?.status === "LIVE";
   useEffect(() => {
-    if (countdownToStart && countdownToStart.days <= 0) {
+    if (isStatusLive) {
+      setShowCountdownToStart(false);
+      setShowCountdownToEnd(true);
+    } else if (countdownToStart && countdownToStart.seconds <= 0) {
       setShowCountdownToStart(false);
       setShowCountdownToEnd(true);
     }
-  }, [countdownToStart]);
+  }, [countdownToStart, isStatusLive]);
 
   return (
     <div className="flex justify-between border-b border-gray-lighter pb-6 md:pb-8 2xl:pb-10 mt-2">

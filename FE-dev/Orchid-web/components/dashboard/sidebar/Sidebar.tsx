@@ -1,6 +1,5 @@
 "use client";
-import logo from "/public/static/images/logo/logo-color.svg";
-import logoW from "/public/static/images/logo/logo-white.svg";
+
 
 import Link from "next/link";
 import { useState } from "react";
@@ -75,35 +74,8 @@ function Sidebar({ handleActive }: any) {
                   </div>
                 </Link>
               </li>
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/statistics">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.statisticSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        Statistics
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
 
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/my-wallet">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.myWalletSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        My Wallet
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
+
 
               {/* <li className="item py-[11px] text-bgray-900 dark:text-white">
                 <Link href="/dashboard/integrations">

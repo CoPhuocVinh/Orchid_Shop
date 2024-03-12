@@ -133,9 +133,11 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
   });
   console.log(typeof initialData?.startDate);
   const onSubmit = async (data: AuctionFormValues) => {
+
     const startDateFormat = data.startDate
       ? new Date(data.startDate).toISOString().replace("Z", "")
       : undefined;
+
     const endDateFormat = data.endDate
       ? new Date(data.endDate).toISOString().replace("Z", "")
       : undefined;

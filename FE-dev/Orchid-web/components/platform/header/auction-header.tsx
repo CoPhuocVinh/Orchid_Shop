@@ -49,7 +49,7 @@ export default function AuctionHeader() {
   const { data: session } = useSession();
 
   const isAuthorized = session?.user;
-  const isCustomer = session?.user.role === "CUSTOMER";
+  // const isCustomer = session?.user.role === "CUSTOMER";
 
   const { data: wallet, isLoading: walletLoading } = useGetWallet(
     session?.user.id!
@@ -97,7 +97,7 @@ export default function AuctionHeader() {
           <SearchIconBtn className="hidden" />
           {/* {mounted ? ( */}
           <>
-            {isAuthorized && isCustomer && (
+            {isAuthorized  && (
               <FormPopover align="start" side="bottom" sideOffset={18}>
                 <div className="bg-gray-200 rounded-lg px-4 py-2 flex items-center cursor-pointer">
                   <div className="mr-2">

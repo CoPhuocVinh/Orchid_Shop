@@ -50,7 +50,8 @@ export const RegiterAuctionModal = () => {
     }
 
     setIsLoading(true);
-
+console.log(session?.user.id!)
+console.log(data.auction?.id.toString()!)
     try {
       const { success, error } = await registerAttendAuction(session?.user.id!, data.auction?.id.toString()!);
       if (success) {

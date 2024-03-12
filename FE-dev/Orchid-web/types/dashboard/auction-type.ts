@@ -21,7 +21,7 @@ export type IAuction = {
   description: string;
   // product: IProduct;
   bidList: IBidList[]
-  biddingPrice?: string;
+  biddingPrice?: number;
   image_url: string;
   quantity: number;
   modifiedBy: string;

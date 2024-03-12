@@ -60,11 +60,34 @@ interface AuctionStatusUpdate {
 }
 export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
   try {
-    const res = await api.post(`/auctions/update-status`, { id, status });
+    const res = await api.put(`/auctions/update-auction/${id}`, { status });
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {
     console.log("FALI");
+  }
+}
+export async function updateStatusAcceptAuction({ id,  approved } : any) {
+
+  try {
+    const res = await api.put(`/auctions/update-auction/${id}`, {  approved: approved });
+
+    revalidatePath("/dashboard/auctions");
+  } catch (error) {
+    console.log("FALI to updateStatusAcceptAuction");
+  }
+}
+export async function updateStatusRejectAuction({ id,  rejected } : any) {
+
+  try {
+
+    const reasonReject = "Buổi đấu giá ko đạt yêu cầu"
+
+    const res = await api.put(`/auctions/update-auction/${id}`, {  rejected: rejected ,reasonReject: reasonReject});
+
+    revalidatePath("/dashboard/auctions");
+  } catch (error) {
+    console.log("FALI to updateStatusRejectAuction");
   }
 }
 
@@ -110,7 +133,7 @@ export async function createAuction(data: IAuctionCreateField): Promise<void> {
 }
 
 export async function registerAttendAuction(userId: string, auctionId: string) {
-  const url = `/auctions/register-by-autionId/${auctionId}`;
+  const url = `/auctions/register-by-auctionId/${auctionId}`;
 
   try {
     const res = await api.post(url, userId);
