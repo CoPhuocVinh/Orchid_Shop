@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import { vendorData } from "@/data/user-working-data/listing-details";
 import { Button } from "@/components/ui/button";
 import ListingDetailsHeroBlock from "./hero-block";
@@ -9,6 +9,16 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { biddingAuction } from "@/lib/actions/bidding";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface ListingDetailsProps {
   auction: IAuction | null;
@@ -18,11 +28,25 @@ export default function ListingDetails({ auction }: ListingDetailsProps) {
   const minimumPrice = auction?.depositPrice || 0;
   const biddingPrice = auction?.biddingPrice || minimumPrice;
 
-  const [manualBidAmount, setManualBidAmount] = useState<number | null>(null);
-  const [raiseBidAmount, setRaiseBidAmount] = useState<number>(biddingPrice);
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
   const { onOpen } = useModal();
+
+  const BiddingSchema = z.object({
+    manualBidAmount: z.coerce
+      .number()
+      .min(10000, "Please enter a bid amount of 10000 or higher")
+      .refine((value) => value > biddingPrice, {
+        message: "Nhập giá tiền lớn hơn giá hiện tại mới đấu giá được",
+      }),
+  });
+
+  const form = useForm<z.infer<typeof BiddingSchema>>({
+    resolver: zodResolver(BiddingSchema),
+    defaultValues: {
+      manualBidAmount: biddingPrice,
+    },
+  });
 
   const isRegisterAuction = auction?.bidList.some(
     (item) => item.userID.toString() === session?.user.id
@@ -31,75 +55,32 @@ export default function ListingDetails({ auction }: ListingDetailsProps) {
   const isStatusLive = auction?.status === "LIVE";
   const canBid = isRegisterAuction && isStatusLive;
 
-  const handleManualBidAmountChange = (value: number | null) => {
-    setManualBidAmount(value);
-  };
-
-  const handlePlaceBid = async () => {
-    if (canBid && manualBidAmount !== null) {
-      if (manualBidAmount > biddingPrice) {
-        console.log(`Đặt giá: ${manualBidAmount}`);
-
-        try {
-          setIsLoading(true);
-          const userId = session?.user.id!;
-          const auctionId = auction.id.toString();
-          const { success, error } = await biddingAuction(
-            userId,
-            auctionId,
-            manualBidAmount
-          );
-          if (success) {
-            toast.success("Tăng giá thành công");
-          } else if (error) {
-            toast.error(error);
-          } else {
-            toast.error("An unexpected error occurred during bidding");
-          }
-        } catch (error) {
-          toast.error("An unexpected error occurred");
-          console.error(error);
-        } finally {
-          setIsLoading(false);
+  const handleBidding = async (bidAmount: number) => {
+    if (canBid && bidAmount !== null) {
+      try {
+        setIsLoading(true);
+        const userId = session?.user.id!;
+        const auctionId = auction.id.toString();
+        const { success, error } = await biddingAuction(userId, auctionId, bidAmount);
+        if (success) {
+          toast.success("Tăng giá thành công");
+          form.reset();
+        } else if (error) {
+          toast.error(error);
+        } else {
+          toast.error("Có lỗi xảy ra trong quá trình đấu giá");
         }
-      } else {
-        toast.error("Vui lòng nhập giá lớn hơn");
+      } catch (error) {
+        toast.error("An unexpected error occurred");
+        console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
-  const handleRaiseByDefault = async () => {
-    const newBidAmount = biddingPrice + 20;
-    setRaiseBidAmount(newBidAmount);
-
-    if (canBid && raiseBidAmount !== null) {
-      if (raiseBidAmount > biddingPrice) {
-        try {
-          setIsLoading(true);
-          const userId = session?.user.id!;
-          const auctionId = auction.id.toString();
-          const { success, error } = await biddingAuction(
-            userId,
-            auctionId,
-            raiseBidAmount
-          );
-          if (success) {
-            toast.success("Tăng giá thành công");
-          } else if (error) {
-            toast.error(error);
-          } else {
-            toast.error("An unexpected error occurred during bidding");
-          }
-        } catch (error) {
-          toast.error("An unexpected error occurred");
-          console.error(error);
-        } finally {
-          setIsLoading(false);
-        }
-      } else {
-        toast.error("Vui lòng nhập giá lớn hơn");
-      }
-    }
+  const onSubmit = async (values: z.infer<typeof BiddingSchema>) => {
+    await handleBidding(values.manualBidAmount);
   };
 
   return (
@@ -117,48 +98,62 @@ export default function ListingDetails({ auction }: ListingDetailsProps) {
           )}
 
           {!isRegisterAuction && isStatusLive && (
-            <div>Đã quá hạn đăng kí đấu giá</div>
+            <div>Registration deadline has passed</div>
           )}
           <ListingDetailsHeroBlock
             vendor={vendorData.vendor}
             auction={auction}
           />
 
-          <div className=" bg-slate-200 h-[150px] p-4 rounded-md">
-            <h1>Bind now</h1>
-            <p>Bid Amount : Minimum Bid ${biddingPrice}</p>
+          <div className="bg-slate-200 p-4 rounded-md">
+            <h1 className="font-bold text-2xl space-y-2">Đấu giá ngay</h1>
+            <p>Giá đấu giá hiện tại là : ${biddingPrice}</p>
 
             <div className="flex items-center space-x-4">
               <div className="relative w-full">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500">$</span>
-                </div>
-                <Input
-                  type="number"
-                  placeholder="00.00"
-                  className="bg-gray-100 text-gray-700 placeholder-gray-400 rounded-lg py-3 pl-8 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  onChange={(e) =>
-                    handleManualBidAmountChange(parseFloat(e.target.value))
-                  }
-                  disabled={!canBid}
-                />
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="manualBidAmount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              className="text-bgray-800 text-base border focus-visible:ring-0 focus-visible:ring-offset-0 border-bgray-300 dark:border-darkblack-400 dark:bg-darkblack-500 dark:text-white h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-bgray-500 placeholder:text-base"
+                              placeholder="e.g., 10000"
+                              disabled={isLoading}
+                              type="number"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button
+                      type="submit"
+                      disabled={!canBid || isLoading}
+                      className="bg-indigo-500 text-white py-3 px-6 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Place Bid
+                    </Button>
+                  </form>
+                </Form>
               </div>
-              <Button
-                onClick={handlePlaceBid}
-                disabled={!canBid}
-                className="bg-indigo-500 text-white py-3 px-6 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Place Bid
-              </Button>
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 relative">
               <Button
-                onClick={handleRaiseByDefault}
-                disabled={!canBid}
-                className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => handleBidding(biddingPrice + minimumPrice)}
+                disabled={!canBid || isLoading}
+                className="bg-gray-300 absolute top-[-56px] left-[140px] text-gray-700 py-2 px-4 rounded-lg hover:bg-green-400 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Raise by Default ($20)
+                Raise (${minimumPrice})
               </Button>
             </div>
           </div>

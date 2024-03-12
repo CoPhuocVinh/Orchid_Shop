@@ -23,30 +23,31 @@ const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
           <LeftSideAuction productId={auction.data?.productID!} />
 
           <div className="w-full md:w-3/5 h-[250px] md:pl-4">
-          <ListingDetails auction={auction.data} />
+            <ListingDetails auction={auction.data} />
 
-          <div className="mt-8 h-[300px] md:h-[200px]">
-          <Tabs defaultValue="description" className="w-[350px] md:w-[700px]">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="description">description</TabsTrigger>
-              <TabsTrigger value="Bidding">Bidding history</TabsTrigger>
-            </TabsList>
-            <TabsContent value="description">
-              <h1 className="text-2xl font-bold mb-4">Mô tả chi tiết</h1>
+            <div className="mt-8 h-[300px] md:h-[200px]">
+              <Tabs
+                defaultValue="description"
+                className="w-[350px] md:w-[700px]"
+              >
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="description">description</TabsTrigger>
+                  <TabsTrigger value="Bidding">Bidding history</TabsTrigger>
+                </TabsList>
+                <TabsContent value="description">
+                  <h1 className="text-2xl font-bold mb-4">Mô tả chi tiết</h1>
 
-              <p>
-                {auction.data?.description
-                  ? auction.data.description
-                  : "EOS hog có desc"}
-              </p>
-            </TabsContent>
-            <TabsContent value="Bidding">content 2</TabsContent>
-          </Tabs>
-        </div>
+                  <p>
+                    {auction.data?.description
+                      ? auction.data.description
+                      : "EOS hog có desc"}
+                  </p>
+                </TabsContent>
+                <TabsContent value="Bidding">content 2</TabsContent>
+              </Tabs>
+            </div>
           </div>
         </div>
-
-
 
         <RelatedListingBlock />
       </div>

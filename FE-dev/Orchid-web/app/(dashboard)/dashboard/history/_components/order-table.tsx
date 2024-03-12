@@ -7,25 +7,26 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { DataTable } from "@/components/data-table/data-table";
 
 import {
-  fetchTransactionTableColumnDefs,
   searchableColumns,
-  filterableColumns
-} from "./transaction-table-column-def";
+  filterableColumns,
+  fetchOrderTableColumnDefs
+} from "./order-table-column-def";
 import { useRouter } from "next/navigation";
-import { ITransaction } from "@/types/dashboard/transaction-type";
 import { getTransactions } from "@/lib/actions/transaction";
+import { IOrder } from "@/types/dashboard";
+import { getOrders } from "@/lib/actions";
 
-interface TransactionsTableProps {
-  transactionPromise: ReturnType<typeof getTransactions>;
+interface OrdersTableProps {
+  orderPromise: ReturnType<typeof getOrders>;
 }
 
-export function TransactionTable({ transactionPromise }: TransactionsTableProps) {
-  const { data, pageCount } = React.use(transactionPromise);
+export function OrderTable({ orderPromise }: OrdersTableProps) {
+  const { data, pageCount } = React.use(orderPromise);
   const [isPending, startTransition] = React.useTransition();
   // console.log(data)
   const router = useRouter();
-  const columns = React.useMemo<ColumnDef<ITransaction, unknown>[]>(
-    () => fetchTransactionTableColumnDefs(isPending, startTransition, router),
+  const columns = React.useMemo<ColumnDef<IOrder, unknown>[]>(
+    () => fetchOrderTableColumnDefs(isPending, startTransition, router),
     [isPending, router]
   );
   const { dataTable } = useDataTable({

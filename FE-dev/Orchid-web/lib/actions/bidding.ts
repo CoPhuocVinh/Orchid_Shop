@@ -1,3 +1,5 @@
+'use server'
+
 import { revalidatePath } from "next/cache";
 import { api } from "../api-interceptor/api";
 import axios from "axios";

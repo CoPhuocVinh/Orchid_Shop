@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 // import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

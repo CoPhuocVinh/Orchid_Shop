@@ -35,12 +35,10 @@ const FormPopoverUser = ({
 }: FormPopoverUserProps) => {
   const { data: session } = useSession();
 
-
   const isAdmin =
     session?.user.role === "ADMIN" || session?.user.role === "STAFF";
 
   const router = useRouter();
-  
 
   return (
     <Popover>
@@ -72,16 +70,22 @@ const FormPopoverUser = ({
           {/* fix role lai sau */}
 
           {isAdmin && (
-            <Button variant="ghost" className="flex items-center gap-x-3 group w-full justify-start" onClick={() => router.push("/dashboard")}>
-             
-                <LayoutDashboard className="h-6 w-6 " />
-                <div className=" p-2 rounded-md font-normal">Dashboard</div>
+            <Button
+              variant="ghost"
+              className="flex items-center gap-x-3 group w-full justify-start"
+              onClick={() => router.push("/dashboard")}
+            >
+              <LayoutDashboard className="h-6 w-6 " />
+              <div className=" p-2 rounded-md font-normal">Dashboard</div>
             </Button>
           )}
-          <Button variant="ghost"   className="flex items-center gap-x-3 group w-full justify-start"  onClick={() => router.push("/")}>
-  
-              <Settings className="h-6 w-6 " />
-              <div className=" p-2 rounded-md font-normal">Manage Account</div>
+          <Button
+            variant="ghost"
+            className="flex items-center gap-x-3 group w-full justify-start"
+            onClick={() => router.push("/profile")}
+          >
+            <Settings className="h-6 w-6 " />
+            <div className=" p-2 rounded-md font-normal">Manage Account</div>
           </Button>
           <Button
             onClick={() => signOut()}

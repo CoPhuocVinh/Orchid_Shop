@@ -14,7 +14,7 @@ const ProductsPage = ({ searchParams }: IndexPageProps) => {
 
   return (
     <>
-      <div className="2xl:flex-1 w-full min-h-full">
+      <div className="2xl:flex-1 w-full min-h-[800px]">
         <Shell>
           <React.Suspense
             fallback={

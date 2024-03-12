@@ -21,11 +21,7 @@ const menuItems = [
     label: "Auction",
     path: "/auction",
   },
-  {
-    id: 3,
-    label: "order",
-    path: "/order",
-  },
+
 ];
 import { WalletSkeleton } from "@/components/loader/wallet_loader";
 

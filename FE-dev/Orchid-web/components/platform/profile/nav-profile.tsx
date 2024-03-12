@@ -1,102 +1,116 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import Grid_DashBoard_table from "./dashboard-profile";
 import Grid_My_Profile from "./my-profile";
 import Grid_Order_Data_Table from "./table-orders";
-
 import Grid_Address_Default from "./my-address";
-
-function Nav_Menu() {
-  const [openTab, setOpenTab] = React.useState(1);
+import { SearchParams } from "@/types/table";
+import { getOrdersByUserId } from "@/lib/actions";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { Shell } from "@/components/shell";
+import { OrderTable } from "./order-table";
+export interface IndexPageProps {
+  searchParams: SearchParams;
+}
+function Nav_Menu({ searchParams }: IndexPageProps) {
+  const orders = getOrdersByUserId(searchParams, "1");
   return (
     <div className="flex flex-row">
-      <div className="container mx-auto mt-12 h-full w-66">
+      <div className="container mx-auto mt-12 h-full w-88">
         <div className="justify-center items-center h-screen">
           <div className=" md:gap-4">
             <div className=" mx-auto mt-12 items-center">
               <div className="flex flex-row  justify-center  gap-10">
-                <ul className="flex flex-col gap-5 py-4 w-96 font-mono text-2xl font-bold pt-10">
-                  <li>
-                    {/* <a href="#"></a> */}
-                    <button
-                      onClick={() => setOpenTab(1)}
-                      className={`hover:bg-green-500 w-full ${
-                        openTab === 1 ? "bg-green-400 text-black" : "bg-white"
-                      } inline-block px-4 py-2 text-gray-600  bg-green-500 rounded  `}
-                    >
-                      DashBoard
-                    </button>
-                  </li>
-                  <li>
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="item-1">
-                        <AccordionTrigger className="flex items-center justify-center">
-                          My Account
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <button
-                            onClick={() => setOpenTab(2)}
-                            className={`hover:bg-green-500 w-full ${
-                              openTab === 2
-                                ? "bg-green-400 text-black "
-                                : "bg-white"
-                            } inline-block px-4 py-2 text-gray-600 bg-green-500  rounded `}
+                <div className="p-3 mt-6 w-full">
+                  <Tabs defaultValue="dashboard" className="flex">
+                    <TabsList className="flex relative ">
+                      <ul className="flex flex-col gap-5 py-4 w-96 font-mono text-2xl font-bold pt-80">
+                        <li>
+                          <TabsTrigger
+                            value="dashboard"
+                            className="hover:bg-green-500 mt-20 w-full font-mono text-2xl font-bold bg-white text-black inline-block px-4 py-2 rounded"
                           >
-                            My Profile
-                          </button>
-                        </AccordionContent>
-                        <AccordionContent>
-                          <button
-                            onClick={() => setOpenTab(4)}
-                            className={`hover:bg-green-500 w-full ${
-                              openTab === 4
-                                ? "bg-green-400 text-black "
-                                : "bg-white"
-                            } inline-block px-4 py-2 text-gray-600 bg-green-500  rounded `}
+                            DashBoard
+                          </TabsTrigger>
+                        </li>
+                        <li>
+                          <Accordion
+                            type="single"
+                            collapsible
+                            className="w-full"
                           >
-                            My Address
+                            <AccordionItem value="item-1">
+                              <AccordionTrigger className="flex items-center justify-center font-mono text-2xl font-bold">
+                                My Account
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <TabsTrigger
+                                  value="profile"
+                                  className="hover:bg-green-500 w-full font-mono text-2xl font-bold  inline-block px-4 py-2 text-gray-600 bg-white rounded"
+                                >
+                                  My Profile
+                                </TabsTrigger>
+                              </AccordionContent>
+                              <AccordionContent>
+                                <TabsTrigger
+                                  value="address"
+                                  className="hover:bg-green-500 w-full font-mono text-2xl font-bold  inline-block px-4 py-2 text-gray-600 bg-white rounded"
+                                >
+                                  My Address
+                                </TabsTrigger>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
+                        </li>
+                        <li>
+                          <TabsTrigger
+                            value="orders"
+                            className="hover:bg-green-500 w-full  inline-block px-4 py-2 font-mono text-2xl font-bold text-gray-600 bg-white rounded"
+                          >
+                            Order Biding
+                          </TabsTrigger>
+                        </li>
+                        <li>
+                          <button className="hover:bg-green-500 font-mono text-2xl font-bold text-black bg-white inline-block px-4 py-2 w-full rounded-md">
+                            Logout
                           </button>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                    {/* <a href="#"></a> */}
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => setOpenTab(3)}
-                      className={`hover:bg-green-500 w-full ${
-                        openTab === 3 ? "bg-green-400 text-black " : "bg-white"
-                      } inline-block px-4 py-2 text-gray-600 bg-green-500 rounded `}
-                    >
-                      Order Biding
-                    </button>
-                  </li>
-                  <li>
-                    <button className="hover:bg-green-500 text-black  bg-white inline-block px-4 py-2 w-full rounded-md">
-                      Logout
-                    </button>
-                  </li>
-                </ul>
-                <div className="p-3 mt-6 bg-white border w-full">
-                  <div className={openTab === 1 ? "block " : "hidden"}>
-                    {openTab === 1 && <Grid_DashBoard_table />}
-                  </div>
-                  <div className={openTab === 2 ? "block" : "hidden"}>
-                    {openTab === 2 && <Grid_My_Profile />}
-                  </div>
-                  <div className={openTab === 3 ? "block " : "hidden"}>
-                    {openTab === 3 && <Grid_Order_Data_Table />}
-                  </div>
-                  <div className={openTab === 4 ? "block " : "hidden"}>
-                    {openTab === 4 && <Grid_Address_Default />}
-                  </div>
+                        </li>
+                      </ul>
+                    </TabsList>
+
+                    <div className="w-full border bg-white">
+                      <TabsContent value="dashboard">
+                        <Grid_DashBoard_table />
+                      </TabsContent>
+                      <TabsContent value="profile">
+                        <Grid_My_Profile />
+                      </TabsContent>
+                      <TabsContent value="address">
+                        <Grid_Address_Default />
+                      </TabsContent>
+                      <TabsContent value="orders">
+                        <Shell>
+                          <React.Suspense
+                            fallback={
+                              <DataTableSkeleton
+                                columnCount={4}
+                                filterableColumnCount={2}
+                              />
+                            }
+                          >
+                            <OrderTable orderPromise={orders} />
+                          </React.Suspense>
+                        </Shell>
+                      </TabsContent>
+                    </div>
+                  </Tabs>
                 </div>
               </div>
             </div>

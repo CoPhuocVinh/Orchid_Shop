@@ -12,18 +12,19 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-import { ITransaction } from "@/types/dashboard/transaction-type";
+
 import { MdOutlinePending } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { FcCancel } from "react-icons/fc";
 import { BiSolidBank } from "react-icons/bi";
 import { FaWallet } from "react-icons/fa";
+import { IOrder } from "@/types/dashboard";
 
-export function fetchTransactionTableColumnDefs(
+export function fetchOrderTableColumnDefs(
   isPending: boolean,
   startTransition: React.TransitionStartFunction,
   router: AppRouterInstance
-): ColumnDef<ITransaction, unknown>[] {
+): ColumnDef<IOrder, unknown>[] {
   return [
     {
       id: "select",
@@ -53,54 +54,101 @@ export function fetchTransactionTableColumnDefs(
     {
       accessorKey: "id",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="TransactionID" />
+        <DataTableColumnHeader column={column} title="OrderId" />
       ),
       cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
       enableSorting: false,
       enableHiding: false,
     },
     {
-      accessorKey: "transactionCode",
+      accessorKey: "phone",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="transactionCode" />
+        <DataTableColumnHeader column={column} title="Phone" />
       ),
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
             <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("transactionCode")}
+              {row.getValue("phone")}
             </span>
           </div>
         );
       },
     },
     {
-      accessorKey: "amount",
+      accessorKey: "address",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Amount" />
+        <DataTableColumnHeader column={column} title="address" />
       ),
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
             <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("amount")}
+              {row.getValue("address")}
             </span>
           </div>
         );
       },
     },
     {
-      accessorKey: "resource",
+      accessorKey: "productName",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="resource" />
+        <DataTableColumnHeader column={column} title="productName" />
       ),
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
             <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("resource")
-                ? row.getValue("resource")
-                : "payment fail not create transaction"}
+              {row.getValue("productName")}
+               
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "productCode",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="productCode" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+              {row.getValue("productCode")}
+               
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "total",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Total Price" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+              {row.getValue("total")}
+               
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "quantity",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="quantity" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+              {row.getValue("quantity")}
+               
             </span>
           </div>
         );
@@ -213,7 +261,7 @@ export function fetchTransactionTableColumnDefs(
   ];
 }
 
-export const filterableColumns: DataTableFilterableColumn<ITransaction>[] = [
+export const filterableColumns: DataTableFilterableColumn<IOrder>[] = [
   {
     id: "status",
     title: "status",
@@ -232,9 +280,9 @@ export const filterableColumns: DataTableFilterableColumn<ITransaction>[] = [
   },
 ];
 
-export const searchableColumns: DataTableSearchableColumn<ITransaction>[] = [
+export const searchableColumns: DataTableSearchableColumn<IOrder>[] = [
   {
-    id: "transactionCode",
-    title: "transactionCode",
+    id: "productName",
+    title: "productName",
   },
 ];

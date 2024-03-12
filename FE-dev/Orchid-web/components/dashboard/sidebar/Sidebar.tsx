@@ -12,6 +12,8 @@ function Sidebar({ handleActive }: any) {
   const [activeUser, setActiveUser] = useState(false);
   const [activeProduct, setActiveProduct] = useState(false);
   const [activeAcution, setActiveAcution] = useState(false);
+  
+  
 
   return (
     <aside className="sidebar-wrapper fixed top-0 z-30 block h-full w-[308px] bg-white dark:bg-darkblack-600 sm:hidden xl:block">

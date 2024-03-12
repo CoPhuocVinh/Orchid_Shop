@@ -9,7 +9,7 @@ import {
   getUserWithRoleStaff,
 } from "../actions";
 import { SearchParams } from "@/types/table";
-import { AuctionStatus, IAuction, IProduct,IUser } from "@/types/dashboard";
+import { AuctionStatus, IAuction, IProduct,IUser, IWallet } from "@/types/dashboard";
 import { getAuctions, getAuctionsWithStatus } from "../actions/auction";
 import { getWalletByUserId } from "../actions/wallet";
 

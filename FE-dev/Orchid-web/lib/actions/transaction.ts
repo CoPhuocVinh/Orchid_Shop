@@ -4,7 +4,7 @@ import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { SearchParams } from "@/types/table";
 import { fetchListDataWithSearchParam } from "@/lib/generics";
 
-import { ITransaction } from "@/types/dashboard/transaction";
+import { ITransaction } from "@/types/dashboard/transaction-type";
 
 
 

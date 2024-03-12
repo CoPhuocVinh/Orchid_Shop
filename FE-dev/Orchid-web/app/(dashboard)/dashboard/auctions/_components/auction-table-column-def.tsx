@@ -274,7 +274,7 @@ export function fetchAutionsTableColumnDefs(
               aria-hidden="true"
             />
           );
-        } else if (status === "LIVE" && !isApprove && !isReject) {
+        } else if (status === "LIVE" && isApprove && !isReject) {
           statusText = "APPROVE";
           statusColor = "text-green-500";
           statusIcon = (
@@ -283,7 +283,7 @@ export function fetchAutionsTableColumnDefs(
               aria-hidden="true"
             />
           );
-        } else if (status === "END" && !isApprove && !isReject) {
+        } else if (status === "END" && isReject) {
           statusText = "REJECT";
           statusIcon = (
             <FcCancel
@@ -293,14 +293,14 @@ export function fetchAutionsTableColumnDefs(
           );
           statusColor = "text-red-500";
         } else {
-          statusText = status;
+          statusText = "END";
           statusIcon = (
             <FcCancel
-              className="mr-2 size-6 text-muted-foreground"
+              className="mr-2 size-6 text-muted-foreground text-red-500 font-bold"
               aria-hidden="true"
             />
           );
-          statusColor = "";
+          statusColor = "text-red-500";
         }
 
         return (
