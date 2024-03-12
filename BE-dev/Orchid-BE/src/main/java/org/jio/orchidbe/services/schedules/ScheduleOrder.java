@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.jio.orchidbe.utils.WebUtils.convertCurrentToLocalDateTimeWithZone;
+
 @Service
 public class ScheduleOrder {
 
@@ -33,6 +35,7 @@ public class ScheduleOrder {
     @Scheduled(fixedRate = 10000) // Run every 1 minute
     public void checkOrderExpired() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
+        convertCurrentToLocalDateTimeWithZone(currentTime);
         List<Order> expiredAuctions = getExpireOrdersStartingAt(currentTime, OrderStatus.PENDING);
         for (Order order : expiredAuctions) {
             order.setStatus(OrderStatus.FAILED);

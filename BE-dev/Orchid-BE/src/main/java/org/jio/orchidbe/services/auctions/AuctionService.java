@@ -55,9 +55,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.NotAcceptableStatusException;
+import org.springframework.web.util.WebUtils;
 
 import java.text.ParseException;
 import java.util.*;
+
+import static org.jio.orchidbe.utils.WebUtils.convertToLocalDateTimeWithZone;
 
 @Service
 @RequiredArgsConstructor
@@ -88,6 +91,7 @@ public class AuctionService implements IAuctionService {
     private WalletRepository walletRepository;
     @Autowired
     private OrderRepository orderRepository;
+
 
 
     @Transactional
@@ -187,9 +191,10 @@ public class AuctionService implements IAuctionService {
     @Override
     public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
         Auction newAuction = auctionMapper.toEntity(createAuctionResquest);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate(), formatter);
-        LocalDateTime startDate = LocalDateTime.parse(createAuctionResquest.getStartDate(), formatter);
+        LocalDateTime endDate = convertToLocalDateTimeWithZone(createAuctionResquest.getEndDate());
+        LocalDateTime startDate = convertToLocalDateTimeWithZone(createAuctionResquest.getStartDate());
+        LocalDateTime remindAt = convertToLocalDateTimeWithZone(createAuctionResquest.getRemindAt());
+
         validateDate(startDate, endDate);
         //map
         Product product = productRepository.findById(createAuctionResquest.getProductID())
@@ -206,6 +211,8 @@ public class AuctionService implements IAuctionService {
         int updatedProductQuantity = product.getQuantity() - createAuctionResquest.getQuantity();
         product.setQuantity(updatedProductQuantity);
         productRepository.save(product);
+        newAuction.setStartDate(convertToLocalDateTimeWithZone(createAuctionResquest.getStartDate()));
+        newAuction.setEndDate(convertToLocalDateTimeWithZone(createAuctionResquest.getEndDate()));
         newAuction.setProductCode(product.getProductCode());
         newAuction.setProductName(product.getProductName());
         newAuction.setDescription(product.getDescription());

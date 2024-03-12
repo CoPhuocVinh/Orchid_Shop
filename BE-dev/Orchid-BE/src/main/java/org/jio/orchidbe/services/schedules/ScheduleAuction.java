@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.jio.orchidbe.utils.WebUtils.convertCurrentToLocalDateTimeWithZone;
+import static org.jio.orchidbe.utils.WebUtils.convertToLocalDateTimeWithZone;
+
 @Service
 public class ScheduleAuction {
     @Autowired
@@ -31,6 +34,7 @@ public class ScheduleAuction {
     @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
     public void checkAuctionEndings() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
+        convertCurrentToLocalDateTimeWithZone(currentTime);
         List<Auction> auctions = getAuctionsEndingBefore(currentTime, Status.LIVE);
 
         for (Auction auction : auctions) {
@@ -47,6 +51,7 @@ public class ScheduleAuction {
     @Scheduled(fixedRate = 10000) // Run every 1 minute
     public void checkAuctionStatus() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
+        convertCurrentToLocalDateTimeWithZone(currentTime);
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
         List<Auction> remindingAuctions = getAuctionsRemindingAfter(currentTime, Status.COMING);
 
@@ -83,6 +88,7 @@ public class ScheduleAuction {
     @Scheduled(fixedRate = 1000) // Run every 1 minute
     public void checkAuctionExpired() throws DataNotFoundException {
         LocalDateTime currentTime = LocalDateTime.now();
+        convertCurrentToLocalDateTimeWithZone(currentTime);
         List<Auction> expiredAuctions = getWaitingAuctionsStartingAt(currentTime, Status.WAITING);
 
         for (Auction auction : expiredAuctions) {
