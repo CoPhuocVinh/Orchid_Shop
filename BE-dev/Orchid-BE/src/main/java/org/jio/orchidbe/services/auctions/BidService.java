@@ -76,7 +76,7 @@ public class BidService implements IBidService{
                 //set rating  =1
 
                 // set auction bidding
-                if(createBidRequest.getBiddingPrice() > auction.getStartPrice()){
+                if(createBidRequest.getBiddingPrice() >= auction.getStartPrice()){
 
                     userBid.setTop1(true);
                     userBid.setRatings(1);
@@ -87,7 +87,7 @@ public class BidService implements IBidService{
                 }
             } else {
                 // Existing bids, compare with top1 bid
-                if (createBidRequest.getBiddingPrice() > top1Bid.getBiddingPrice() + auction.getDepositPrice()) {
+                if (createBidRequest.getBiddingPrice() >= top1Bid.getBiddingPrice() + auction.getDepositPrice()) {
                     if (top1Bid.getId() == userBid.getId()){
 
                     }else {
