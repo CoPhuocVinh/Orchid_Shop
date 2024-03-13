@@ -55,6 +55,7 @@ export default function ListingDetails({ auction }: ListingDetailsProps) {
   const isStatusLive = auction?.status === "LIVE";
   const canBid = isRegisterAuction && isStatusLive;
 
+  // need to optimize
   const handleBidding = async (bidAmount: number) => {
     if (canBid && bidAmount !== null) {
       try {
@@ -64,7 +65,6 @@ export default function ListingDetails({ auction }: ListingDetailsProps) {
         const { success, error } = await biddingAuction(userId, auctionId, bidAmount);
         if (success) {
           toast.success("Tăng giá thành công");
-          form.reset();
         } else if (error) {
           toast.error(error);
         } else {
@@ -106,8 +106,10 @@ export default function ListingDetails({ auction }: ListingDetailsProps) {
           />
 
           <div className="bg-slate-200 p-4 rounded-md">
+            <div className="space-y-3">
             <h1 className="font-bold text-2xl space-y-2">Đấu giá ngay</h1>
             <p>Giá đấu giá hiện tại là : ${biddingPrice}</p>
+            </div>
 
             <div className="flex items-center space-x-4">
               <div className="relative w-full">

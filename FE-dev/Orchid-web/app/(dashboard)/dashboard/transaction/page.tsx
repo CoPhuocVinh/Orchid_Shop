@@ -12,7 +12,7 @@ export interface IndexPageProps {
 const TransactionPage = ({ searchParams }: IndexPageProps) => {
   const transaction = getTransactions(searchParams);
   return (
-    <div className="min-h-full w-full">
+    <div className="min-h-screen w-full">
    
       <section className="2xl:flex-1 w-full">
         <Wallet />

@@ -240,7 +240,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <Select
                     disabled={isLoading}
                     onValueChange={field.onChange}
-                    value={field.value.toString()}
+                    value={field.value === 0 ? "" : field.value.toString()}
                     defaultValue={field.value.toString()}
                   >
                     <FormControl>

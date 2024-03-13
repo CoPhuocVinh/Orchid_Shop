@@ -39,6 +39,7 @@ import {
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Heading } from "@/components/dashboard-heading";
 import { DateTimePicker } from "@/components/date-time-picker/date-time-picker";
+import { adjustTimeZoneOffset } from "@/hooks/use-countdown-time";
 
 const formSchema = z.object({
   startDate: z.date().refine(
@@ -131,19 +132,11 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
-  console.log(typeof initialData?.startDate);
+
   const onSubmit = async (data: AuctionFormValues) => {
-
-    const startDateFormat = data.startDate
-      ? new Date(data.startDate).toISOString().replace("Z", "")
-      : undefined;
-
-    const endDateFormat = data.endDate
-      ? new Date(data.endDate).toISOString().replace("Z", "")
-      : undefined;
-    const remindAtFormtat = data.remindAt
-      ? new Date(data.endDate).toISOString().replace("Z", "")
-      : undefined;
+    const startDateFormat = adjustTimeZoneOffset(data.startDate, 7);
+    const endDateFormat = adjustTimeZoneOffset(data.endDate, 7);
+    const remindAtFormtat = adjustTimeZoneOffset(data.remindAt, 7);
 
     const value = {
       ...data,
@@ -151,12 +144,8 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
       endDate: endDateFormat,
       remindAt: remindAtFormtat,
     };
-    // console.log({
-    //   ...data,
-    //   startDate: startDateFormat,
-    //   endDate: endDateFormat,
-    //   remindAt: remindAtFormtat,
-    // });
+
+    // console.log(value);
 
     try {
       setLoading(true);
@@ -308,7 +297,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <Select
                     disabled={isLoading}
                     onValueChange={field.onChange}
-                    value={field.value.toString()}
+                    value={field.value === 0 ? "" : field.value.toString()}
                     defaultValue={field.value.toString()}
                   >
                     <FormControl>
@@ -325,7 +314,11 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                           key={product.productID}
                           value={product.productID.toString()}
                         >
-                          <span>{product.productName}</span>
+                          <span>
+                            {product.productName
+                              ? product.productName
+                              : "Lựa chọn sản phẩm đấu giá"}
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>

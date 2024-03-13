@@ -14,5 +14,6 @@ export async function getTransactions(
   noStore();
   const url = `/transactions`;
 
+  revalidatePath("/")
   return await fetchListDataWithSearchParam(url, searchParams);
 }

@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { api } from "../api-interceptor/api";
+import { IWallet } from "@/types/dashboard";
 
 export async function getWalletByUserId(
   params: string

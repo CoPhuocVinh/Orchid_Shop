@@ -54,8 +54,8 @@ const FormPopoverUser = ({
           <div className="flex items-center gap-2">
             <UserAvatar />
             <div className="text-xs">
-              <p className="font-bold text-sm">{fullName}</p>
-              <p className="text-neutral-600">vinh@gmail.com</p>
+              <p className="font-bold text-sm">{session?.user.name}</p>
+              <p className="text-neutral-600">{session?.user.email}</p>
             </div>
           </div>
           <Button
