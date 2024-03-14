@@ -37,7 +37,7 @@ public class PaymentService implements IPaymentService{
 
     @Override
     public String createPayment(Float total, String context, Long id) throws UnsupportedEncodingException {
-        String orderType = "billpayment";
+        String orderType = "other";
 
         long amount = (long) (total * 100);
 
@@ -50,7 +50,9 @@ public class PaymentService implements IPaymentService{
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_BankCode", "NCB");
+        //vnp_Params.put("vnp_BankCode", "NCB");
+        //vnp_Params.put("vnp_BankCode", "VNPAYQR");
+
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + context);

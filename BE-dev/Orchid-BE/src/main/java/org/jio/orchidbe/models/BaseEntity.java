@@ -13,6 +13,8 @@ import lombok.experimental.FieldNameConstants;
 
 import java.time.LocalDateTime;
 
+import static org.jio.orchidbe.utils.WebUtils.convertCurrentToLocalDateTimeWithZone;
+
 @Data//toString
 @Getter
 @Setter
@@ -33,13 +35,13 @@ public class BaseEntity{
     @PrePersist
 
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        createdAt = convertCurrentToLocalDateTimeWithZone();
+        updatedAt = convertCurrentToLocalDateTimeWithZone();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = convertCurrentToLocalDateTimeWithZone();
     }
 
     @Column(name = "deleted", nullable = false)
