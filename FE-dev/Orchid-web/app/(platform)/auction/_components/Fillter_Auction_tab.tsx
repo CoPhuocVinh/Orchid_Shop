@@ -7,16 +7,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 
 import clsx from "clsx";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import { AuctionStatus, IAuction } from "@/types/dashboard";
-import { Switch } from "@headlessui/react";
-import { values } from "lodash";
+import { IAuction } from "@/types/dashboard";
+import { format } from "date-fns";
+
 import Fillter_Auction_Date from "./Fillter_Auction_Date";
+import Fillter_Auction_Price from "./Fillter_Auction_Price";
 //import Fillter_CheckBox from "./Fillter_CheckBox";
 
 interface FilterTypes {
@@ -41,6 +42,10 @@ function Fillter_Auction_Tab({
 }: FilterTypes) {
   const [value, setValue] = React.useState("ALL");
 
+  useEffect(() => {
+    setFilterData(liveAuction);
+  }, [liveAuction]);
+
   const handleChange = (e: any) => {
     // Xử lý logic khác tại đây
     if (e.target.value == "ALL") {
@@ -50,6 +55,7 @@ function Fillter_Auction_Tab({
         return auction.status === e.target.value;
       });
       setFilterData(newFilteredAuctions);
+      // console.log(newFilteredAuctions);
     } else if (e.target.value == "LIVE") {
       const newFilteredAuctions = liveAuction?.filter((auction: IAuction) => {
         return auction.status === e.target.value;
@@ -62,6 +68,48 @@ function Fillter_Auction_Tab({
       setFilterData(newFilteredAuctions);
     }
   };
+
+  // Thêm hàm handleChangeDate
+
+  const handleChangeDate = (
+    getDateChange: { startDate: string; endDate: string }[]
+  ) => {
+    getDateChange.forEach((d) => {
+      const startDate = d.startDate;
+      const endDate = d.endDate;
+
+      const filteredAuctions: IAuction[] = [];
+
+      liveAuction?.forEach((auction: IAuction) => {
+        const formattedStartDate = format(
+          new Date(auction.startDate as any),
+          "yyyy-MM-dd"
+        );
+        const formattedEndDate = format(
+          new Date(auction.endDate as any),
+          "yyyy-MM-dd"
+        );
+
+        const isStartDateInRange = formattedStartDate >= startDate;
+        const isEndDateInRange = formattedEndDate <= endDate;
+
+        if (isStartDateInRange && isEndDateInRange) {
+          filteredAuctions.push(auction);
+        }
+      });
+
+      if (filteredAuctions.length > 0) {
+        console.log(
+          `Các auction từ ${startDate} đến ${endDate}:`,
+          filteredAuctions
+        );
+        setFilterData([...filteredAuctions]);
+      } else {
+        console.log(`Không có auction nào từ ${startDate} đến ${endDate}.`);
+      }
+    });
+  };
+  const handleChangePrice = () => {};
   return (
     <div className={clsx(" h-full bg-white xl:px-0.5 mx-4", className)}>
       <div className="grid grid-cols-1 gap-8 px-20 pb-3 md:px-7 xl:p-0 xl:pb-0  ">
@@ -153,7 +201,10 @@ function Fillter_Auction_Tab({
             </Accordion>
           ))}
           <div>
-            <Fillter_Auction_Date />
+            <Fillter_Auction_Date onChangeDate={handleChangeDate as any} />
+          </div>
+          <div>
+            <Fillter_Auction_Price />
           </div>
         </form>
       </div>
