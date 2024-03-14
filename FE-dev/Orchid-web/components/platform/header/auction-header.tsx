@@ -99,13 +99,13 @@ export default function AuctionHeader() {
           <>
             {isAuthorized  && (
               <FormPopover align="start" side="bottom" sideOffset={18}>
-                <div className="bg-gray-200 rounded-lg px-4 py-2 flex items-center cursor-pointer">
+                <div className="rounded-lg px-4 py-2 flex items-center cursor-pointer">
                   <div className="mr-2">
                     <Wallet />
                   </div>
-                  <div className="font-semibold">
+                  {/* <div className="font-semibold">
                     {wallet?.data?.balance} VNĐ
-                  </div>
+                  </div> */}
                 </div>
               </FormPopover>
             )}

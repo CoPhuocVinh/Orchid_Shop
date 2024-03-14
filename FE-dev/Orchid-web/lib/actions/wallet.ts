@@ -10,6 +10,7 @@ export async function getWalletByUserId(
   try {
     const res = await api.get(url);
 
+
     return { data: res.data.payload };
   } catch (error) {
     return { data: null };
@@ -27,7 +28,7 @@ export async function addMoneyToWallet(
   try {
     const res = await api.post(url, {recharge: price});
 
-
+  
     if (res.status === 200 && res.data.status === "SUCCESS") {
       return res.data.payload;
       

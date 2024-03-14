@@ -12,9 +12,9 @@ export interface IndexPageProps {
 const TransactionPage = ({ searchParams }: IndexPageProps) => {
   const transaction = getTransactions(searchParams);
   return (
-    <div className="min-h-screen w-full">
+    <>
    
-      <section className="2xl:flex-1 w-full">
+      <section className="2xl:w-70 w-full 2xl:mb-0 mb-6 min-h-screen">
         <Wallet />
       </section>
       <section className=" w-full 2xl:mb-0 mb-6">
@@ -28,7 +28,7 @@ const TransactionPage = ({ searchParams }: IndexPageProps) => {
           </React.Suspense>
         </Shell>
       </section>
-    </div>
+    </>
   );
 };
 

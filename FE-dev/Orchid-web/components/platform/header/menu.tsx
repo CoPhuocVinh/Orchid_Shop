@@ -24,18 +24,17 @@ const menuItems = [
 
 ];
 import { WalletSkeleton } from "@/components/loader/wallet_loader";
+import { useModal } from "@/hooks/use-modal";
 
 export default function Menu() {
   const { data: session } = useSession();
 
+  const {onOpen}  = useModal()
+
   const isAuthorized = session?.user;
   // const isCustomer = session?.user.role === "CUSTOMER";
 
-  const { data: wallet, isLoading: walletLoading } = useGetWallet(
-    session?.user.id!
-  );
 
-  if (walletLoading) return <WalletSkeleton />;
 
   return (
     <nav className="primary-nav hidden items-center justify-between md:flex">
@@ -53,14 +52,17 @@ export default function Menu() {
       </ul>
 
       {isAuthorized && (
-        <FormPopover align="start" side="bottom" sideOffset={18}>
-          <div className="bg-gray-200 rounded-lg px-4 py-2 flex items-center cursor-pointer">
+        // <FormPopover align="start" side="bottom" sideOffset={18}>
+        <button onClick={() => onOpen("walletModal", {})}>
+
+          <div className=" rounded-lg px-4 py-2 flex items-center cursor-pointer">
             <div className="mr-2">
-              <Wallet className="text-red-500" />
+              <Wallet className="text-black hover:text-red-600" />
             </div>
-            <div className="font-semibold">{wallet?.data?.balance} VNĐ</div>
+            {/* <div className="font-semibold">{wallet?.data?.balance} VNĐ</div> */}
           </div>
-        </FormPopover>
+        </button>
+        // </FormPopover>
       )}
 
       <>
