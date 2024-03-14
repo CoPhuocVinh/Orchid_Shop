@@ -1,7 +1,7 @@
 import { IAuction } from "@/types/dashboard";
 import { create } from "zustand";
 
-export type ModalType = "registerAtendAction" | "walletModal";
+export type ModalType = "registerAtendAction" | "walletModal" | "orderSheetModal";
 
 interface ModalData {
   auction?: IAuction

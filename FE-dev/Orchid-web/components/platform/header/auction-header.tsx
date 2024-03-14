@@ -11,11 +11,13 @@ import { useSession } from "next-auth/react";
 import FormPopoverUser from "../popover-user-info";
 import UserAvatar from "../user-avatar";
 import FormPopover from "@/components/form/form-popover";
-import { Wallet } from "lucide-react";
+import { ShoppingBag, Wallet } from "lucide-react";
 
 import { useGetWallet } from "@/lib/react-query/queries";
 import { WalletSkeleton } from "@/components/loader/wallet_loader";
 import Image from "next/image";
+import { useModal } from "@/hooks/use-modal";
+import { useRouter } from "next/navigation";
 // import SearchIconBtn from '@/components/ui/search-icon-btn';
 // import SideNavButton from '@/components/ui/side-nav-button';
 // import ProfileMenu from '@/components/header/profile-menu';
@@ -50,7 +52,9 @@ export default function AuctionHeader() {
 
   const isAuthorized = session?.user;
   // const isCustomer = session?.user.role === "CUSTOMER";
+  const { onOpen } = useModal();
 
+  const router = useRouter();
   const { data: wallet, isLoading: walletLoading } = useGetWallet(
     session?.user.id!
   );
@@ -81,15 +85,15 @@ export default function AuctionHeader() {
             <span className="text-2xl ml-2 font-bold">Orchid</span>
           </Link>
         </div>
-        <ul className="hidden flex-wrap md:flex w-full max-w-sm xl:max-w-[600px] justify-center">
+        <ul className="hidden flex-wrap md:flex space-x-2">
           {menuItems.map((item) => (
             <li key={item.id}>
-              <Link
-                href={item.path}
-                className="px-5 capitalize text-black font-bold"
+              <button
+                onClick={() => router.push(`${item.path}`)}
+                className="px-5 py-2 hover:bg-slate-300 rounded-lg capitalize text-black font-bold "
               >
                 {item.label}
-              </Link>
+              </button>
             </li>
           ))}
         </ul>
@@ -97,17 +101,25 @@ export default function AuctionHeader() {
           <SearchIconBtn className="hidden" />
           {/* {mounted ? ( */}
           <>
-            {isAuthorized  && (
-              <FormPopover align="start" side="bottom" sideOffset={18}>
-                <div className="rounded-lg px-4 py-2 flex items-center cursor-pointer">
+            {isAuthorized && (
+              <button onClick={() => onOpen("walletModal", {})}>
+                <div className=" hover:bg-slate-300 rounded-lg px-4 py-2 flex items-center cursor-pointer group">
                   <div className="mr-2">
-                    <Wallet />
+                    <Wallet className="text-black hover:text-red-600 group-hover:text-red-600" />
                   </div>
-                  {/* <div className="font-semibold">
-                    {wallet?.data?.balance} VNĐ
-                  </div> */}
+                  <div className="font-semibold ">Ví tiền</div>
                 </div>
-              </FormPopover>
+              </button>
+            )}
+            {isAuthorized && (
+              <button onClick={() => onOpen("orderSheetModal", {})}>
+                <div className="hover:bg-slate-300 rounded-lg px-4 py-2 flex items-center cursor-pointer group">
+                  <div className="mr-2">
+                    <ShoppingBag className="text-black group-hover:text-green-600" />
+                  </div>
+                  <div className="font-semibold ">Đơn hàng</div>
+                </div>
+              </button>
             )}
             {isAuthorized ? (
               <div className="ml-7 flex justify-end dark:text-black">
