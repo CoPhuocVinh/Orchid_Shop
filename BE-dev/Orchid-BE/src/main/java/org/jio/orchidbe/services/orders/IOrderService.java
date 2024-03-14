@@ -23,4 +23,6 @@ public interface IOrderService {
                                BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException;
 
     OrderResponse UpdateOrderStatus(StatusOrderRequest request) ;
+
+    OrderResponse getById(Long id) throws DataNotFoundException;
 }

@@ -38,6 +38,7 @@ public class ScheduleAuction {
     public void checkAuctionEndings() throws DataNotFoundException {
         LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
 
+
         List<Auction> auctions = getAuctionsEndingBefore(currentTime, Status.LIVE);
 
         for (Auction auction : auctions) {
@@ -55,13 +56,12 @@ public class ScheduleAuction {
     @Scheduled(fixedRate = 10000) // Run every 1 minute
     public void checkAuctionStatus() throws DataNotFoundException {
         LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
-
-
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
         List<Auction> remindingAuctions = getAuctionsRemindingAfter(currentTime, Status.COMING);
 
 
         for (Auction auction : pendingAuctions) {
+//            System.out.println("start time : ========= " + auction.getStartDate());
 
             auctionContainer.removeOnAuctionListById(auction.getId());
             auctionContainer.removeOnStatusLists(auction);
@@ -95,6 +95,7 @@ public class ScheduleAuction {
         List<Auction> expiredAuctions = getWaitingAuctionsStartingAt(currentTime, Status.WAITING);
 
         for (Auction auction : expiredAuctions) {
+
             auction.setModifiedBy("System");
             auction.setStatus(Status.END);
             auction.setRejected(true);
@@ -115,6 +116,7 @@ public class ScheduleAuction {
     }
 
     private List<Auction> getWaitingAuctionsStartingAt(LocalDateTime startTime, Status status) {
+
         return auctionContainer.getWaitingAuctions().stream()
                 .filter(auction -> startTime.isAfter(auction.getStartDate()) && auction.getStatus() == status)
                 .collect(Collectors.toList());

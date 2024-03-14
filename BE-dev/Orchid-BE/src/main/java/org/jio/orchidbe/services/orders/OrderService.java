@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.enums.TypeTrans;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
@@ -11,6 +12,7 @@ import org.jio.orchidbe.mappers.orders.OrderMapper;
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
+import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
@@ -270,7 +272,14 @@ public class OrderService implements IOrderService {
         return orderMapper.toResponse(existingOrder);
     }
 
-
+    @Override
+    public OrderResponse getById(Long id) throws DataNotFoundException {
+        Order entity = orderRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found .")
+        );
+        OrderResponse response = orderMapper.toResponse(entity);
+        return response;
+    }
 
 
 //    public void validateOrder(String auctionTitle) throws BadRequestException {

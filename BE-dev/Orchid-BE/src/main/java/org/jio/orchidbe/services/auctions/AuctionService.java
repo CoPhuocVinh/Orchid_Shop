@@ -192,8 +192,6 @@ public class AuctionService implements IAuctionService {
         Auction newAuction = auctionMapper.toEntity(createAuctionResquest);
         LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate());
         LocalDateTime startDate = LocalDateTime.parse(createAuctionResquest.getStartDate());
-
-
         validateDate(startDate, endDate);
         //map
         Product product = productRepository.findById(createAuctionResquest.getProductID())

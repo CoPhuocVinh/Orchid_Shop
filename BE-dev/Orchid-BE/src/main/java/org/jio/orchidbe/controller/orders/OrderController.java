@@ -12,6 +12,7 @@ import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
+import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.OrderContainer;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.jio.orchidbe.services.orders.IOrderService;
@@ -95,11 +96,20 @@ public class OrderController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/list/pending")
-    public List<OrderResponse> getLiveAuctions() {
-        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
-        List<Order> pendingOrders = orderContainer.getOrders();
-        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-        return orderMapper.toResponseList(pendingOrders);
+    @GetMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> findOrderById(@PathVariable Long id) throws DataNotFoundException {
+        ApiResponse apiResponse = new ApiResponse();
+        OrderResponse response = orderService.getById(id);
+        apiResponse.ok(response);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+//    @GetMapping("/list/pending")
+//    public List<OrderResponse> getLiveAuctions() {
+//        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
+//        List<Order> pendingOrders = orderContainer.getOrders();
+//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+//        return orderMapper.toResponseList(pendingOrders);
+//    }
 }
