@@ -1,6 +1,5 @@
 "use client";
 
-
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
@@ -12,13 +11,14 @@ function Sidebar({ handleActive }: any) {
   const [activeUser, setActiveUser] = useState(false);
   const [activeProduct, setActiveProduct] = useState(false);
   const [activeAcution, setActiveAcution] = useState(false);
-  
-  
 
   return (
     <aside className="sidebar-wrapper fixed top-0 z-30 block h-full w-[308px] bg-white dark:bg-darkblack-600 sm:hidden xl:block">
       <div className="sidebar-header relative z-30 flex h-[108px] w-full items-center border-b border-r border-b-[#F7F7F7] border-r-[#F7F7F7] pl-[50px] dark:border-darkblack-400">
-        <Link href="/" className="flex items-center font-bold dark:text-blue-200  ">
+        <Link
+          href="/"
+          className="flex items-center font-bold dark:text-blue-200  "
+        >
           <Image
             alt="logo"
             src="/images/logo-white.svg"
@@ -76,8 +76,6 @@ function Sidebar({ handleActive }: any) {
                   </div>
                 </Link>
               </li>
-
-
 
               {/* <li className="item py-[11px] text-bgray-900 dark:text-white">
                 <Link href="/dashboard/integrations">
@@ -215,6 +213,14 @@ function Sidebar({ handleActive }: any) {
                       className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
                     >
                       Create auction
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/dashboard/censorship"
+                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                    >
+                      Censorship auctions
                     </Link>
                   </li>
                 </ul>

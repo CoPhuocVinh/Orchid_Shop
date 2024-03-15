@@ -27,7 +27,7 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 
-import { ICategoryForm, IProduct, IProductCreate } from "@/types/dashboard";
+import { ICategoryForm, IProduct } from "@/types/dashboard";
 import ImageUpload from "@/components/image-cloudinary-upload/image-upload";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -35,19 +35,10 @@ import { toast } from "sonner";
 import { checkProductNameExits, createProduct, deleteProductByID, updateProductDetail} from "@/lib/actions";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Heading } from "@/components/dashboard-heading";
+import { productSchema } from "@/lib/schemas";
 
-const formSchema = z.object({
-  productName: z.string().min(1, { message: "Hãy nhập tên sản phẩm" }),
-  quantity: z.coerce.number().min(1, { message: "Hãy nhập giá tiền" }),
-  description: z.string().min(1, { message: "Hãy nhập mô tả" }),
-  category_id: z.coerce.number().min(1, { message: "Hãy chọn thể loại" }),
-  productImages: z
-    .object({ image_url: z.string() , image_code: z.string() })
-    .array()
-    .min(1, { message: "Hãy nhập ít nhất 1 ảnh" }),
-});
 
-export type ProductFormValues = z.infer<typeof formSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;
 
 interface ProductFormProps {
   initialData: IProduct | null;
@@ -84,7 +75,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       };
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(productSchema),
     defaultValues,
   });
 

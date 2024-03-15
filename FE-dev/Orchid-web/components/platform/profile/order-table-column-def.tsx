@@ -248,7 +248,7 @@ export function fetchOrderTableColumnDefs(
         }
 
         return (
-          <div className="flex items-center bg-slate-700 w-full h-14 rounded-md px-2">
+          <div className="flex items-center w-full h-14 rounded-md px-2">
             <span>{statusIcon}</span>
             <span className={`capitalize ${statusColor}`}>{statusText}</span>
           </div>

@@ -16,11 +16,13 @@ import { getOrdersByUserId } from "@/lib/actions";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { Shell } from "@/components/shell";
 import { OrderTable } from "./order-table";
+import { auth } from "@/lib/auth";
 export interface IndexPageProps {
   searchParams: SearchParams;
 }
-function Nav_Menu({ searchParams }: IndexPageProps) {
-  const orders = getOrdersByUserId(searchParams, "1");
+async function Nav_Menu({ searchParams }: IndexPageProps) {
+  const session = await auth()
+  const orders = getOrdersByUserId(searchParams, session?.user.id!);
   return (
     <div className="flex flex-row">
       <div className="container mx-auto mt-12 h-full w-88">

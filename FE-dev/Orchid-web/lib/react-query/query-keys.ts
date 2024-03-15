@@ -16,5 +16,10 @@ export enum QUERY_KEYS {
 
 
     //Wallet
-    GET_WALLET = "GET_WALLET"
+    GET_WALLET = "GET_WALLET",
+
+
+
+    //ORDER
+    GET_ORDERS = "GET_ORDERS"
 }

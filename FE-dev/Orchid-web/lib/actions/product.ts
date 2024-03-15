@@ -3,9 +3,9 @@ import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { IProduct, IProductCreate } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { fetchListDataWithSearchParam } from "@/lib/generics";
-import { api } from "../api-interceptor/api";
-
-
+import { api, axiosAuth } from "../api-interceptor/api";
+import { auth } from "../auth";
+import setupAxiosAuth from "../api-interceptor/axios-server";
 
 export async function getProducts(
   searchParams: SearchParams
@@ -82,12 +82,26 @@ export async function updateProductDetail(
   }
 }
 
+export async function updateStatusProduct({ id, status }: {id: number, status: string}) {
+  try {
+
+    const res = await api.put(`/products/${id}`, { actived : status });
+
+    revalidatePath("/dashboard/products");
+  } catch (error) {
+    console.log("FALI");
+  }
+}
+
 export async function createProduct(data: IProductCreate): Promise<void> {
   noStore();
   const url = `/products`;
+  const session = await auth();
+  setupAxiosAuth(session);
 
+  console.log(axiosAuth)
   try {
-    await api.post(url, data);
+    await axiosAuth.post(url, data);
 
     revalidatePath("/dashboard/products");
   } catch (error) {

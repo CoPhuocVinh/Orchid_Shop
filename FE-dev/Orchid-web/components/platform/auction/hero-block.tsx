@@ -7,7 +7,7 @@ import { IAuction } from "@/types/dashboard";
 import { VendorTypes } from "@/types/platform";
 import { Menu } from "@headlessui/react";
 import { HeartIcon, ShareIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface ListingDetailsHeroBlockProps {
   vendor: VendorTypes;
@@ -69,8 +69,8 @@ function ShareMenu() {
 export default function ListingDetailsHeroBlock({
   auction,
 }: ListingDetailsHeroBlockProps) {
-  const startDate = auction?.startDate?.toString();
-  const endDate = auction?.endDate?.toString();
+  const startDate = useMemo(() => auction?.startDate?.toString(), [auction]);
+  const endDate = useMemo(() => auction?.endDate?.toString(), [auction]);
   const countdownToStart = useCountdownTimer(startDate);
   const countdownToEnd = useCountdownTimer(endDate);
 
@@ -92,7 +92,7 @@ export default function ListingDetailsHeroBlock({
     <div className="flex justify-between border-b border-gray-lighter pb-6 md:pb-8 2xl:pb-10 mt-2">
       <div>
         <div className="py-4">
-          {showCountdownToStart && (
+          {showCountdownToStart && countdownToStart && (
             <>
               <div className="text-black text-lg font-bold">
                 <span>Bắt đầu sau</span>: ..
@@ -115,7 +115,7 @@ export default function ListingDetailsHeroBlock({
               </div>
             </>
           )}
-          {showCountdownToEnd && (
+          {showCountdownToEnd && countdownToEnd && (
             <>
               <div className="text-black text-lg font-bold">
                 <span>Kết thúc sau</span>: ..

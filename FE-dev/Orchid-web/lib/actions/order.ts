@@ -20,8 +20,10 @@ export async function getOrdersByUserId(
   searchParams: SearchParams,
   userId: string
 ): Promise<{ data: IOrder[]; pageCount: number }> {
+
+  
   noStore();
-  const url = `/orders/list?userID=${userId}`;
+  const url = `/orders/list?userId=${userId}`;
 
   return await fetchListDataWithSearchParam(url, searchParams);
 }

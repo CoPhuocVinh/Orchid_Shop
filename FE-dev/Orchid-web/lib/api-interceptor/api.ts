@@ -1,4 +1,7 @@
 import axios from "axios";
+import { Session } from "next-auth";
+import refreshToken from "./refresh-token-server";
+import { auth } from "../auth";
 
 // const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 // const baseURL = process.env.API_URL;
@@ -15,3 +18,5 @@ export const axiosAuth = axios.create({
   baseURL: baseURL,
   headers: { "Content-Type": "application/json" },
 });
+
+

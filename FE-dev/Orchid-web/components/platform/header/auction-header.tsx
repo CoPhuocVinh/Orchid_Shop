@@ -68,7 +68,7 @@ export default function AuctionHeader() {
       ref={headerRef}
       className="dashboard-header sticky top-0 z-30 flex h-16 w-full bg-white md:flex md:items-center lg:h-[72px] 2xl:h-20 4xl:h-24"
     >
-      <div className="container-fluid grid w-full grid-cols-2 items-center gap-0 lg:grid-cols-3 3xl:!px-12">
+      <div className="container-fluid grid w-full grid-cols-3 items-center gap-0 lg:grid-cols-3 3xl:!px-12">
         <div className="flex items-center gap-2 md:gap-4 2xl:gap-5">
           <Link
             href="/"
@@ -85,7 +85,7 @@ export default function AuctionHeader() {
             <span className="text-2xl ml-2 font-bold">Orchid</span>
           </Link>
         </div>
-        <ul className="hidden flex-wrap md:flex space-x-2">
+        <ul className="hidden flex-wrap justify-center md:flex space-x-2">
           {menuItems.map((item) => (
             <li key={item.id}>
               <button

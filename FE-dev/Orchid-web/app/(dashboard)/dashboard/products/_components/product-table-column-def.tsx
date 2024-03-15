@@ -7,7 +7,7 @@ import type {
 
 import { type ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import { CheckCircle, XCircle } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { IProduct } from "@/types/dashboard";
 import {
@@ -29,7 +29,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Edit } from "lucide-react";
 import { toast } from "sonner";
-import { deleteProductByID } from "@/lib/actions";
+import { deleteProductByID, updateStatusProduct } from "@/lib/actions";
 
 export function fetchProductsTableColumnDefs(
   isPending: boolean,
@@ -117,6 +117,25 @@ export function fetchProductsTableColumnDefs(
       },
     },
     {
+      accessorKey: "actived",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="actived" />
+      ),
+      cell: ({ row }) => {
+        const isActived = row.getValue("actived");
+        return (
+          <div className="flex items-center space-x-2 ">
+            {isActived ? (
+              <CheckCircle className="text-green-500" size={20} />
+            ) : (
+              <XCircle className="text-red-500" size={20} />
+            )}
+            <span>{isActived ? "Active" : "Inactive"}</span>
+          </div>
+        );
+      },
+    },
+    {
       id: "actions",
       cell: ({ row }) => (
         <DropdownMenu>
@@ -137,23 +156,50 @@ export function fetchProductsTableColumnDefs(
             >
               <Edit className="mr-2 h-4 w-4" /> Chỉnh sửa
             </DropdownMenuItem>
-
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuRadioGroup
+                  value={row.original.actived.toString()}
+                  onValueChange={(value) => {
+                    startTransition(() => {
+                      toast.promise(
+                        updateStatusProduct({
+                          id: row.original.id,
+                          status: value.toString(),
+                        }),
+                        {
+                          loading: "Update...",
+                          success: () => "Product update successfully.",
+                          error: () => "Dellete error",
+                        }
+                      );
+                    });
+                  }}
+                >
+                  {["true", "false"].map((status) => (
+                    <DropdownMenuRadioItem
+                      key={status.toString()}
+                      value={status.toString()}
+                      className="capitalize"
+                    >
+                      {status}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 startTransition(() => {
                   row.toggleSelected(false);
-                  toast.promise(
-                    deleteProductByID(
-                       row.original.id.toString(),
-                    ),
-                    {
-                      loading: "Deleting...",
-                      success: () => "Product deleted successfully.",
-                      // error: (err: unknown) => catchError(err),
-                      error: () => "Dellete error",
-                    }
-                  );
+                  toast.promise(deleteProductByID(row.original.id.toString()), {
+                    loading: "Deleting...",
+                    success: () => "Product deleted successfully.",
+                    // error: (err: unknown) => catchError(err),
+                    error: () => "Dellete error",
+                  });
                 });
               }}
             >

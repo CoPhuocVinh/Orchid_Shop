@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import axios from "axios"; // Thêm dòng này để import axios
 
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
@@ -8,7 +9,7 @@ import Image from "next/image";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 function BodyOrder() {
-  const [selectedMethod, setSelectedMethod] = useState("card");
+  const [selectedMethod, setSelectedMethod] = useState("CARD");
   const { data: session } = useSession();
   const { data: in4DetailResponseList } = useGetAddress(
     session?.user.id! || "1"
@@ -49,6 +50,28 @@ function BodyOrder() {
 
   const handleMethodChange = (method: any) => {
     setSelectedMethod(method);
+  };
+
+  const handleUpdateOrder = async () => {
+    try {
+      const orderId = orderData.id; // Lấy id của đơn hàng từ dữ liệu orderData
+      const payload = {
+        paymentMethod: "CARD", // Giá trị paymentMethod được truyền vào
+        note: "string", // Giá trị note được truyền vào
+        userIn4Id: 0, // Giá trị userIn4Id được truyền vào
+      };
+
+      const response = await axios.put(
+        `https://orchid.fams.io.vn/api/v1/orders/update-order/${orderId}`,
+        payload
+      );
+
+      // Xử lý phản hồi từ API tại đây
+      console.log(response.data);
+    } catch (error) {
+      // Xử lý lỗi tại đây
+      console.error(error);
+    }
   };
 
   return (
@@ -128,8 +151,8 @@ function BodyOrder() {
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div>
                 <Button
-                  variant={selectedMethod === "card" ? "primary" : "outline"}
-                  onClick={() => handleMethodChange("card")}
+                  variant={selectedMethod === "CARD" ? "primary" : "outline"}
+                  onClick={() => handleMethodChange("CARD")}
                   className="w-full flex items-center justify-center"
                 >
                   <svg
@@ -148,7 +171,28 @@ function BodyOrder() {
                   Card
                 </Button>
               </div>
-              {/* Add more payment methods here */}
+              <div>
+                <Button
+                  variant={selectedMethod === "WALLET" ? "primary" : "outline"}
+                  onClick={() => handleMethodChange("WALLET")}
+                  className="w-full flex items-center justify-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-6 h-6 mr-2"
+                  >
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <path d="M2 10h20" />
+                  </svg>
+                  WALLET
+                </Button>
+              </div>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-2">Order Summary</h4>
@@ -160,7 +204,10 @@ function BodyOrder() {
                   ${orderData.total}
                 </div>
               </div>
-              <Button className="bg-slate-400 hover:bg-green-800 w-full">
+              <Button
+                className="bg-slate-400 hover:bg-green-800 w-full"
+                onClick={handleUpdateOrder}
+              >
                 Proceed to payment
               </Button>
             </div>

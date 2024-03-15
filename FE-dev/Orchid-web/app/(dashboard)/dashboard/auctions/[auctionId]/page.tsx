@@ -10,7 +10,7 @@ const AuctionDashboardPage = async ({
 }) => {
 
   // limit 100 product actived
-  const searchParams = { page: "1", per_page: "100", actived: "actived" };
+  const searchParams = { page: "1", per_page: "100", active: "true" };
 
   const products = await getProducts(searchParams);
 

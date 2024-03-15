@@ -22,8 +22,8 @@ export default function ThemePlatformProvider({
   }, [setTheme, resolvedTheme, router]);
 
   return (
-    <>
-      <div>{children}</div>
-    </>
+    <div className="flex min-h-full flex-col">
+      {children}
+    </div>
   );
 }

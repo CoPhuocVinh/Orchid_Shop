@@ -3,13 +3,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./query-keys";
 import {
+  getOrdersByUserId,
   getProducts,
   getUserAddressInfo,
   getUserWithRoleCustomer,
   getUserWithRoleStaff,
 } from "../actions";
 import { SearchParams } from "@/types/table";
-import { AuctionStatus, IAuction, IProduct,IUser, IWallet } from "@/types/dashboard";
+import { AuctionStatus, IAuction, IOrder, IProduct,IUser, IWallet } from "@/types/dashboard";
 import { getAuctions, getAuctionsWithStatus } from "../actions/auction";
 import { getWalletByUserId } from "../actions/wallet";
 
@@ -71,5 +72,15 @@ export const useGetWallet = (params: string) => {
   return useQuery<{ data: IWallet | null}>({
     queryKey: [QUERY_KEYS.GET_WALLET, params],
     queryFn: () => getWalletByUserId(params),
+  });
+};
+
+
+
+//ORDER
+export const useGetOrderByUserId = (searchTerm: SearchParams, userId: string) => {
+  return useQuery<{ data: IOrder[]; pageCount: number }>({
+    queryKey: [QUERY_KEYS.GET_ORDERS, searchTerm, userId],
+    queryFn: () => getOrdersByUserId(searchTerm, userId),
   });
 };

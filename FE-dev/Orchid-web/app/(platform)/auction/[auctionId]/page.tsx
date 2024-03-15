@@ -25,7 +25,7 @@ const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
         <div className="w-full md:w-3/5 md:pl-4">
           <ListingDetails auction={auction.data} />
 
-          <div className="mt-8 md:mt-0 md:h-72">
+          <div className="mt-8 md:mt-0">
             <Tabs defaultValue="description" className="w-[350px] md:w-[700px]">
               <TabsList className="grid grid-cols-2 gap-4">
                 <TabsTrigger
@@ -51,14 +51,14 @@ const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
               </TabsContent>
               <TabsContent
                 value="bidding"
-                className="overflow-y-auto max-h-72 md:max-h-[380px]"
+                className="overflow-y-auto "
               >
                 <div>
                   <h2 className="text-lg font-bold mb-2">
                     Top 3 People Bidding
                   </h2>
                   <ul>
-                    {auction.data?.bidList.slice(0, 3).map((bidder, index) => (
+                    {auction.data?.bidList.sort((a,b) => b.ratings - a.ratings).slice(0, 3).map((bidder, index) => (
                       <li
                         key={index}
                         className={`flex items-center bg-white border-2 shadow-md rounded-md p-4 mb-4 space-y-3 ${
