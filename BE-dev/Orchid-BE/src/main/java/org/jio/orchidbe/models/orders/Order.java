@@ -53,6 +53,9 @@ public class Order extends BaseEntity {
     @Column(name = "expired", nullable = false)
     private boolean expired = false;
 
+    @Column(name = "confirmed", nullable = false)
+    private boolean confirmed = false;
+
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
 
