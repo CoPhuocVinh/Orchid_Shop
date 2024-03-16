@@ -28,11 +28,12 @@ public class OrderResponse {
     private String modifiedBy;
     private String auctionTitle;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private String expiredAt;;
+    private String expiredAt;
     private String productName;
     private String productCode;
     private Integer quantity;
     private String note;
+    private boolean confirmed;
     private Long auctionID;
     private Long userID;
     //private UserDTOResponse user;

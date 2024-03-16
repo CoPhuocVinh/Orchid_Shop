@@ -6,9 +6,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.dtos.products.ProductDTORequest;
+import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
 import org.jio.orchidbe.models.orders.Order;
+import org.jio.orchidbe.requests.orders.ConfirmedOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
@@ -77,6 +80,24 @@ public class OrderController {
 
         return orderService.updateOrder(updateOrderRequest, id, bindingResult);
 
+    }
+
+    @PutMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> confirmedOrder(
+            @PathVariable Long id,
+            @Valid @RequestBody ConfirmedOrderRequest request,
+            BindingResult result
+    )throws Exception{
+        ApiResponse apiResponse = new ApiResponse();
+        if (result.hasErrors()) {
+            apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        OrderResponse updated = orderService.confirmedOrder(id,request,result);
+        apiResponse.ok( updated);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @PostMapping("update-status")
