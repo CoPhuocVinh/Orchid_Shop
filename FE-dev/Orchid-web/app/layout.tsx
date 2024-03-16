@@ -1,6 +1,18 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "/public/static/css/style.css";
+import "/public/static/css/font-awesome-all.min.css";
+import "swiper/css";
+import "swiper/css/effect-fade";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "react-quill/dist/quill.snow.css";
+import { QueryProvider } from "@/providers/query-provider";
+import { Toaster } from "@/components/ui/sonner";
+import SessionProviders from "@/providers/session-provider";
+import { ModalProvider } from "@/providers/modal-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +29,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <ThemeProvider
+    attribute="class"
+    defaultTheme="system"
+    enableSystem
+    disableTransitionOnChange
+    >
+          <SessionProviders>
+            <QueryProvider>
+              <ModalProvider />
+              {children}
+              <Toaster />
+            </QueryProvider>
+          </SessionProviders>
+          </ThemeProvider>
 
-          {children}
       </body>
     </html>
   );

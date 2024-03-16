@@ -1,125 +1,67 @@
 "use client";
-
-import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-import type { ListingItemTypes } from "@/types/platform";
+import { useState, useEffect } from "react";
+import useCountdownTimer from "@/hooks/use-countdown-time";
+// Make sure to import the useCountdownTimer hook
 
-import {
-  Swiper,
-  SwiperSlide,
-  Navigation,
-  Pagination,
-} from "@/components/platform/slider-custom/slider";
+interface LiveAuctionsCardProps {
+  productName: string;
+  productCode: string;
+  endDate: Date;
+  id: number;
+  image_url: string;
+}
 
-// import AddToWishlist from "@/components/add-to-wishlist";
-// import Rate from "@/components/ui/rating";
-// import { Routes } from "@/config/routes";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import ActionIcon from "../action-icon";
-
-export default function ListingCard({
+export default function DestinationCard({
+  image_url,
   id,
-  slides,
-  time,
-  caption,
-  title,
-  slug,
-  location,
-  price,
-  rating,
-  ratingCount,
-}: ListingItemTypes) {
+  productName,
+  productCode,
+  endDate,
+}: LiveAuctionsCardProps) {
+  const countdown = useCountdownTimer(endDate.toString());
+
   return (
-    <>
-      <div className="listing-card group/item relative inline-flex w-full flex-col">
-        <div className="relative w-full overflow-hidden rounded-xl">
-          {/* <AddToWishlist
-            isWishListed={false}
-            onClick={(data) => console.log("Item added to Wishlist.", data)}
-          /> */}
-          <Link href="/auction/1">
-            <div className="listing-item after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-1/4 after:w-full after:bg-gradient-to-t after:from-black/25">
-              <Swiper
-                className="!static"
-                modules={[Pagination, Navigation]}
-                pagination={{
-                  clickable: true,
-                }}
-                slidesPerView={1}
-                navigation={{
-                  nextEl: `.${id}-listing-item-button-next`,
-                  prevEl: `.${id}-listing-item-button-prev`,
-                }}
-              >
-                {slides?.map((slide, index) => (
-                  <SwiperSlide key={`slide-${index}`}>
-                    <Image
-                      className="aspect-[34/25] bg-gray-lighter"
-                      src={slide}
-                      width={816}
-                      height={600}
-                      alt="boat"
-                      priority
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <ActionIcon
-                rounded="full"
-                color="light"
-                size="sm"
-                className={clsx(
-                  "absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 shadow-md !transition-all focus:!ring-0 md:invisible md:flex md:disabled:hidden md:group-hover/item:visible",
-                  `${id}-listing-item-button-prev`
-                )}
-              >
-                <ChevronLeftIcon className="-ml-0.5 h-auto w-[7px]" />
-              </ActionIcon>
-              <ActionIcon
-                rounded="full"
-                size="sm"
-                color="light"
-                className={clsx(
-                  "absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 opacity-80 shadow-md !transition-all duration-300 focus:!ring-0 md:invisible md:flex md:disabled:hidden md:group-hover/item:visible md:group-hover/item:opacity-100",
-                  `${id}-listing-item-button-next`
-                )}
-              >
-                <ChevronRightIcon className="-mr-0.5 h-auto w-[7px]" />
-              </ActionIcon>
-            </div>
-          </Link>
+    <Link href={`/auction/${id}`}>
+      <div className="group/item relative flex aspect-auto h-[340px] w-full flex-col overflow-hidden rounded-xl lg:h-[380px] 2xl:h-[420px] 4xl:h-[500px]">
+        <Image
+          src={image_url}
+          alt="destination"
+          fill
+          sizes="(min-width: 320) 100vw, 100vw"
+          className="relative z-0 rounded-xl bg-gray-lighter object-cover transition-all duration-500 group-hover/item:scale-110"
+        />
+        <div className="absolute bottom-0 z-10 h-1/4 w-full bg-gradient-to-t from-gray-dark/90 to-gray-dark/0 transition-all duration-500 group-hover/item:h-1/2 3xl:from-gray-dark/60"></div>
+        <div className="relative z-10 mt-auto px-6 pb-6 md:px-7 md:pb-7 3xl:px-9 3xl:pb-9 4xl:px-12 4xl:pb-12">
+          <h3 className="text-xl font-bold leading-7 text-lime-400 3xl:text-2xl">
+            {productName}
+          </h3>
+          <p className="text-sm font-normal leading-7 text-lime-400 lg:text-base 3xl:pt-1.5 4xl:text-lg">
+            {productCode}
+          </p>
         </div>
-        <Link href="/">
-          <div className="content pt-3">
-            <div className="mb-1 flex items-center gap-5">
-              <span className="relative flex items-center font-bold text-gray-dark before:absolute before:-right-3 before:block before:h-1 before:w-1 before:rounded-full before:bg-gray-dark">
-                {time}
-              </span>
-              <span className="font-bold">{caption}</span>
-            </div>
-            <h4 className="text-ellipsis text-gray-dark 2xl:mb-1.5">{title}</h4>
-            <p className="mb-3 text-gray-light xl:mb-3">{location}</p>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-gray-light">
-                <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">
-                  {price}
-                </span>{" "}
-                avg/day
-              </p>
-              <div className="flex items-center gap-3 leading-7">
-                {/* <Rate
-                  allowHalf
-                  allowClear
-                  defaultValue={rating}
-                  characterClassName="h-[14px] w-[14px] 3xl:h-[18px] 3xl:w-[18px]"
-                /> */}
-                ({ratingCount})
-              </div>
-            </div>
+        {countdown && (
+          <div className="absolute top-0 right-2 m-4 text-green-300 text-lg font-bold">
+            <span className="inline-block w-6 text-center">{`${countdown.days
+              .toString()
+              .padStart(2, "0")}`}</span>
+            d&nbsp; :&nbsp;
+            <span className="inline-block w-6 text-center">{`${countdown.hours
+              .toString()
+              .padStart(2, "0")}`}</span>
+            h&nbsp; :&nbsp;
+            <span className="inline-block w-6 text-center">{`${countdown.minutes
+              .toString()
+              .padStart(2, "0")}`}</span>
+            m&nbsp; :&nbsp;
+            <span className="inline-block w-6 text-center">{`${countdown.seconds
+              .toString()
+              .padStart(2, "0")}`}</span>
+            s
           </div>
-        </Link>
+        )}
       </div>
-    </>
+    </Link>
   );
 }

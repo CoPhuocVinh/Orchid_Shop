@@ -1,6 +1,6 @@
 import * as React from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import type { DataTableFilterOption } from "@/types"
+import type { DataTableFilterOption } from "@/types/table"
 import {
   CopyIcon,
   DotsHorizontalIcon,
@@ -62,7 +62,8 @@ export function DataTableMultiFilter<TData>({
   setSelectedOptions,
 }: DataTableMultiFilterProps<TData>) {
   const [open, setOpen] = React.useState(true)
-  const [operator, setOperator] = React.useState(operators[0])
+  const [operator, setOperator] = React.useState<{ label: string; value: string; } | undefined>(undefined);
+
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
