@@ -13,6 +13,7 @@ import org.jio.orchidbe.dtos.category.CategoryDTOResponse;
 import org.jio.orchidbe.dtos.users.GetAllUserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
+import org.jio.orchidbe.dtos.users.UserLoginGoogle;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.users.UserMapper;
@@ -36,6 +37,7 @@ import org.springframework.validation.BindingResult;
 
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -88,6 +90,49 @@ public class UserService implements IUserService{
         }
         return userMapper.toResponse(newUser);
     }
+    @Override
+    public UserDTOResponse createUserLoginGg(UserLoginGoogle request, BindingResult bindingResult) throws Exception {
+        // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu hay chưa
+        String email = request.getEmail();
+        if (userRepository.existsByEmail(email)) {
+            throw new DataIntegrityViolationException("Email đã tồn tại");
+        }
+
+        // Tạo một đối tượng User mới và đặt các giá trị cho các trường
+        User newUser = new User();
+        newUser.setImg(request.getAvatar());
+        newUser.setName(request.getUsername());
+        newUser.setEmail(request.getEmail());
+
+        // Đặt vai trò của người dùng (nếu cần thiết)
+        newUser.setRole(UserRole.CUSTOMER);
+
+        // Mã hóa mật khẩu (nếu cần thiết)
+        // Ở đây, do việc đăng nhập Google không cần mật khẩu, bạn có thể bỏ qua bước này
+
+        // Lưu người dùng mới vào cơ sở dữ liệu
+        try {
+            userRepository.save(newUser);
+            Wallet walletUser = Wallet.builder()
+                    .user(newUser)
+                    .balance(0f)
+                    .build();
+            walletRepository.save(walletUser);
+        } catch (DataIntegrityViolationException e) {
+            if (e.getCause() instanceof ConstraintViolationException) {
+                // Xử lý trường hợp unique constraint violation
+                throw new DataIntegrityViolationException("Email đã tồn tại");
+            } else {
+                // Xử lý các trường hợp ngoại lệ khác
+                throw new Exception("Lỗi trong quá trình tạo người dùng: " + e.getMessage());
+            }
+        }
+
+        // Chuyển đổi đối tượng User thành UserDTOResponse để trả về cho client
+        return userMapper.toResponse(newUser);
+    }
+
+
 
     @Override
     @Transactional

@@ -10,6 +10,7 @@ package org.jio.orchidbe.services.users;/*  Welcome to Jio word
 import org.jio.orchidbe.dtos.users.GetAllUserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
+import org.jio.orchidbe.dtos.users.UserLoginGoogle;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ public interface IUserService {
     Page<UserDTOResponse> getAllUser(GetAllUserDTORequest request);
 
     UserDTOResponse createUser(UserDTORequest userDTO, BindingResult result) throws Exception;
+    UserDTOResponse createUserLoginGg(UserLoginGoogle request, BindingResult bindingResult) throws Exception;
 
     UserDTOResponse updateUserIn4(Long id, UserDTORequest userDTO, BindingResult result) throws DataNotFoundException;
 

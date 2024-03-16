@@ -3,10 +3,12 @@ server:
   port: 8088
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://128.199.185.211:3307/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:Abc123456789@}
+#    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://128.199.185.211:3307/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
+#    username: ${SPRING_DATASOURCE_USERNAME:root}
+#    password: ${SPRING_DATASOURCE_PASSWORD:Abc123456789@}
   security:
     oauth2:
       client:
@@ -77,3 +79,4 @@ management:
 #url return payment
 HOST:
   URL: ${HOST_URL:https://orchid.fams.io.vn/api/v1}
+

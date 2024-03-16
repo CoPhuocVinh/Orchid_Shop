@@ -12,10 +12,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
-import org.jio.orchidbe.dtos.category.CategoryDTOResponse;
 import org.jio.orchidbe.dtos.users.GetAllUserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
+import org.jio.orchidbe.dtos.users.UserLoginGoogle;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.services.users.IUserService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -97,4 +97,18 @@ public class UserController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @PostMapping("/register_by_Google")
+    public ResponseEntity<?> registerUser (@RequestBody UserLoginGoogle request,
+                                                     BindingResult result
+    ) throws Exception {
+            ApiResponse apiResponse = new ApiResponse();
+            if (result.hasErrors()) {
+                apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
+                return ResponseEntity.badRequest().body(apiResponse);
+            }
+
+            UserDTOResponse newUser = userService.createUserLoginGg(request,result);
+            apiResponse.ok( newUser);
+            return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+    }
 }
