@@ -235,7 +235,6 @@ public class OrderService implements IOrderService {
                         existingField.setAccessible(true);
                         ReflectionUtils.setField(existingField, order, newValue);
                     }
-
                 }
             });
 

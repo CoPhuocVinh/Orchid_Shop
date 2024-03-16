@@ -257,13 +257,23 @@ public class AuctionService implements IAuctionService {
 
         Auction auction = auctionContainer.getAuctionById(id);
 
-        if ( auction.getStatus().equals(Status.LIVE) ||   auction.getStatus().equals(Status.END)){
-            throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
+
+
+        if (updateAuctionRequest.getRejected() == null){
+            if ( auction.getStatus().equals(Status.LIVE) ||   auction.getStatus().equals(Status.END)){
+                throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
+            }
         }
 
         try {
             if (updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null) {
                 throw new BadRequestException("Fill the reason reject");
+            }
+
+            if (updateAuctionRequest.getRejected() == null){
+                if ( auction.getStatus().equals(Status.LIVE) ||   auction.getStatus().equals(Status.END)){
+                    throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
+                }
             }
             auctionContainer.removeOnAuctionListById(id);
             auctionContainer.removeOnStatusLists(auction);
@@ -371,42 +381,43 @@ public class AuctionService implements IAuctionService {
         Auction auction = auctionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found auction.")
         );
-        if (auction.getStatus().equals(Status.COMING)
-                && !bidRepository.existsBidByAuction_IdAndUser_Id(auction.getId(), user.getId())) {
+        if (auction.getStatus().equals(Status.COMING) ) {
+            if(!bidRepository.existsBidByAuction_IdAndUser_Id(auction.getId(), user.getId())){
+                if (wallet.getBalance() >= auction.getStartPrice()) {
 
-            if (wallet.getBalance() >= auction.getStartPrice()) {
+                    String tranCode = GenerateCodeUtils
+                            .generateCode4Transaction(TypeTrans.RT, auction.getProductCode(), dto.getUserId());
 
-                String tranCode = GenerateCodeUtils
-                        .generateCode4Transaction(TypeTrans.RT, auction.getProductCode(), dto.getUserId());
+                    Transaction transaction = Transaction.builder()
+                            .wallet(wallet)
+                            .amount(auction.getDepositPrice() )
+                            .status(OrderStatus.CONFIRMED)
+                            .paymentMethod(PaymentMethod.CARD)
+                            .transactionCode(tranCode)
+                            .build();
+                    transactionRepository.save(transaction);
 
-                Transaction transaction = Transaction.builder()
-                        .wallet(wallet)
-                        .amount(auction.getDepositPrice() )
-                        .status(OrderStatus.CONFIRMED)
-                        .paymentMethod(PaymentMethod.CARD)
-                        .transactionCode(tranCode)
-                        .build();
-                transactionRepository.save(transaction);
+                    Float newBalance = wallet.getBalance() - auction.getStartPrice();
+                    wallet.setBalance(newBalance);
+                    walletRepository.save(wallet);
 
-                Float newBalance = wallet.getBalance() - auction.getStartPrice();
-                wallet.setBalance(newBalance);
-                walletRepository.save(wallet);
-
-                Bid bid = Bid.builder()
-                        .auction(auction)
-                        .user(user)
-                        .biddingPrice(auction.getStartPrice())
-                        .ratings(0)
-                        .build();
-                bidRepository.save(bid);
-            } else {
-                throw new NotAcceptableStatusException("Insufficient balance in wallet.");
+                    Bid bid = Bid.builder()
+                            .auction(auction)
+                            .user(user)
+                            .biddingPrice(auction.getStartPrice())
+                            .ratings(0)
+                            .build();
+                    bidRepository.save(bid);
+                } else {
+                    throw new NotAcceptableStatusException("Insufficient balance in wallet.");
+                }
+            }else {
+                throw new DataNotFoundException("auction register failed by user was registered");
             }
 
         } else {
-            throw new BadRequestException("auction register failed by user was registered or auction not COMING to register!!!");
+            throw new BadRequestException("auction not COMING to register!!!");
         }
-
 
         return true;
     }
