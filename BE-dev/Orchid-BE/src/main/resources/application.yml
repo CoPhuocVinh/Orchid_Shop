@@ -7,9 +7,15 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://128.199.185.211:3307/db_orchid?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=True}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:Abc123456789@}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1057856726587-gbad25fkcea5rbr3u18p02l769tcota3.apps.googleusercontent.com
+            client-secret: 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
 
-
-#  datasource:
+    #  datasource:
 #    url: jdbc:mysql://localhost:3306/db_orchid
 #    username: root
 #    password: 12345
