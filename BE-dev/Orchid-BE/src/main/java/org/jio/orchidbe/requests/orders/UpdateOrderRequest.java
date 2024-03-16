@@ -1,5 +1,6 @@
 package org.jio.orchidbe.requests.orders;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,5 @@ public class UpdateOrderRequest {
     private PaymentMethod paymentMethod;
     //private Integer quantity;
     private String note;
-
     private Long userIn4Id;
 }

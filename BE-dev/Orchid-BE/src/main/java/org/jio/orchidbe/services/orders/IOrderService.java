@@ -4,10 +4,7 @@ import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.requests.Request;
-import org.jio.orchidbe.requests.orders.CreateOrderRequest;
-import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
-import org.jio.orchidbe.requests.orders.StatusOrderRequest;
-import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
+import org.jio.orchidbe.requests.orders.*;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
@@ -21,6 +18,9 @@ public interface IOrderService {
     @Transactional
     ResponseEntity updateOrder(UpdateOrderRequest updateOrderRequest, Long id,
                                BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException;
+
+    @Transactional
+    OrderResponse confirmedOrder(Long id, ConfirmedOrderRequest confirmedOrderRequest, BindingResult result) throws DataNotFoundException;
 
     OrderResponse UpdateOrderStatus(StatusOrderRequest request) ;
 

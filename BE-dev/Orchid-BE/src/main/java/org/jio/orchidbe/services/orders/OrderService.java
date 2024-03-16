@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
-import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
+import org.jio.orchidbe.dtos.users.UserDTOResponse;
 import org.jio.orchidbe.enums.TypeTrans;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
@@ -12,13 +12,14 @@ import org.jio.orchidbe.mappers.orders.OrderMapper;
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
-import org.jio.orchidbe.models.products.Product;
+import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
 import org.jio.orchidbe.repositorys.products.*;
 import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
+import org.jio.orchidbe.requests.orders.ConfirmedOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
@@ -35,10 +36,12 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,7 +130,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderResponse deleteOrder(Long  id) throws DataNotFoundException {
+    public OrderResponse deleteOrder(Long id) throws DataNotFoundException {
         Optional<Order> order = orderRepository.findById(id);
         Order existingOrder = order.orElseThrow(() -> new DataNotFoundException("Order not found with id: " + id));
         existingOrder.setDeleted(true);
@@ -193,6 +196,10 @@ public class OrderService implements IOrderService {
 
             Order updatedOrder = orderRepository.save(order);
 
+            if (updatedOrder.getStatus().equals(OrderStatus.CONFIRMED)) {
+                orderContainer.removeOrderById(updatedOrder.getId());
+            }
+
             OrderResponse orderResponse = orderMapper.toResponse(updatedOrder);
             apiResponse.ok(orderResponse);
             return ResponseEntity.ok().body(apiResponse);
@@ -208,6 +215,40 @@ public class OrderService implements IOrderService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    @Transactional
+    public OrderResponse confirmedOrder(Long id, ConfirmedOrderRequest confirmedOrderRequest, BindingResult result) throws DataNotFoundException {
+        Order order = orderRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found user_controller.")
+        );
+        OrderResponse orderResponse = null;
+        try {
+            // đổ data theo field
+            ReflectionUtils.doWithFields(confirmedOrderRequest.getClass(), field -> {
+                field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
+                Object newValue = field.get(confirmedOrderRequest);
+                if (newValue != null) { // lấy các giá trị ko null
+                    String fieldName = field.getName();
+                    Field existingField = ReflectionUtils.findField(order.getClass(), fieldName);
+                    if (existingField != null) {
+                        existingField.setAccessible(true);
+                        ReflectionUtils.setField(existingField, order, newValue);
+                    }
+
+                }
+            });
+
+            orderResponse = orderMapper.toResponse(order);
+        } catch (OptimisticLockingFailureException ex) {
+            throw new OptimisticException("Data is updated by another order_controller!");
+        }
+        catch (DataIntegrityViolationException e) {
+        }
+        return orderResponse;
+    }
+
+
 
     // Xử lý thanh toán bằng ví
     private void handleWalletPayment(Order order, Transaction transaction) throws BadRequestException, DataNotFoundException, NotAcceptableStatusException {
@@ -232,7 +273,7 @@ public class OrderService implements IOrderService {
             transaction.setResource(
                     GenerateCodeUtils.generateResource4Wallet(userWallet.getId(), order.getProductCode())
             );
-
+            order.setConfirmed(true);
             order.setStatus(OrderStatus.CONFIRMED);
 
         } else {
@@ -266,6 +307,7 @@ public class OrderService implements IOrderService {
 
         } else if (request.getStatus().equalsIgnoreCase(OrderStatus.CONFIRMED.name())) {
             existingOrder.setStatus(OrderStatus.CONFIRMED);
+            existingOrder.setConfirmed(true);
             existingOrder.setModifiedBy(request.getBy());
         }
         orderRepository.save(existingOrder);

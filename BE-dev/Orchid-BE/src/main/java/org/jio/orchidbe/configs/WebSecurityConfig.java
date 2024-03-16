@@ -69,37 +69,28 @@ public class WebSecurityConfig {
 
                             )
                             .permitAll()
-
-
                             .requestMatchers(GET,
                                     String.format("%s/categories/**", apiPrefix)).permitAll()
                             .requestMatchers(GET,
-                                    String.format("%s/products**", apiPrefix)).permitAll()
-
-                            .requestMatchers(GET,
-                                    String.format("%s/products/**", apiPrefix)).permitAll()
-
-                            .requestMatchers(GET,
                                     String.format("%s/auctions/**", apiPrefix)).permitAll()
-
-                            .requestMatchers(GET,
-                                    String.format("%s/products/images/*", apiPrefix)).permitAll()
-
+//                            .requestMatchers(GET,
+//                                    String.format("%s/products/images/*", apiPrefix)).permitAll()
                             .requestMatchers(GET,
                                     String.format("%s/orders/**", apiPrefix)).permitAll()
                             .requestMatchers(GET,
                                     String.format("%s/order_details/**", apiPrefix)).permitAll()
-                            /*.requestMatchers(GET,
+                            .requestMatchers(POST,
+                                    String.format("%s/products**", apiPrefix)).authenticated()
+                            .requestMatchers(GET,
                                     String.format("%s/hello**", apiPrefix)).authenticated()
                             .requestMatchers(GET,
-                                    String.format("%s/hello**", apiPrefix)).authenticated()*/
-//                            .anyRequest()
-//                            .authenticated();
+                                    String.format("%s/products/**", apiPrefix)).permitAll()
+//                            .anyRequest().authenticated();
                             .anyRequest().permitAll();
                 });
 
 
-            http.securityMatcher(String.valueOf(EndpointRequest.toAnyEndpoint()));
+            //http.securityMatcher(String.valueOf(EndpointRequest.toAnyEndpoint()));
         return http.build();
     }
 }

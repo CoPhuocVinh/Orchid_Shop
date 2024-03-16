@@ -8,10 +8,7 @@ package org.jio.orchidbe.dtos.products;/*  Welcome to Jio word
 */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.List;
@@ -29,12 +26,16 @@ public class ProductDTOCreateRequest {
     @Min(value = 0, message = "Quantity must be greater than or equal to 0")
     @Max(value = 1000, message = "Quantity must be less than or equal to 1000")
     private int quantity;
+
+    @Size(min = 80, max = 500, message = "description must be between 80 and 500 characters")
     private String description;
 
     @JsonProperty("category_id")
+    @NotNull(message = "categoryId not null")
     private Long categoryId;
 
-    private boolean active = true;
+    private boolean actived = false;
 
+    @NotNull(message = "productImages not null")
     private List<ProductImageDTOCreate> productImages;
 }
