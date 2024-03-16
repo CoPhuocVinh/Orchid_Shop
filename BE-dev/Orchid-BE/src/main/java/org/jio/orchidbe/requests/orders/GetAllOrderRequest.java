@@ -48,10 +48,12 @@ public class GetAllOrderRequest extends BaseFilterRequest<Order> {
             if (userId != null && !userId.isBlank()) {
                 predicates.add(root.join(Order.Fields.user).get(User.Fields.id).in(userId));
             }
-            if (confirmed) {
-                predicates.add(cb.isTrue(root.get(Order.Fields.confirmed)));
-            } else {
-                predicates.add(cb.isFalse(root.get(Order.Fields.confirmed)));
+            if (confirmed != null) {
+                if (confirmed) {
+                    predicates.add(cb.isTrue(root.get(Order.Fields.confirmed)));
+                } else {
+                    predicates.add(cb.isFalse(root.get(Order.Fields.confirmed)));
+                }
             }
 
             // Add deleted=false criteria
