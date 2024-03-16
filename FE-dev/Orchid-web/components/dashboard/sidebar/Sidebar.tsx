@@ -1,37 +1,33 @@
 "use client";
-import bg from "/public/static/images/bg/upgrade-bg.png";
-import logo from "/public/static/images/logo/logo-color.svg";
-import logoW from "/public/static/images/logo/logo-white.svg";
-import profileImg from "/public/static/images/avatar/profile-xs.png";
+
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import { Icons } from "@/components/icons";
+import { signOut } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 function Sidebar({ handleActive }: any) {
   const [activeUser, setActiveUser] = useState(false);
   const [activeProduct, setActiveProduct] = useState(false);
+  const [activeAcution, setActiveAcution] = useState(false);
 
   return (
     <aside className="sidebar-wrapper fixed top-0 z-30 block h-full w-[308px] bg-white dark:bg-darkblack-600 sm:hidden xl:block">
       <div className="sidebar-header relative z-30 flex h-[108px] w-full items-center border-b border-r border-b-[#F7F7F7] border-r-[#F7F7F7] pl-[50px] dark:border-darkblack-400">
-        <Link href="/">
+        <Link
+          href="/"
+          className="flex items-center font-bold dark:text-blue-200  "
+        >
           <Image
-            priority={true}
-            height={logo.height}
-            width={logo.width}
-            src={logo.src}
-            className="block dark:hidden"
             alt="logo"
-          />
-          <Image
+            src="/images/logo-white.svg"
+            height={40}
+            width={40}
             priority={true}
-            height={logoW.height}
-            width={logoW.width}
-            src={logoW.src}
-            className="hidden dark:block"
-            alt="logo"
+            className=""
           />
+          <span className="text-2xl ml-2 font-bold">Orchid</span>
         </Link>
         <button
           aria-label="none"
@@ -52,9 +48,7 @@ function Sidebar({ handleActive }: any) {
               Menu
             </h4>
             <ul className="mt-2.5">
-              <li
-                className="item py-[11px] text-bgray-900 dark:text-white"
-              >
+              <li className="item py-[11px] text-bgray-900 dark:text-white">
                 <Link href="/dashboard" className="cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
@@ -77,35 +71,6 @@ function Sidebar({ handleActive }: any) {
                       </span>
                       <span className="item-text text-lg font-medium leading-none">
                         Transaction
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/statistics">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.statisticSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        Statistics
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/my-wallet">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.myWalletSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        My Wallet
                       </span>
                     </div>
                   </div>
@@ -202,10 +167,60 @@ function Sidebar({ handleActive }: any) {
                   </li>
                   <li>
                     <Link
-                      href="/dashboard/create-product"
+                      href="/dashboard/products/create-product"
                       className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
                     >
                       Create product
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li
+                className="item py-[11px] text-bgray-900 dark:text-white"
+                onClick={() => setActiveAcution(!activeAcution)}
+              >
+                <a className="cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2.5">
+                      <span className="item-ico ">
+                        <Icons.auctionDashboardIcon />
+                      </span>
+                      <span className="item-text text-lg font-medium leading-none">
+                        Auction
+                      </span>
+                    </div>
+                    <span>
+                      <Icons.sidebarChevonLeftIcon />
+                    </span>
+                  </div>
+                </a>
+                <ul
+                  className={`sub-menu ml-2.5 mt-[22px] border-l border-success-100 pl-5 ${
+                    activeAcution && "active"
+                  }`}
+                >
+                  <li>
+                    <Link
+                      href="/dashboard/auctions"
+                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                    >
+                      View auctions
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/dashboard/auctions/create-auctions"
+                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                    >
+                      Create auction
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/dashboard/censorship"
+                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                    >
+                      Censorship auctions
                     </Link>
                   </li>
                 </ul>
@@ -254,66 +269,28 @@ function Sidebar({ handleActive }: any) {
             </h4>
             <ul className="mt-2.5">
               <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/signin">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.userSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        Signin
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/signup">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.userSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        Signup
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/coming-soon">
-                  <div className="flex items-center space-x-2.5">
-                    <span className="item-ico">
-                      <Icons.commingSoonIcon />
-                    </span>
-                    <span className="item-text text-lg font-medium leading-none">
-                      Coming Soon
-                    </span>
-                  </div>
-                </Link>
-              </li>
-
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="#">
+                <Button
+                  onClick={() => signOut()}
+                  className=" bg-white dark:bg-darkblack-600 "
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
                       <span className="item-ico">
                         <Icons.logoutSidebardIcon />
                       </span>
-                      <span className="item-text text-lg font-medium leading-none">
+                      <span className="item-text text-lg font-medium leading-none text-bgray-900 dark:text-white hover:text-green-300">
                         Logout
                       </span>
                     </div>
                   </div>
-                </Link>
+                </Button>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="copy-write-text">
-          <p className="text-sm text-[#969BA0]">© 2023 All Rights Reserved</p>
+          <p className="text-sm text-[#969BA0]">© 2024 All Rights Reserved</p>
           <p className="text-sm font-medium text-bgray-700">
             Made with ❤️ by
             <a
@@ -321,7 +298,7 @@ function Sidebar({ handleActive }: any) {
               target="_blank"
               className="border-b font-semibold hover:text-blue-600"
             >
-              QuomodoTheme
+              Vinh Nguyễn
             </a>
           </p>
         </div>
