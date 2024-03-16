@@ -106,11 +106,6 @@ public class UserService implements IUserService{
 
         // Đặt vai trò của người dùng (nếu cần thiết)
         newUser.setRole(UserRole.CUSTOMER);
-
-        // Mã hóa mật khẩu (nếu cần thiết)
-        // Ở đây, do việc đăng nhập Google không cần mật khẩu, bạn có thể bỏ qua bước này
-
-        // Lưu người dùng mới vào cơ sở dữ liệu
         try {
             userRepository.save(newUser);
             Wallet walletUser = Wallet.builder()

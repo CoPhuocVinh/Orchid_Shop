@@ -97,7 +97,7 @@ public class UserController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/register_by_Google")
+    @GetMapping("/register_by_google")
     public ResponseEntity<?> registerUser (@RequestBody UserLoginGoogle request,
                                                      BindingResult result
     ) throws Exception {
@@ -111,4 +111,5 @@ public class UserController {
             apiResponse.ok( newUser);
             return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
+
 }

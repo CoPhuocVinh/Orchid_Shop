@@ -67,35 +67,6 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String clientSecret;
 
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId,
-                                                                     @Value("${spring.security.oauth2.client.registration.google.client-secret}") String clientSecret) {
-        ClientRegistration registration = ClientRegistration.withRegistrationId("google")
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
-                .scope("openid", "profile", "email")
-                .authorizationUri("https://accounts.google.com/o/oauth2/auth")
-                .tokenUri("https://www.googleapis.com/oauth2/v3/token")
-                .userInfoUri("https://openidconnect.googleapis.com/v1/userinfo")
-                .userNameAttributeName(IdTokenClaimNames.SUB)
-                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
-                .clientName("Google")
-                .build();
-        return new InMemoryClientRegistrationRepository(registration);
-    }
-
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> userService() {
-        return new DefaultOAuth2UserService();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return JwtDecoders.fromIssuerLocation("https://www.googleapis.com/oauth2/v3/certs");
-    }
 
 
 }
