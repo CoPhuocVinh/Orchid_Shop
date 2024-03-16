@@ -14,7 +14,7 @@ const AuctionDashBoardPage = ({ searchParams }: IndexPageProps) => {
 
   return (
     <>
-      <div className="2xl:flex-1 w-full ">
+      <div className="2xl:flex-1 w-full overflow-x-auto">
         <Shell>
           <React.Suspense
             fallback={

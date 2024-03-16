@@ -104,7 +104,7 @@ export function DataTable<TData, TValue>({
           deleteRowsAction={deleteRowsAction}
         />
       )}
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-auto">
         <Table>
           <TableHeader>
             {dataTable.getHeaderGroups().map((headerGroup) => (

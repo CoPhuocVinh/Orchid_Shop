@@ -9,7 +9,7 @@ import { DataTable } from "@/components/data-table/data-table";
 import {
   fetchTransactionTableColumnDefs,
   searchableColumns,
-  filterableColumns
+  filterableColumns,
 } from "./transaction-table-column-def";
 import { useRouter } from "next/navigation";
 import { ITransaction } from "@/types/dashboard/transaction-type";
@@ -19,7 +19,9 @@ interface TransactionsTableProps {
   transactionPromise: ReturnType<typeof getTransactions>;
 }
 
-export function TransactionTable({ transactionPromise }: TransactionsTableProps) {
+export function TransactionTable({
+  transactionPromise,
+}: TransactionsTableProps) {
   const { data, pageCount } = React.use(transactionPromise);
   const [isPending, startTransition] = React.useTransition();
   // console.log(data)
@@ -37,13 +39,15 @@ export function TransactionTable({ transactionPromise }: TransactionsTableProps)
   });
 
   return (
-    <DataTable
-      dataTable={dataTable}
-      columns={columns}
-      searchableColumns={searchableColumns}
+    <div className="space-y-4 overflow-hidden">
+      <DataTable
+        dataTable={dataTable}
+        columns={columns}
+        searchableColumns={searchableColumns}
         filterableColumns={filterableColumns}
-      //   floatingBarContent={TasksTableFloatingBarContent(dataTable)}
-      //   deleteRowsAction={(event) => deleteSelectedRows(dataTable, event)}
-    />
+        //   floatingBarContent={TasksTableFloatingBarContent(dataTable)}
+        //   deleteRowsAction={(event) => deleteSelectedRows(dataTable, event)}
+      />
+    </div>
   );
 }

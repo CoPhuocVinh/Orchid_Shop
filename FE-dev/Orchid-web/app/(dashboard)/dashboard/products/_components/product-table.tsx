@@ -36,13 +36,15 @@ export function ProductTable({ productPromise }: ProductsTableProps) {
   });
 
   return (
-    <DataTable
-      dataTable={dataTable}
-      columns={columns}
-      searchableColumns={searchableColumns}
-      //   filterableColumns={filterableColumns}
-      //   floatingBarContent={TasksTableFloatingBarContent(dataTable)}
-      //   deleteRowsAction={(event) => deleteSelectedRows(dataTable, event)}
-    />
+    <div className="space-y-4 overflow-hidden">
+      <DataTable
+        dataTable={dataTable}
+        columns={columns}
+        searchableColumns={searchableColumns}
+        //   filterableColumns={filterableColumns}
+        //   floatingBarContent={TasksTableFloatingBarContent(dataTable)}
+        //   deleteRowsAction={(event) => deleteSelectedRows(dataTable, event)}
+      />
+    </div>
   );
 }

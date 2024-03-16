@@ -14,9 +14,7 @@ const TransactionPage = ({ searchParams }: IndexPageProps) => {
   return (
     <>
    
-      <section className="2xl:w-70 w-full 2xl:mb-0 mb-6 min-h-screen">
-        <Wallet />
-      </section>
+
       <section className=" w-full 2xl:mb-0 mb-6">
         <Shell>
           <React.Suspense

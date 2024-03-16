@@ -17,8 +17,7 @@ import { IAuction } from "@/types/dashboard";
 import { format } from "date-fns";
 
 import Fillter_Auction_Date from "./fillter-auction-date";
-import Fillter_Auction_Price from "./fillter-auction-price";
-import Price_Slider from "./Price_Slider";
+import Price_Slider from "./price-slider";
 //import Fillter_CheckBox from "./Fillter_CheckBox";
 
 interface FilterTypes {

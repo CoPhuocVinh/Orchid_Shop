@@ -9,7 +9,7 @@ import { DataTable } from "@/components/data-table/data-table";
 import {
   searchableColumns,
   filterableColumns,
-  fetchOrderTableColumnDefs
+  fetchOrderTableColumnDefs,
 } from "./order-table-column-def";
 import { useRouter } from "next/navigation";
 import { getTransactions } from "@/lib/actions/transaction";
@@ -38,13 +38,15 @@ export function OrderTable({ orderPromise }: OrdersTableProps) {
   });
 
   return (
-    <DataTable
-      dataTable={dataTable}
-      columns={columns}
-      searchableColumns={searchableColumns}
+    <div className="space-y-4 overflow-hidden">
+      <DataTable
+        dataTable={dataTable}
+        columns={columns}
+        searchableColumns={searchableColumns}
         filterableColumns={filterableColumns}
-      //   floatingBarContent={TasksTableFloatingBarContent(dataTable)}
-      //   deleteRowsAction={(event) => deleteSelectedRows(dataTable, event)}
-    />
+        //   floatingBarContent={TasksTableFloatingBarContent(dataTable)}
+        //   deleteRowsAction={(event) => deleteSelectedRows(dataTable, event)}
+      />
+    </div>
   );
 }

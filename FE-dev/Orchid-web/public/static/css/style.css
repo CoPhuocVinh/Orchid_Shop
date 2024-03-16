@@ -10,11 +10,7 @@ body {
 .overflow-style-none::-webkit-scrollbar {
   display: none;
 }
-/* Hide scrollbar for IE, Edge and Firefox */
-.overflow-style-none {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
+
 /* width */
 .scroll-style-1::-webkit-scrollbar {
   width: 2px;
@@ -493,14 +489,14 @@ button.fc-button.fc-button-primary.fc-prev-button {
   width: 100% !important;
   height: 800px !important;
 }
-.fc .fc-scrollgrid-sync-table {
+/* .fc .fc-scrollgrid-sync-table {
   width: 100% !important;
   height: 100% !important;
 }
 
 .fc table.fc-col-header {
   width: 100% !important;
-}
+} */
 .fc .fc-daygrid-body.fc-daygrid-body-unbalanced {
   width: 100% !important;
   height: 100% !important;
@@ -1115,60 +1111,6 @@ button.fc-button.fc-button-primary.fc-prev-button {
   }
 }
 
-@media (max-width: 1280px) {
-  .overFlowHidden {
-    overflow: hidden !important;
-  }
-}
 
-/* scroll bar  */
-::-webkit-scrollbar {
-  background: transparent;
-  width: 10px;
-  padding: 2px;
-  border-radius: 10px;
-  box-shadow: inset 2px 2px 5px #8e8e8e;
-}
 
-.dark ::-webkit-scrollbar {
-  background: rgb(29 30 36);
-  width: 10px;
-  padding: 2px;
-  border-radius: 10px;
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.1);
-}
 
-*::-webkit-scrollbar-thumb {
-  background: #16a34a;
-  width: 10px;
-  margin: 2px;
-  border-radius: 10px;
-  background-clip: padding-box;
-  box-shadow: inset 2px 2px 5px #16a34a;
-  border: 2px solid transparent;
-}
-
-::-webkit-scrollbar-button:single-button {
-  display: block;
-  border-style: solid;
-  height: 13px;
-  width: 16px;
-}
-/* Up */
-::-webkit-scrollbar-button:single-button:vertical:decrement {
-  border-width: 0 8px 8px 8px;
-  border-color: transparent transparent #16a34a transparent;
-}
-
-::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
-  border-color: transparent transparent #16a34a transparent;
-}
-/* Down */
-::-webkit-scrollbar-button:single-button:vertical:increment {
-  border-width: 8px 8px 0 8px;
-  border-color: #16a34a transparent transparent transparent;
-}
-
-::-webkit-scrollbar-button:vertical:single-button:increment:hover {
-  border-color: #16a34a transparent transparent transparent;
-}
