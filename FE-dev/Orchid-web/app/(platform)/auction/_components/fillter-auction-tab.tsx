@@ -18,6 +18,7 @@ import { format } from "date-fns";
 
 import Fillter_Auction_Date from "./fillter-auction-date";
 import Fillter_Auction_Price from "./fillter-auction-price";
+import Price_Slider from "./Price_Slider";
 //import Fillter_CheckBox from "./Fillter_CheckBox";
 
 interface FilterTypes {
@@ -109,7 +110,33 @@ function Fillter_Auction_Tab({
       }
     });
   };
-  const handleChangePrice = () => {};
+
+  const handleChangePrice = ({
+    valueMin,
+    valueMax,
+  }: {
+    valueMin: number;
+    valueMax: number;
+  }) => {
+    // Lọc liveAuction
+    const filteredAuctions = liveAuction?.filter((auction: IAuction) => {
+      // Kiểm tra nếu biddingPrice không tồn tại hoặc null, lọc theo startPrice
+      if (auction.biddingPrice === undefined || auction.biddingPrice === null) {
+        return auction.startPrice >= valueMin && auction.startPrice <= valueMax;
+      } else {
+        // Lọc theo biddingPrice
+        return (
+          auction.biddingPrice >= valueMin && auction.biddingPrice <= valueMax
+        );
+      }
+    });
+
+    // Đẩy dữ liệu đã lọc vào setFilterData
+    if (filteredAuctions) {
+      setFilterData(filteredAuctions);
+    }
+  };
+
   return (
     <div className={clsx(" h-full bg-white xl:px-0.5 mx-4", className)}>
       <div className="grid grid-cols-1 gap-8 px-20 pb-3 md:px-7 xl:p-0 xl:pb-0  ">
@@ -204,7 +231,7 @@ function Fillter_Auction_Tab({
             <Fillter_Auction_Date onChangeDate={handleChangeDate as any} />
           </div>
           <div>
-            <Fillter_Auction_Price />
+            <Price_Slider onChangePrice={handleChangePrice as any} />
           </div>
         </form>
       </div>

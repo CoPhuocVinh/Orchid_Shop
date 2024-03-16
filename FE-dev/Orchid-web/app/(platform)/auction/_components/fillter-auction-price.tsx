@@ -21,25 +21,6 @@ function Filter_Auction_Price() {
     <>
       <div className="mt-2">
         <div className="flex flex-col items-center">
-          {/* <div className="mb-5">
-            <h5>Giá</h5>
-            <Slider
-              min={0}
-              max={100000}
-              // value={value}
-              onChange={handleSliderChange}
-              className="w-full mx-0 my-0"
-              //trackStyle={trackStyle}
-              // handleStyle={[handleStyle, handleStyle]} // Áp dụng style cho cả hai đầu mút
-            />
-            <div className="flex items-center justify-center mt-3">
-              <div className="mr-3">Giá:</div>
-              <div className="fw-bold">
-                {formatPrice(value[0])}VND-{formatPrice(value[1])}VND
-              </div>
-            </div>
-          </div> */}
-
           <Price_Slider />
         </div>
       </div>

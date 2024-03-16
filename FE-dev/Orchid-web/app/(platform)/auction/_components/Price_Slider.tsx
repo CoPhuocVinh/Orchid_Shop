@@ -1,10 +1,22 @@
 import React, { useState } from "react";
-import ReactSlider from "react-slider";
+
 import Slider from "react-slider";
 
-const Price_Slider = () => {
+const Price_Slider = ({
+  onChangePrice,
+}: {
+  onChangePrice: (price: { valueMin: number; valueMax: number }) => void;
+}) => {
   const [values, setValues] = useState([0, 100000]);
-  const handleChange = (newValues: any) => setValues(newValues);
+
+  const handleChange = (newValues: number[]) => {
+    setValues(newValues);
+
+    onChangePrice({
+      valueMin: newValues[0],
+      valueMax: newValues[1],
+    });
+  };
 
   return (
     <div className=" border-gray-300 rounded-lg shadow-md w-full">
