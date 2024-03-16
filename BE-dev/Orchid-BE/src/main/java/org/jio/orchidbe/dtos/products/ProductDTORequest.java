@@ -35,6 +35,6 @@ public class ProductDTORequest {
     @JsonProperty("category_id")
     private Long categoryId;
 
-    private Boolean active = true;
+    private Boolean actived = true;
     private List<ProductImageDTO> productImages;
 }

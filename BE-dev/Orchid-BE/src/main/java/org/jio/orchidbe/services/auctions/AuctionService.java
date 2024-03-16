@@ -102,7 +102,10 @@ public class AuctionService implements IAuctionService {
             if (auction.getStatus() == Status.LIVE) {
 
                 // Cập nhật trạng thái của phiên đấu giá thành đã kết thúc
-                auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+                //auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+                auctionContainer.removeOnAuctionListById(auction.getId());
+                auctionContainer.removeOnStatusLists(auction);
+
                 auction.setModifiedBy("System");
                 auction.setStatus(Status.END);
                 // auctionContainer.removeAuctionFromList(auction, Status.LIVE);
@@ -121,6 +124,7 @@ public class AuctionService implements IAuctionService {
 
                     // Set các thuộc tính cho order
                     order.setPhone(userInfo.getPhone());
+                    //set expired 24h
                     order.setExpiredAt(LocalDateTime.now().plusHours(24));
                     order.setAddress(userInfo.getAddress());
                     order.setProductCode(auction.getProductCode());
@@ -141,7 +145,11 @@ public class AuctionService implements IAuctionService {
             }
         } else {
             // Nếu không có bid, chỉ cần cập nhật trạng thái của phiên đấu giá thành đã kết thúc
-            auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+            //auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+            auctionContainer.removeOnAuctionListById(auction.getId());
+            auctionContainer.removeOnStatusLists(auction);
+
+            auction.setModifiedBy("System");
             auction.setStatus(Status.END);
             Product product = productRepository.findById(auction.getProduct().getId())
                     .orElseThrow(() ->
@@ -151,6 +159,9 @@ public class AuctionService implements IAuctionService {
             int updatedProductQuantity = product.getQuantity() + auction.getQuantity();
             product.setQuantity(updatedProductQuantity);
             productRepository.save(product);
+
+            // thíu send notification to creator (email or push notifications)
+
         }
 
         List<Bid> bids = bidRepository.findByAuctionIdAndTop1False(auction.getId());
@@ -159,24 +170,23 @@ public class AuctionService implements IAuctionService {
         for (Bid bidFalse : bids) {
             String tranCode = GenerateCodeUtils.generateCode4Transaction(TypeTrans.HT, auction.getProductCode(), bidFalse.getUser().getId());
             // Tạo một transaction mới
-            Wallet walletUser = walletRepository.findById(bidFalse.getUser().getId())
+            Wallet walletUser = walletRepository.findByUser_Id(bidFalse.getUser().getId())
                     .orElseThrow(() ->
                             new DataNotFoundException(
                                     "Cannot find wallet with id: " + bidFalse.getUser().getId()));
 
             // t t
-
             Transaction transaction = Transaction.builder()
-                    .amount(auction.getDepositPrice()) // Giả sử giá trị thanh toán là tổng số tiền đơn hàng
+                    .amount(auction.getStartPrice()) // Giả sử giá trị thanh toán là tổng số tiền đơn hàng
                     .status(OrderStatus.PENDING) // Trạng thái của giao dịch là chờ xử lý ban đầu
                     .transactionCode(tranCode)
                     .wallet(walletUser)
-                    .content("System hoàn tiền " + auction.getDepositPrice() + " to " + bidFalse.getUser())
+                    .content("System hoàn tiền " + auction.getStartPrice() + " to " + bidFalse.getUser())
                     .paymentMethod(PaymentMethod.CARD)
                     .build();
 
             // + tiền
-            walletUser.setBalance(walletUser.getBalance() + auction.getDepositPrice());
+            walletUser.setBalance(walletUser.getBalance() + auction.getStartPrice());
 
             transaction.setStatus(OrderStatus.CONFIRMED);
             transactions.add(transaction);
@@ -246,6 +256,10 @@ public class AuctionService implements IAuctionService {
         }
 
         Auction auction = auctionContainer.getAuctionById(id);
+
+        if ( auction.getStatus().equals(Status.LIVE) ||   auction.getStatus().equals(Status.END)){
+            throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
+        }
 
         try {
             if (updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null) {
@@ -360,7 +374,7 @@ public class AuctionService implements IAuctionService {
         if (auction.getStatus().equals(Status.COMING)
                 && !bidRepository.existsBidByAuction_IdAndUser_Id(auction.getId(), user.getId())) {
 
-            if (wallet.getBalance() >= auction.getDepositPrice()) {
+            if (wallet.getBalance() >= auction.getStartPrice()) {
 
                 String tranCode = GenerateCodeUtils
                         .generateCode4Transaction(TypeTrans.RT, auction.getProductCode(), dto.getUserId());
@@ -374,14 +388,14 @@ public class AuctionService implements IAuctionService {
                         .build();
                 transactionRepository.save(transaction);
 
-                Float newBalance = wallet.getBalance() - auction.getDepositPrice();
+                Float newBalance = wallet.getBalance() - auction.getStartPrice();
                 wallet.setBalance(newBalance);
                 walletRepository.save(wallet);
 
                 Bid bid = Bid.builder()
                         .auction(auction)
                         .user(user)
-                        .biddingPrice(auction.getDepositPrice())
+                        .biddingPrice(auction.getStartPrice())
                         .ratings(0)
                         .build();
                 bidRepository.save(bid);

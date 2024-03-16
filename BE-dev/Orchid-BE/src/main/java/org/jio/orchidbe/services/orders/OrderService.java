@@ -193,6 +193,10 @@ public class OrderService implements IOrderService {
 
             Order updatedOrder = orderRepository.save(order);
 
+            if (updatedOrder.getStatus().equals(OrderStatus.CONFIRMED)){
+                orderContainer.removeOrderById(updatedOrder.getId());
+            }
+
             OrderResponse orderResponse = orderMapper.toResponse(updatedOrder);
             apiResponse.ok(orderResponse);
             return ResponseEntity.ok().body(apiResponse);

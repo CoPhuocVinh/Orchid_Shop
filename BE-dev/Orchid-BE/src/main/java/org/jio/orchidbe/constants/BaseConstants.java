@@ -39,10 +39,9 @@ public class BaseConstants {
 
     private static String HOST_RETURN ;
     //public static final String HOST_RETURN = "http://localhost:8088/api/v1";
-    public static final String RETURN_PAYMENT_SUCCESS = "http://localhost:3000/test-success?test=1";
-    public static final String RETURN_PAYMENT_FAILED = "http://localhost:3000/test-failed?test=1";
-
-
+    public static final String RETURN_PAYMENT_SUCCESS = "https://orchid-shop-iota.vercel.app/test-success?test=1";
+    public static final String RETURN_PAYMENT_FAILED = "https://orchid-shop-iota.vercel.app/test-failed?test=1";
+    
     public static String getHostReturn() {
         return HOST_RETURN;
     }

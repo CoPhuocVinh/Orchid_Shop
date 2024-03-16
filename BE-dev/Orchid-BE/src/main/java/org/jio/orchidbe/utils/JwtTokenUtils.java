@@ -92,8 +92,8 @@ public class JwtTokenUtils {
             Token existingToken = tokenRepository.findByToken(token);
             if(existingToken == null ||
                     existingToken.isRevoked() == true ||
-                    !userDetails.isDeleted() ||
-                    !userDetails.isBanned()
+                    userDetails.isDeleted() ||
+                    userDetails.isBanned()
             ) {
                 return false;
             }
