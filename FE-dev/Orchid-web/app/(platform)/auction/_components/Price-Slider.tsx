@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Slider from "react-slider";
 
-const Price_Slider = ({
+const PriceSlider = ({
   onChangePrice,
 }: {
   onChangePrice: (price: { valueMin: number; valueMax: number }) => void;
@@ -55,4 +55,4 @@ const Price_Slider = ({
   );
 };
 
-export default Price_Slider;
+export default PriceSlider;

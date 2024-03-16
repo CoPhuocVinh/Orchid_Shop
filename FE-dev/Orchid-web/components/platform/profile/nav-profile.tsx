@@ -21,7 +21,7 @@ export interface IndexPageProps {
   searchParams: SearchParams;
 }
 async function Nav_Menu({ searchParams }: IndexPageProps) {
-  const session = await auth()
+  const session = await auth();
   const orders = getOrdersByUserId(searchParams, session?.user.id!);
   return (
     <div className="flex flex-row">
@@ -33,11 +33,11 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                 <div className="p-3 mt-6 w-full">
                   <Tabs defaultValue="dashboard" className="flex">
                     <TabsList className="flex relative ">
-                      <ul className="flex flex-col gap-5 py-4 w-96 font-mono text-2xl font-bold pt-80">
+                      <ul className="flex flex-col gap-5 py-4 w-96 font-mono text-xl font-bold pt-80">
                         <li>
                           <TabsTrigger
                             value="dashboard"
-                            className="hover:bg-green-500 mt-20 w-full font-mono text-2xl font-bold bg-white text-black inline-block px-4 py-2 rounded"
+                            className="hover:bg-green-500 mt-20 w-full  text-xl font-normal bg-white text-black inline-block px-4 py-2 rounded"
                           >
                             DashBoard
                           </TabsTrigger>
@@ -49,13 +49,13 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                             className="w-full"
                           >
                             <AccordionItem value="item-1">
-                              <AccordionTrigger className="flex items-center justify-center font-mono text-2xl font-bold">
+                              <AccordionTrigger className="flex items-center justify-center font-normal text-xl ">
                                 My Account
                               </AccordionTrigger>
                               <AccordionContent>
                                 <TabsTrigger
                                   value="profile"
-                                  className="hover:bg-green-500 w-full font-mono text-2xl font-bold  inline-block px-4 py-2 text-gray-600 bg-white rounded"
+                                  className="hover:bg-green-500 w-full font-normal text-xl inline-block px-4 py-2 text-gray-600 bg-white rounded"
                                 >
                                   My Profile
                                 </TabsTrigger>
@@ -63,7 +63,7 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                               <AccordionContent>
                                 <TabsTrigger
                                   value="address"
-                                  className="hover:bg-green-500 w-full font-mono text-2xl font-bold  inline-block px-4 py-2 text-gray-600 bg-white rounded"
+                                  className="hover:bg-green-500 w-full font-normal text-xl inline-block px-4 py-2 text-gray-600 bg-white rounded"
                                 >
                                   My Address
                                 </TabsTrigger>
@@ -74,13 +74,13 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                         <li>
                           <TabsTrigger
                             value="orders"
-                            className="hover:bg-green-500 w-full  inline-block px-4 py-2 font-mono text-2xl font-bold text-gray-600 bg-white rounded"
+                            className="hover:bg-green-500 w-full  inline-block px-4 py-2 font-normal text-xl  text-gray-600 bg-white rounded"
                           >
                             Order Biding
                           </TabsTrigger>
                         </li>
                         <li>
-                          <button className="hover:bg-green-500 font-mono text-2xl font-bold text-black bg-white inline-block px-4 py-2 w-full rounded-md">
+                          <button className="hover:bg-green-500 text-xl font-normal text-black bg-white inline-block px-4 py-2 w-full rounded-md">
                             Logout
                           </button>
                         </li>
