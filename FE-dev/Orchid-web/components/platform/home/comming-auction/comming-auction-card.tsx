@@ -42,7 +42,7 @@ export default function ListingCard({
   startDate,
 }: ListingCardProps) {
   const countdown = useCountdownTimer(startDate?.toString());
-  console.log(countdown);
+  //console.log(countdown);
   return (
     <>
       <div className="listing-card group/item relative inline-flex w-full flex-col">
