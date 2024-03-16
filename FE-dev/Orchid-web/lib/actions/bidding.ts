@@ -29,7 +29,11 @@ export async function biddingAuction(userId: string, auctionId: string, biddingP
         } else if (response && response.status === 400) {
           console.error('Bidding price must be greater than the start price.');
           return { success: false, error: 'Hãy tăng giá tiền của bạn' };
-        } else {
+        }  else if(response && response.status === 404 ) {
+          console.error('Bidding price must be live to bid');
+          return { success: false, error: 'Thời gian không thích hợp để đấu giá' };
+        }
+        else {
           console.error('An unexpected error occurred:', error.message);
           return { success: false, error: 'An unexpected error occurred' };
         }

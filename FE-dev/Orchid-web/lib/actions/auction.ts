@@ -151,9 +151,10 @@ export async function registerAttendAuction(userId: string, auctionId: string) {
       const { response } = error;
 
       if (response && response.status === 406) {
+      
         console.error('Insufficient balance in wallet.');
         return { success: false, error: 'Không đủ xèng trong ví vui lòng nạp tiền nhé' };
-      } else if (response && response.status === 400) {
+      } else if (response && response.status === 400 ) {
         console.error('Auction status is not COMING and user has already registered.');
         return { success: false, error: 'Buổi đấu giá chưa diễn ra!' };
       } else {

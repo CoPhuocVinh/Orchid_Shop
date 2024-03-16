@@ -76,6 +76,8 @@ export default function ListingDetails({ auction }: ListingDetailsProps) {
       } finally {
         setIsLoading(false);
       }
+    }else{
+      toast.error("Thời gian không thích hợp để đấu giá")
     }
   };
 
@@ -151,7 +153,7 @@ export default function ListingDetails({ auction }: ListingDetailsProps) {
 
             <div className="mt-4 relative">
               <Button
-                onClick={() => handleBidding(biddingPrice + minimumPrice)}
+                onClick={() =>  handleBidding(biddingPrice + minimumPrice)}
                 disabled={!canBid || isLoading}
                 className="bg-gray-300 absolute top-[-56px] left-[140px] text-gray-700 py-2 px-4 rounded-lg hover:bg-green-400 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
