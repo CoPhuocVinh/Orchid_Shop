@@ -101,4 +101,20 @@ public class UserActivityLogger {
         return result;
     }
 
+    @Around("controllerMethods() && execution(* org.jio.orchidbe.controller.testController.*(..))")
+    public Object logUserhacker(ProceedingJoinPoint joinPoint) throws Throwable {
+        // Ghi log trước khi thực hiện method
+        String methodName = joinPoint.getSignature().getName();
+        String remoteAddress = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest().getRemoteAddr();
+        String computerName = InetAddress.getLocalHost().getHostName();
+        logger.info("User activity started: " + methodName + ", IP address: " + remoteAddress +
+                ", computerName: " + computerName);
+        // Thực hiện method gốc
+        Object result = joinPoint.proceed();
+        // Ghi log sau khi thực hiện method
+        logger.info("User activity finished: " + methodName);
+        return result;
+    }
+
 }

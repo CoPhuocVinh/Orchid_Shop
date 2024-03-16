@@ -1,4 +1,4 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.auctions;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
@@ -7,8 +7,8 @@ import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 
 import org.jio.orchidbe.enums.OrderStatus;
+import org.jio.orchidbe.enums.TypeTrans;
 import org.jio.orchidbe.exceptions.OptimisticException;
-import org.jio.orchidbe.mappers.orders.OrderMapper;
 
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
 
@@ -17,18 +17,15 @@ import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.UserInfo;
+import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
 import org.jio.orchidbe.repositorys.products.*;
 import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.auctions.*;
-import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.responses.*;
 
-import org.jio.orchidbe.responses.GetAuctionResponse;
-import org.jio.orchidbe.responses.OrderContainer;
-
-import org.jio.orchidbe.responses.AuctionDetailResponse;
-
+import org.jio.orchidbe.utils.GenerateCodeUtils;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
@@ -41,7 +38,6 @@ import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.models.auctions.Auction;
 
 import org.jio.orchidbe.exceptions.DataNotFoundException;
@@ -59,10 +55,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.NotAcceptableStatusException;
+import org.springframework.web.util.WebUtils;
 
 import java.text.ParseException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -80,8 +77,6 @@ public class AuctionService implements IAuctionService {
     @Autowired
     private BidRepository bidRepository;
     @Autowired
-    private OrderService orderService;
-    @Autowired
     private OrderContainer orderContainer;
     @Autowired
     private UserInfoRepository userInfoRepository;
@@ -90,12 +85,12 @@ public class AuctionService implements IAuctionService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private OrderMapper orderMapper;
-
+    private TransactionRepository transactionRepository;
     @Autowired
     private WalletRepository walletRepository;
     @Autowired
     private OrderRepository orderRepository;
+
 
 
     @Transactional
@@ -141,26 +136,62 @@ public class AuctionService implements IAuctionService {
                     // Thêm order vào container và lưu order
                     orderContainer.addOrder(order);
                     orderRepository.save(order);
-                } else {
-
                 }
 
-            } else {
-                // Nếu không có bid, chỉ cần cập nhật trạng thái của phiên đấu giá thành đã kết thúc
-                auctionContainer.removeAuctionFromList(auction, Status.LIVE);
-                auction.setStatus(Status.END);
-
             }
+        } else {
+            // Nếu không có bid, chỉ cần cập nhật trạng thái của phiên đấu giá thành đã kết thúc
+            auctionContainer.removeAuctionFromList(auction, Status.LIVE);
+            auction.setStatus(Status.END);
+            Product product = productRepository.findById(auction.getProduct().getId())
+                    .orElseThrow(() ->
+                            new DataNotFoundException(
+                                    "Cannot find product with name: " + auction.getProduct().getId()));
+
+            int updatedProductQuantity = product.getQuantity() + auction.getQuantity();
+            product.setQuantity(updatedProductQuantity);
+            productRepository.save(product);
         }
+
+        List<Bid> bids = bidRepository.findByAuctionIdAndTop1False(auction.getId());
+        List<Transaction> transactions = new ArrayList<>();
+
+        for (Bid bidFalse : bids) {
+            String tranCode = GenerateCodeUtils.generateCode4Transaction(TypeTrans.HT, auction.getProductCode(), bidFalse.getUser().getId());
+            // Tạo một transaction mới
+            Wallet walletUser = walletRepository.findById(bidFalse.getUser().getId())
+                    .orElseThrow(() ->
+                            new DataNotFoundException(
+                                    "Cannot find wallet with id: " + bidFalse.getUser().getId()));
+
+            // t t
+
+            Transaction transaction = Transaction.builder()
+                    .amount(auction.getDepositPrice()) // Giả sử giá trị thanh toán là tổng số tiền đơn hàng
+                    .status(OrderStatus.PENDING) // Trạng thái của giao dịch là chờ xử lý ban đầu
+                    .transactionCode(tranCode)
+                    .wallet(walletUser)
+                    .content("System hoàn tiền " + auction.getDepositPrice() + " to " + bidFalse.getUser())
+                    .paymentMethod(PaymentMethod.CARD)
+                    .build();
+
+            // + tiền
+            walletUser.setBalance(walletUser.getBalance() + auction.getDepositPrice());
+
+            transaction.setStatus(OrderStatus.CONFIRMED);
+            transactions.add(transaction);
+        }
+
+        transactionRepository.saveAll(transactions);
         auctionRepository.save(auction);
+
     }
 
     @Override
     public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
         Auction newAuction = auctionMapper.toEntity(createAuctionResquest);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate(), formatter);
-        LocalDateTime startDate = LocalDateTime.parse(createAuctionResquest.getStartDate(), formatter);
+        LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate());
+        LocalDateTime startDate = LocalDateTime.parse(createAuctionResquest.getStartDate());
         validateDate(startDate, endDate);
         //map
         Product product = productRepository.findById(createAuctionResquest.getProductID())
@@ -215,12 +246,13 @@ public class AuctionService implements IAuctionService {
         }
 
         Auction auction = auctionContainer.getAuctionById(id);
-        auctionContainer.removeOnAuctionListById(id);
-        auctionContainer.removeOnStatusLists(auction);
+
         try {
             if (updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null) {
                 throw new BadRequestException("Fill the reason reject");
             }
+            auctionContainer.removeOnAuctionListById(id);
+            auctionContainer.removeOnStatusLists(auction);
             // Update auction fields
             ReflectionUtils.doWithFields(updateAuctionRequest.getClass(), field -> {
                 field.setAccessible(true); // Đảm bảo rằng chúng ta có thể truy cập các trường private
@@ -239,11 +271,19 @@ public class AuctionService implements IAuctionService {
                 // Xử lý việc cập nhật trạng thái dựa trên các trường khác
                 if (updateAuctionRequest.getRejected() != null || updateAuctionRequest.getApproved() != null) {
                     if (auction.isRejected()) {
-                        if(updateAuctionRequest.getReasonReject() != null && !updateAuctionRequest.getReasonReject().isBlank()) {
+                        if (updateAuctionRequest.getReasonReject() != null && !updateAuctionRequest.getReasonReject().isBlank()) {
                             auction.setRejectReason(updateAuctionRequest.getReasonReject());
                             auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+                            Product product = productRepository.findById(auction.getProduct().getId())
+                                    .orElseThrow(() ->
+                                            new DataNotFoundException(
+                                                    "Cannot find product with name: " + auction.getProduct().getId()));
+
+                            int updatedProductQuantity = product.getQuantity() + auction.getQuantity();
+                            product.setQuantity(updatedProductQuantity);
+                            productRepository.save(product);
                             auction.setStatus(Status.END);
-                        }else if (updateAuctionRequest.getReasonReject() == null || updateAuctionRequest.getReasonReject().isBlank()){
+                        } else if (updateAuctionRequest.getReasonReject() == null || updateAuctionRequest.getReasonReject().isBlank()) {
                             throw new BadRequestException("Fill in the reason for reject");
                         }
                     } else if (auction.isApproved() && !auction.isRejected()) {
@@ -255,9 +295,17 @@ public class AuctionService implements IAuctionService {
                 auction.setStatus(Status.LIVE);
 
             } else if (updateAuctionRequest.getStatus().equals(Status.END)) {
+                Product product = productRepository.findById(auction.getProduct().getId())
+                        .orElseThrow(() ->
+                                new DataNotFoundException(
+                                        "Cannot find product with name: " + auction.getProduct().getId()));
 
+                int updatedProductQuantity = product.getQuantity() + auction.getQuantity();
+                product.setQuantity(updatedProductQuantity);
+                productRepository.save(product);
                 auction.setStatus(Status.END);
             }
+
             auctionRepository.save(auction);
 
             AuctionResponse auctionResponse = auctionMapper.toResponse(auction);
@@ -272,19 +320,13 @@ public class AuctionService implements IAuctionService {
             }
             throw new DataIntegrityViolationException("Contract data");
         } catch (BadRequestException e) {
-            throw new RuntimeException(e);
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("errorMessage", e.getMessage());
+            apiResponse.error(errorMap);
+            return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
         }
     }
 
-
-    @Override
-    public AuctionResponse deleteAuction(Long id) throws DataNotFoundException {
-        Optional<Auction> aution = auctionRepository.findById(id);
-        Auction existingAuction = aution.orElseThrow(() -> new DataNotFoundException("Auction not found with id: " + id));
-        existingAuction.setDeleted(true);
-        Auction updatedAuction = auctionRepository.save(existingAuction);
-        return auctionMapper.toResponse(updatedAuction);
-    }
 
     @Override
     public AuctionDetailResponse getById(Long id) throws DataNotFoundException {
@@ -315,10 +357,23 @@ public class AuctionService implements IAuctionService {
         Auction auction = auctionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found auction.")
         );
-
         if (auction.getStatus().equals(Status.COMING)
                 && !bidRepository.existsBidByAuction_IdAndUser_Id(auction.getId(), user.getId())) {
+
             if (wallet.getBalance() >= auction.getDepositPrice()) {
+
+                String tranCode = GenerateCodeUtils
+                        .generateCode4Transaction(TypeTrans.RT, auction.getProductCode(), dto.getUserId());
+
+                Transaction transaction = Transaction.builder()
+                        .wallet(wallet)
+                        .amount(auction.getDepositPrice() )
+                        .status(OrderStatus.CONFIRMED)
+                        .paymentMethod(PaymentMethod.CARD)
+                        .transactionCode(tranCode)
+                        .build();
+                transactionRepository.save(transaction);
+
                 Float newBalance = wallet.getBalance() - auction.getDepositPrice();
                 wallet.setBalance(newBalance);
                 walletRepository.save(wallet);
@@ -348,7 +403,6 @@ public class AuctionService implements IAuctionService {
             throw new BadRequestException("End date cannot be before start date!");
         }
     }
-
 
 
     @Override

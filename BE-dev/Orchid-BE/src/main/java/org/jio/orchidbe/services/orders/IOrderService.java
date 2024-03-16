@@ -1,4 +1,4 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.orders;
 
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
@@ -23,4 +23,6 @@ public interface IOrderService {
                                BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException;
 
     OrderResponse UpdateOrderStatus(StatusOrderRequest request) ;
+
+    OrderResponse getById(Long id) throws DataNotFoundException;
 }

@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class WalletDTORequest {
-    @Min(value = 10000, message = "recharge must be greater than or equal to 0")
+    @Min(value = 10000, message = "recharge must be greater than or equal to 10000")
     private Float recharge;
 
 }

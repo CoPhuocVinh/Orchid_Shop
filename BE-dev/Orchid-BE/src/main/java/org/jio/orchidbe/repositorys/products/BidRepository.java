@@ -23,5 +23,7 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     List<Bid> findByAuction_Id(Long auctionId);
 
     Boolean existsBidByAuction_IdAndUser_Id(Long auctionId, Long userId);
+    List<Bid> findByAuctionIdAndTop1False(Long auctionId);
+
 
 }

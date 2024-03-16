@@ -1,17 +1,13 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.feedbacks;
 
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
-import org.jio.orchidbe.mappers.feedbacks.FeedbackMapper;
 import org.jio.orchidbe.mappers.feedbacks.ReplyMapper;
 import org.jio.orchidbe.models.FBStatus;
 import org.jio.orchidbe.models.feedbacks.Feedbacks;
 import org.jio.orchidbe.models.feedbacks.Replys;
-import org.jio.orchidbe.models.products.Product;
-import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.repositorys.products.FeedbackRepository;
-import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.repositorys.products.ReplyRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.feedbacks.UpdateFeedbackRequest;

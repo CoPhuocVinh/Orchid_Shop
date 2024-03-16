@@ -1,4 +1,4 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.auctions;
 
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
@@ -28,7 +28,6 @@ public interface IAuctionService {
     ResponseEntity updateAuction(UpdateAuctionRequest updateAuctionRequest, Long id,
                                  BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException;
 
-    AuctionResponse deleteAuction(Long id) throws DataNotFoundException;
 
     AuctionDetailResponse getById(Long id) throws DataNotFoundException;
 

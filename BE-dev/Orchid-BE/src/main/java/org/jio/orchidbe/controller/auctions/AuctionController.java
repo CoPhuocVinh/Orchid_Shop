@@ -7,30 +7,24 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
-import org.jio.orchidbe.dtos.products.ProductDTOResponse;
-import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.mappers.auctions.AuctionMapper;
-import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
-import org.jio.orchidbe.requests.Request;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.GetAuctionResponse;
-import org.jio.orchidbe.services.products.IAuctionService;
+import org.jio.orchidbe.services.auctions.IAuctionService;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/auctions")
@@ -94,21 +88,21 @@ public class AuctionController {
 //        return auctionMapper.toResponseList(waitingAuctions);
 //    }
 
-    @GetMapping("/auctions/coming")
-    public List<AuctionResponse> getComingAuctions() {
-        // Lấy danh sách các phiên đấu giá có trạng thái COMING từ AuctionContainer
-        List<Auction> comingAuctions = auctionContainer.getComingAuctions();
-        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-        return auctionMapper.toResponseList(comingAuctions);
-    }
-
-    @GetMapping("/auctions/live")
-    public List<AuctionResponse> getLiveAuctions() {
-        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
-        List<Auction> liveAuctions = auctionContainer.getLiveAuctions();
-        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
-        return auctionMapper.toResponseList(liveAuctions);
-    }
+//    @GetMapping("/auctions/coming")
+//    public List<AuctionResponse> getComingAuctions() {
+//        // Lấy danh sách các phiên đấu giá có trạng thái COMING từ AuctionContainer
+//        List<Auction> comingAuctions = auctionContainer.getComingAuctions();
+//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+//        return auctionMapper.toResponseList(comingAuctions);
+//    }
+//
+//    @GetMapping("/auctions/live")
+//    public List<AuctionResponse> getLiveAuctions() {
+//        // Lấy danh sách các phiên đấu giá có trạng thái LIVE từ AuctionContainer
+//        List<Auction> liveAuctions = auctionContainer.getLiveAuctions();
+//        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
+//        return auctionMapper.toResponseList(liveAuctions);
+//    }
 
     @GetMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -130,7 +124,7 @@ public class AuctionController {
     }
 
     // register
-    @PostMapping("/register-by-autionId/{id}")
+    @PostMapping("/register-by-auctionId/{id}")
     public ResponseEntity<?> registerAuctionById(@PathVariable Long id,
         @Valid @RequestBody RegisterAuctionDTO dto) throws DataNotFoundException, BadRequestException {
         ApiResponse apiResponse = new ApiResponse();

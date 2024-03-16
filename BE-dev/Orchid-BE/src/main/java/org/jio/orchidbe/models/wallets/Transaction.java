@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.orders.Order;
@@ -14,6 +15,7 @@ import org.jio.orchidbe.models.orders.PaymentMethod;
 @Builder
 @Data
 @NoArgsConstructor
+@FieldNameConstants
 @Entity
 @Table(name="tbl_transaction")
 public class Transaction extends BaseEntity {

@@ -1,34 +1,31 @@
-package org.jio.orchidbe.services.products;
+package org.jio.orchidbe.services.orders;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.enums.TypeTrans;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
 import org.jio.orchidbe.enums.OrderStatus;
-import org.jio.orchidbe.models.auctions.Auction;
-import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
-import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
 import org.jio.orchidbe.repositorys.products.*;
 import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
-import org.jio.orchidbe.requests.Request;
-import org.jio.orchidbe.requests.orders.CreateOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
 import org.jio.orchidbe.responses.AuctionContainer;
-import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.OrderContainer;
 import org.jio.orchidbe.responses.OrderResponse;
+import org.jio.orchidbe.services.wallets.IPaymentService;
 import org.jio.orchidbe.utils.GenerateCodeUtils;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +39,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -276,7 +272,14 @@ public class OrderService implements IOrderService {
         return orderMapper.toResponse(existingOrder);
     }
 
-
+    @Override
+    public OrderResponse getById(Long id) throws DataNotFoundException {
+        Order entity = orderRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("Not found .")
+        );
+        OrderResponse response = orderMapper.toResponse(entity);
+        return response;
+    }
 
 
 //    public void validateOrder(String auctionTitle) throws BadRequestException {
