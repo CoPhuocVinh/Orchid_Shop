@@ -1,92 +1,67 @@
 "use client";
-
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import useCountdownTimer from "@/hooks/use-countdown-time";
+// Make sure to import the useCountdownTimer hook
 
-interface ListingCardProps {
-  id: number;
+interface LiveAuctionsCardProps {
   productName: string;
   productCode: string;
-  startPrice: number;
-  endPrice: number;
-  status: string;
-  depositPrice: number;
-  quantity: number;
-  modifiedBy: string;
-  created_at: Date;
-  updated_at: Date;
-  remindAt: Date;
-  idCss: string;
-  image_url?: string;
+  endDate: Date;
+  id: number;
+  image_url: string;
 }
 
-export default function ListingCard({
+export default function DestinationCard({
+  image_url,
   id,
   productName,
   productCode,
-  startPrice,
-  endPrice,
-  status,
-  depositPrice,
-  quantity,
-  modifiedBy,
-  created_at,
-  updated_at,
-  remindAt,
-  idCss,
-  image_url,
-}: ListingCardProps) {
+  endDate,
+}: LiveAuctionsCardProps) {
+  const countdown = useCountdownTimer(endDate.toString());
+
   return (
-    <>
-      <div className="listing-card group/item relative inline-flex w-full flex-col">
-        <div className="relative w-full overflow-hidden rounded-xl">
-          <Link href={`/auction/${id}`}>
-            <div className="listing-item after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-1/4 after:w-full after:bg-gradient-to-t after:from-black/25">
-              <Image
-                className="aspect-[34/25] bg-gray-lighter transition-all duration-500 group-hover/item:scale-110"
-                src={
-                  image_url ? image_url : "/images/hoa-lan/hoa-lan-dep_1.jpg"
-                }
-                width={816}
-                height={600}
-                alt="auction"
-                priority
-              />
-            </div>
-          </Link>
+    <Link href={`/auction/${id}`}>
+      <div className="group/item relative flex aspect-auto h-[340px] w-full flex-col overflow-hidden rounded-xl lg:h-[380px] 2xl:h-[420px] 4xl:h-[500px]">
+        <Image
+          src={image_url}
+          alt="destination"
+          fill
+          sizes="(min-width: 320) 100vw, 100vw"
+          className="relative z-0 rounded-xl bg-gray-lighter object-cover transition-all duration-500 group-hover/item:scale-110"
+        />
+        <div className="absolute bottom-0 z-10 h-1/4 w-full bg-gradient-to-t from-gray-dark/90 to-gray-dark/0 transition-all duration-500 group-hover/item:h-1/2 3xl:from-gray-dark/60"></div>
+        <div className="relative z-10 mt-auto px-6 pb-6 md:px-7 md:pb-7 3xl:px-9 3xl:pb-9 4xl:px-12 4xl:pb-12">
+          <h3 className="text-xl font-bold leading-7 text-lime-400 3xl:text-2xl">
+            {productName}
+          </h3>
+          <p className="text-sm font-normal leading-7 text-lime-400 lg:text-base 3xl:pt-1.5 4xl:text-lg">
+            {productCode}
+          </p>
         </div>
-        <Link href={`/auction/${id}`}>
-          <div className="content pt-3">
-            <div className="mb-1 flex items-center gap-5">
-              <span className="relative flex items-center font-bold text-gray-dark before:absolute before:-right-3 before:block before:h-1 before:w-1 before:rounded-full before:bg-gray-dark">
-                {startPrice}
-              </span>
-              <span className="font-bold">{productName}</span>
-            </div>
-            <h4 className="text-ellipsis text-gray-dark 2xl:mb-1.5">
-              {productCode}
-            </h4>
-            <p className="mb-3 text-gray-light xl:mb-3">{depositPrice}</p>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-gray-light">
-                <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">
-                  {startPrice}
-                </span>{" "}
-                avg/day
-              </p>
-              <div className="flex items-center gap-3 leading-7">
-                {/* <Rate
-                  allowHalf
-                  allowClear
-                  defaultValue={rating}
-                  characterClassName="h-[14px] w-[14px] 3xl:h-[18px] 3xl:w-[18px]"
-                /> */}
-                {/* ({ratingCount}) */}
-              </div>
-            </div>
+        {countdown && (
+          <div className="absolute top-0 right-2 m-4 text-green-300 text-lg font-bold">
+            <span className="inline-block w-6 text-center">{`${countdown.days
+              .toString()
+              .padStart(2, "0")}`}</span>
+            d&nbsp; :&nbsp;
+            <span className="inline-block w-6 text-center">{`${countdown.hours
+              .toString()
+              .padStart(2, "0")}`}</span>
+            h&nbsp; :&nbsp;
+            <span className="inline-block w-6 text-center">{`${countdown.minutes
+              .toString()
+              .padStart(2, "0")}`}</span>
+            m&nbsp; :&nbsp;
+            <span className="inline-block w-6 text-center">{`${countdown.seconds
+              .toString()
+              .padStart(2, "0")}`}</span>
+            s
           </div>
-        </Link>
+        )}
       </div>
-    </>
+    </Link>
   );
 }

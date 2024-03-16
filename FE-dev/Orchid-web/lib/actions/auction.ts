@@ -9,6 +9,7 @@ import {
 import { SearchParams } from "@/types/table";
 import { fetchListData, fetchListDataWithSearchParam } from "@/lib/generics";
 import { api } from "../api-interceptor/api";
+import axios from "axios";
 
 export async function getAuctions(): Promise<{ data: IAuction[] }> {
   noStore();
@@ -18,7 +19,7 @@ export async function getAuctions(): Promise<{ data: IAuction[] }> {
 }
 
 export async function getAuctionsWithStatus(
-  status: AuctionStatus
+  status: string
 ): Promise<{ data: IAuction[] }> {
   noStore();
 
@@ -59,11 +60,34 @@ interface AuctionStatusUpdate {
 }
 export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
   try {
-    const res = await api.post(`/auctions/update-status`, { id, status });
+    const res = await api.put(`/auctions/update-auction/${id}`, { status });
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {
     console.log("FALI");
+  }
+}
+export async function updateStatusAcceptAuction({ id,  approved } : any) {
+
+  try {
+    const res = await api.put(`/auctions/update-auction/${id}`, {  approved: approved });
+
+    revalidatePath("/dashboard/auctions");
+  } catch (error) {
+    console.log("FALI to updateStatusAcceptAuction");
+  }
+}
+export async function updateStatusRejectAuction({ id,  rejected } : any) {
+
+  try {
+
+    const reasonReject = "Buổi đấu giá ko đạt yêu cầu"
+
+    const res = await api.put(`/auctions/update-auction/${id}`, {  rejected: rejected ,reasonReject: reasonReject});
+
+    revalidatePath("/dashboard/auctions");
+  } catch (error) {
+    console.log("FALI to updateStatusRejectAuction");
   }
 }
 
@@ -105,5 +129,40 @@ export async function createAuction(data: IAuctionCreateField): Promise<void> {
   } catch (error) {
     console.log(error);
     throw error;
+  }
+}
+
+export async function registerAttendAuction(userId: string, auctionId: string) {
+  const url = `/auctions/register-by-auctionId/${auctionId}`;
+
+  try {
+    const res = await api.post(url, userId);
+
+    if (res.status === 200) {
+      console.log('Registration successful');
+      revalidatePath(`/auction/${auctionId}`);
+      return { success: true, successFull: "Đăng kí đấu giá thành công"};
+    } else {
+      const errorMessage = res.data.error.errorMessage;
+      return { success: false, error: errorMessage };
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const { response } = error;
+
+      if (response && response.status === 406) {
+        console.error('Insufficient balance in wallet.');
+        return { success: false, error: 'Không đủ xèng trong ví vui lòng nạp tiền nhé' };
+      } else if (response && response.status === 400) {
+        console.error('Auction status is not COMING and user has already registered.');
+        return { success: false, error: 'Buổi đấu giá chưa diễn ra!' };
+      } else {
+        console.error('An unexpected error occurred:', error.message);
+        return { success: false, error: 'An unexpected error occurred' };
+      }
+    } else {
+      console.error('An unexpected error occurred:', error);
+      return { success: false, error: 'An unexpected error occurred' };
+    }
   }
 }

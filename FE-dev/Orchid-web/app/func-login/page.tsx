@@ -13,6 +13,36 @@ const AppBar = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+  //   const data = {
+  //     productName: "tesst",
+  //     quantity: 1,
+  //     description: "đầy mê hoặc, nơi người chơi được đưa vào một thế giới đầy màu sắc và bí ẩn. Trò chơi kể về hành trình của một anh hùng trẻ trên đường tìm kiếm sức mạnh để bảo vệ thế giới khỏi sự tàn phá của thế lực tà ác. Với đồ họa đẹp mắt, cốt truyện hấp dẫn và gameplay đa dạng, Hoa Đột Biến hứa hẹn mang đến cho người chơi những trải nghiệm đầy cảm xúc và kích thích.",
+  //     category_id: 3,
+  //     productImages: [
+  //         {
+  //             image_url: "https://res.cloudinary.com/dnjh2rjpw/image/upload/v1710498641/wyfcsglllpzldujvm0an.jpg",
+  //             image_code: "wyfcsglllpzldujvm0an"
+  //         },
+        
+  //     ]
+  // }
+  //   const fetch = async () => {
+  //     try {
+  //       const res = await axiosAuth.post(
+  //         "https://orchid.fams.io.vn/api/v1/products", data
+  //       );
+
+  //       console.log(res)
+  //       setLoading(true);
+  //       setTestData(res.data);
+  //     } catch (error) {
+  //       console.log("FALI");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+    // fetch();
     const fetch = async () => {
       try {
         const res = await axiosAuth.get(

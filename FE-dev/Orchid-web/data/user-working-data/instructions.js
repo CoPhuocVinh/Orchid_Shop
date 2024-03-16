@@ -1,39 +1,31 @@
-import { InstructionIconOne } from '@/components/icons/instruction/instruction-one';
-import { InstructionIconTwo } from '@/components/icons/instruction/instruction-two';
-import { InstructionIconThree } from '@/components/icons/instruction/instruction-three';
-import { InstructionIconFour } from '@/components/icons/instruction/instruction-four';
+import { InstructionIconOne } from "@/components/icons/instruction/instruction-one";
+import { InstructionIconTwo } from "@/components/icons/instruction/instruction-two";
+import { InstructionIconThree } from "@/components/icons/instruction/instruction-three";
+import { InstructionIconFour } from "@/components/icons/instruction/instruction-four";
 
 export const instructions = [
   {
-    title: 'Find the perfect boat',
+    title: "Xem Các Loài Hoa Lan Đang Có",
     description:
-      'Browse our 5,000 designer dresses and accessories online or at our Melbourne warehouse.',
-    icon: (
-      <InstructionIconOne />
-    ),
+      "Khám phá bộ sưu tập các loài hoa lan độc đáo và hiếm có đang được đấu giá.",
+    icon: <InstructionIconOne />,
   },
   {
-    title: 'Select a captain',
+    title: "Đặt Giá Của Bạn",
     description:
-      'Find your perfect look among thousands of fashion pieces, here available for rent and purchase',
-    icon: (
-      <InstructionIconTwo />
-    ),
+      "Chọn những loài hoa lan mà bạn mong muốn và đặt giá với sự tự tin.",
+    icon: <InstructionIconTwo />,
   },
   {
-    title: 'Many Pickup Locations',
+    title: "Nhiều Địa Điểm Nhận Hoa",
     description:
-      'Enjoy wearing it at your special event for a few days, or purchase it to make it part of your wardrobe',
-    icon: (
-      <InstructionIconThree />
-    ),
+      "Sau khi chiến thắng, hãy chọn từ các địa điểm khác nhau để nhận các loài hoa lan quý giá của bạn.",
+    icon: <InstructionIconThree />,
   },
   {
-    title: 'Satisfied Customers',
+    title: "Những Người Yêu Thích Hoa Lan Hài Lòng",
     description:
-      'Simply pop your dress back in the free prepaid satchel provided. We now handle all the dry cleaning.',
-    icon: (
-      <InstructionIconFour />
-    ),
+      "Tham gia cộng đồng những người yêu thích hoa lan hài lòng đã tìm thấy những bông hoa hoàn hảo của mình.",
+    icon: <InstructionIconFour />,
   },
 ];

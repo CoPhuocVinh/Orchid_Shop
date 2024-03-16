@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { topBoats } from "@/data/user-working-data/top-boats";
-import ListingCard from "../home/live-auction/live-auction-card";
-import { Button } from "@/components/ui/button";
+import ListingCard from "../home/comming-auction/comming-auction-card";
 
 import { IAuction } from "@/types/dashboard";
-import Panigation_Auction_Page from "@/app/(platform)/auction/_components/Panigation_Auction_Page";
+import PanigationAuctionPage from "@/app/(platform)/auction/_components/panigation-auction";
 
 interface AuctionListingProps {
   liveAuction: IAuction[];
@@ -67,7 +66,7 @@ export default function AuctionListing({
           >
             Load more
           </Button> */}
-          <Panigation_Auction_Page
+          <PanigationAuctionPage
             totalPages={Math.ceil(liveAuction.length / itemsPerPage)}
             currentPage={currentPage}
             onPageChange={handlePageChange}

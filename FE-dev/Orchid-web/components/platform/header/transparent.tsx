@@ -8,6 +8,7 @@ import FormPopoverUser from "../popover-user-info";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "../user-avatar";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function TransparentHeader() {
   const headerRef = useRef(null);
@@ -18,9 +19,14 @@ export default function TransparentHeader() {
   return (
     <header
       ref={headerRef}
-      className="transparent-header fixed left-0 top-0 z-[100] flex w-full justify-between bg-white px-4 py-3.5 sm:bg-transparent sm:px-6 lg:py-6 2xl:px-7 3xl:px-8 4xl:px-16 4xl:py-9"
+      className="transparent-header fixed left-0 top-0 z-40 flex w-full justify-between bg-white px-4 py-3.5 sm:bg-transparent sm:px-6 lg:py-6 2xl:px-7 3xl:px-8 4xl:px-16 4xl:py-9"
     >
-      <Link href="/">Logo</Link>
+      <div className="flex items-center">
+        <Link href="/">
+          <Image alt="logo" src="/images/logo.svg" width={20} height={20} />
+        </Link>
+        <span className="text-lg ml-2 font-bold">Orchid</span>
+      </div>
       <div className="flex items-center">
         <div className="md:hidden">
           {isAuthorized ? (

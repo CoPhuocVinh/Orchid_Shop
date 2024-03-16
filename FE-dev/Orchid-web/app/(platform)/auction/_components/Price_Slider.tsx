@@ -4,7 +4,7 @@ import Slider from "react-slider";
 
 const Price_Slider = () => {
   const [values, setValues] = useState([0, 100000]);
-  const handleChange = (newValues) => setValues(newValues);
+  const handleChange = (newValues: any) => setValues(newValues);
 
   return (
     <div className=" border-gray-300 rounded-lg shadow-md w-full">

@@ -1,5 +1,17 @@
 import { useState, useEffect } from "react";
 
+export const adjustTimeZoneOffset = (dateString: Date, offset: number) => {
+  const date = dateString ? new Date(dateString) : undefined;
+
+  if (date) {
+    date.setHours(date.getHours() + offset);
+    return date.toISOString().replace("Z", "");
+  } else {
+    return undefined;
+  }
+};
+
+
 function useCountdownTimer(
   targetDateStr: string | undefined
 ): { days: number; hours: number; minutes: number; seconds: number } | null {
@@ -51,3 +63,5 @@ function useCountdownTimer(
 }
 
 export default useCountdownTimer;
+
+

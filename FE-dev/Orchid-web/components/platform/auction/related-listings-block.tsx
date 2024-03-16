@@ -1,13 +1,13 @@
 'use client';
 
-import ListingCard from '../home/live-auction/live-auction-card';
+import ListingCard from '../home/comming-auction/comming-auction-card';
 import Section from '@/components/platform/section';
 import SeeMore from '@/components/platform/see-more';
 import { useGetAuctionsWithStatus } from '@/lib/react-query/queries';
 import { AuctionStatus } from '@/types/dashboard';
 
 export default function RelatedListingBlock() {
-  const { data: liveAuction, isLoading: auctionLoading } = useGetAuctionsWithStatus(AuctionStatus.END);
+  const { data: liveAuction, isLoading: auctionLoading } = useGetAuctionsWithStatus(AuctionStatus.LIVE);
 
   return (
     <Section

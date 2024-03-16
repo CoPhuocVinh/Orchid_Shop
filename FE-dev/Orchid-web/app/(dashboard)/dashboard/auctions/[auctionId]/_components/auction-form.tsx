@@ -39,44 +39,10 @@ import {
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Heading } from "@/components/dashboard-heading";
 import { DateTimePicker } from "@/components/date-time-picker/date-time-picker";
+import { adjustTimeZoneOffset } from "@/hooks/use-countdown-time";
+import { auctionSchema } from "@/lib/schemas";
 
-const formSchema = z.object({
-  startDate: z.date().refine(
-    (date) => {
-      const now = new Date();
-      return date !== null && date >= now;
-    },
-    { message: "Vui lòng chọn không chọn ngày trong quá khứ" }
-  ),
-  endDate: z.date().refine(
-    (date) => {
-      const now = new Date();
-      return date !== null && date >= now;
-    },
-    { message: "Vui lòng chọn không chọn ngày trong quá khứ" }
-  ),
-  remindAt: z.date().refine(
-    (date) => {
-      const now = new Date();
-      return date !== null && date >= now;
-    },
-    { message: "Vui lòng chọn không chọn ngày trong quá khứ" }
-  ),
-  quantity: z.coerce
-    .number()
-    .min(1, { message: "Hãy nhập giá tiền khởi điểm" }),
-  depositPrice: z.coerce
-    .number()
-    .min(1, { message: "Hãy nhập giá tiền depositPrice" }),
-  startPrice: z.coerce
-    .number()
-    .min(1, { message: "Hãy nhập giá tiền startPrice" }),
-
-  productID: z.coerce.number().min(1, { message: "Hãy chọn sản phẩm đấu giá" }),
-  image_url: z.string().min(1, { message: "Hãy thêm ít nhất 1 ảnh" }),
-});
-
-export type AuctionFormValues = z.infer<typeof formSchema>;
+export type AuctionFormValues = z.infer<typeof auctionSchema>;
 
 interface AuctionFormProps {
   initialData: IAuction | null;
@@ -92,6 +58,14 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const waitingStatus = initialData?.status === "WAITING"
+  const comingStatus = initialData?.status === "COMING"
+  const liveStatus = initialData?.status === "LIVE" ;
+  const endStatus = initialData?.status === "END";
+
+  const notPermissionAlowEdit = liveStatus || endStatus
+  const comingNotPermissionEdit = comingStatus 
 
   const title = initialData ? "Chỉnh sửa buổi đấu giá" : "Tạo buổi đấu giá";
   const description = initialData
@@ -128,20 +102,14 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
       };
 
   const form = useForm<AuctionFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(auctionSchema),
     defaultValues,
   });
-  console.log(typeof initialData?.startDate);
+
   const onSubmit = async (data: AuctionFormValues) => {
-    const startDateFormat = data.startDate
-      ? new Date(data.startDate).toISOString().replace("Z", "")
-      : undefined;
-    const endDateFormat = data.endDate
-      ? new Date(data.endDate).toISOString().replace("Z", "")
-      : undefined;
-    const remindAtFormtat = data.remindAt
-      ? new Date(data.endDate).toISOString().replace("Z", "")
-      : undefined;
+    const startDateFormat = adjustTimeZoneOffset(data.startDate, 7);
+    const endDateFormat = adjustTimeZoneOffset(data.endDate, 7);
+    const remindAtFormtat = adjustTimeZoneOffset(data.remindAt, 7);
 
     const value = {
       ...data,
@@ -149,12 +117,8 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
       endDate: endDateFormat,
       remindAt: remindAtFormtat,
     };
-    // console.log({
-    //   ...data,
-    //   startDate: startDateFormat,
-    //   endDate: endDateFormat,
-    //   remindAt: remindAtFormtat,
-    // });
+
+    // console.log(value);
 
     try {
       setLoading(true);
@@ -229,7 +193,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                 <FormControl>
                   <ImageUploadOne
                     value={field.value}
-                    disabled={isLoading}
+                    disabled={isLoading || notPermissionAlowEdit}
                     onChange={(imageUrl) => field.onChange(imageUrl)}
                     onRemove={() => field.onChange(null)}
                   />
@@ -254,6 +218,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                       // isDisabled={
                       //   field.value && new Date(field.value) < new Date()
                       // }
+                      isDisabled={notPermissionAlowEdit}
                     />
                   </FormControl>
                   <FormMessage className="dark:text-yellow-300" />
@@ -272,12 +237,24 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                       jsDate={field.value ? new Date(field.value) : null}
                       onJsDateChange={field.onChange}
                       aria-label="Time Field"
+                      isDisabled={notPermissionAlowEdit}
                     />
                   </FormControl>
-                  <FormMessage className="dark:text-yellow-300" />
+                  {form.formState.errors.endDateInValid && (
+                    <FormField
+                      control={form.control}
+                      name="endDateInValid"
+                      render={() => (
+                        <FormItem>
+                          <FormMessage className="dark:text-yellow-300" />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="remindAt"
@@ -290,9 +267,20 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                       jsDate={field.value ? new Date(field.value) : null}
                       onJsDateChange={field.onChange}
                       aria-label="Time Field"
+                      isDisabled={notPermissionAlowEdit}
                     />
                   </FormControl>
-                  <FormMessage className="dark:text-yellow-300" />
+                  {form.formState.errors.remindAtDateInValid && (
+                    <FormField
+                      control={form.control}
+                      name="remindAtDateInValid"
+                      render={() => (
+                        <FormItem>
+                          <FormMessage className="dark:text-yellow-300" />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </FormItem>
               )}
             />
@@ -306,7 +294,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <Select
                     disabled={isLoading}
                     onValueChange={field.onChange}
-                    value={field.value.toString()}
+                    value={field.value === 0 ? "" : field.value.toString()}
                     defaultValue={field.value.toString()}
                   >
                     <FormControl>
@@ -322,8 +310,13 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                         <SelectItem
                           key={product.productID}
                           value={product.productID.toString()}
+                          disabled={notPermissionAlowEdit || comingNotPermissionEdit}
                         >
-                          <span>{product.productName}</span>
+                          <span>
+                            {product.productName
+                              ? product.productName
+                              : "Lựa chọn sản phẩm đấu giá"}
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -342,7 +335,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      disabled={isLoading}
+                      disabled={isLoading || notPermissionAlowEdit}
                       placeholder="0"
                       {...field}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
@@ -361,7 +354,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      disabled={isLoading}
+                      disabled={isLoading || notPermissionAlowEdit || comingNotPermissionEdit}
                       placeholder="0"
                       {...field}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
@@ -380,7 +373,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      disabled={isLoading}
+                      disabled={isLoading || notPermissionAlowEdit || comingNotPermissionEdit}
                       placeholder="0"
                       {...field}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
@@ -394,7 +387,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
 
           <div className="space-x-4">
             <Button
-              disabled={isLoading}
+              disabled={isLoading || notPermissionAlowEdit}
               variant="action"
               className="ml-auto"
               type="submit"

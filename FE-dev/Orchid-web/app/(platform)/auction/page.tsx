@@ -7,10 +7,10 @@ import BreadCrumb from "@/components/platform/bread-crumb";
 import { IAuction } from "@/types/dashboard";
 
 import React, { useEffect, useState } from "react";
-import Fillter_Auction_Tab from "./_components/Fillter_Auction_tab";
-import GetAllData_Auction from "./_components/GetAllData_Auction";
+import Fillter_Auction_Tab from "./_components/fillter-auction-tab";
+import GetAllData_Auction from "./_components/get-all-auctions";
 import { log } from "console";
-import Fillter_Auction_Date from "./_components/Fillter_Auction_Date";
+import Fillter_Auction_Date from "./_components/fillter-auction-date";
 
 const AuctionPage = () => {
   //console.log(liveAuction?.data);

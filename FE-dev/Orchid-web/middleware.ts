@@ -14,7 +14,7 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
   //change to ADMIN later
   const isAdminRole =
-    req.auth?.user.role === "CUSTOMER" || req.auth?.user.role === "STAFF";
+    req.auth?.user.role === "ADMIN" || req.auth?.user.role === "STAFF";
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);

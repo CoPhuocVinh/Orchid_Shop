@@ -73,23 +73,16 @@ function LeftSide() {
   return (
     <div className="lg:w-1/2 px-5 xl:pl-12 pt-10">
       <header>
-        <Link href="/" className="">
+      <Link href="/" className="flex items-center font-bold dark:text-blue-200  ">
           <Image
+            alt="logo"
+            src="/images/logo.svg"
+            height={40}
+            width={40}
             priority={true}
-            height={logoColor.height}
-            width={logoColor.width}
-            src={logoColor.src}
-            className="block dark:hidden"
-            alt="Logo"
+            className=""
           />
-          <Image
-            priority={true}
-            height={logoWhite.height}
-            width={logoWhite.width}
-            src={logoWhite.src}
-            className="hidden dark:block"
-            alt="Logo"
-          />
+          <span className="text-2xl ml-2 font-bold">Orchid</span>
         </Link>
       </header>
       <div className="max-w-[450px] m-auto pt-24 pb-16">

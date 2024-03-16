@@ -1,6 +1,4 @@
 "use client";
-import logo from "/public/static/images/logo/logo-color.svg";
-import logoW from "/public/static/images/logo/logo-white.svg";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -17,23 +15,19 @@ function Sidebar({ handleActive }: any) {
   return (
     <aside className="sidebar-wrapper fixed top-0 z-30 block h-full w-[308px] bg-white dark:bg-darkblack-600 sm:hidden xl:block">
       <div className="sidebar-header relative z-30 flex h-[108px] w-full items-center border-b border-r border-b-[#F7F7F7] border-r-[#F7F7F7] pl-[50px] dark:border-darkblack-400">
-        <Link href="/">
+        <Link
+          href="/"
+          className="flex items-center font-bold dark:text-blue-200  "
+        >
           <Image
-            priority={true}
-            height={logo.height}
-            width={logo.width}
-            src={logo.src}
-            className="block dark:hidden"
             alt="logo"
-          />
-          <Image
+            src="/images/logo-white.svg"
+            height={40}
+            width={40}
             priority={true}
-            height={logoW.height}
-            width={logoW.width}
-            src={logoW.src}
-            className="hidden dark:block"
-            alt="logo"
+            className=""
           />
+          <span className="text-2xl ml-2 font-bold">Orchid</span>
         </Link>
         <button
           aria-label="none"
@@ -77,35 +71,6 @@ function Sidebar({ handleActive }: any) {
                       </span>
                       <span className="item-text text-lg font-medium leading-none">
                         Transaction
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/statistics">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.statisticSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        Statistics
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/my-wallet">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.myWalletSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        My Wallet
                       </span>
                     </div>
                   </div>
@@ -250,6 +215,14 @@ function Sidebar({ handleActive }: any) {
                       Create auction
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      href="/dashboard/censorship"
+                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                    >
+                      Censorship auctions
+                    </Link>
+                  </li>
                 </ul>
               </li>
 
@@ -296,7 +269,10 @@ function Sidebar({ handleActive }: any) {
             </h4>
             <ul className="mt-2.5">
               <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Button  onClick={() => signOut()} className=" bg-white dark:bg-darkblack-600 ">
+                <Button
+                  onClick={() => signOut()}
+                  className=" bg-white dark:bg-darkblack-600 "
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
                       <span className="item-ico">
@@ -316,7 +292,7 @@ function Sidebar({ handleActive }: any) {
         <div className="copy-write-text">
           <p className="text-sm text-[#969BA0]">© 2024 All Rights Reserved</p>
           <p className="text-sm font-medium text-bgray-700">
-            Made with ❤️ by 
+            Made with ❤️ by
             <a
               href="#"
               target="_blank"

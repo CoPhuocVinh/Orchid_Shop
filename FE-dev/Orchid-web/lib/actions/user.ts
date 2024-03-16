@@ -49,3 +49,25 @@ export async function updateUserInfo(
     return { success: false, message: "Something went wrong!" };
   }
 }
+
+
+export async function getUserAddressInfo(
+  params: string
+ 
+): Promise<{ data: any}> {
+  noStore();
+  const url = `/userInfo/getByUserId/${params}`;
+
+  try {
+    const res = await api.get(url);
+
+    const data = res.data.payload.in4DetailResponseList
+
+
+    return { data: data };
+  } catch (error) {
+    console.log(error);
+    return { data: [] };
+    
+  }
+}

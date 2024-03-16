@@ -35,12 +35,10 @@ const FormPopoverUser = ({
 }: FormPopoverUserProps) => {
   const { data: session } = useSession();
 
-
   const isAdmin =
     session?.user.role === "ADMIN" || session?.user.role === "STAFF";
 
   const router = useRouter();
-  
 
   return (
     <Popover>
@@ -56,8 +54,8 @@ const FormPopoverUser = ({
           <div className="flex items-center gap-2">
             <UserAvatar />
             <div className="text-xs">
-              <p className="font-bold text-sm">{fullName}</p>
-              <p className="text-neutral-600">vinh@gmail.com</p>
+              <p className="font-bold text-sm">{session?.user.name}</p>
+              <p className="text-neutral-600">{session?.user.email}</p>
             </div>
           </div>
           <Button
@@ -71,17 +69,23 @@ const FormPopoverUser = ({
         <div className="pt-6  text-neutral-500 space-y-2">
           {/* fix role lai sau */}
 
-          {!isAdmin && (
-            <Button variant="ghost" className="flex items-center gap-x-3 group w-full justify-start" onClick={() => router.push("/dashboard")}>
-             
-                <LayoutDashboard className="h-6 w-6 " />
-                <div className=" p-2 rounded-md font-normal">Dashboard</div>
+          {isAdmin && (
+            <Button
+              variant="ghost"
+              className="flex items-center gap-x-3 group w-full justify-start"
+              onClick={() => router.push("/dashboard")}
+            >
+              <LayoutDashboard className="h-6 w-6 " />
+              <div className=" p-2 rounded-md font-normal">Dashboard</div>
             </Button>
           )}
-          <Button variant="ghost"   className="flex items-center gap-x-3 group w-full justify-start"  onClick={() => router.push("/")}>
-  
-              <Settings className="h-6 w-6 " />
-              <div className=" p-2 rounded-md font-normal">Manage Account</div>
+          <Button
+            variant="ghost"
+            className="flex items-center gap-x-3 group w-full justify-start"
+            onClick={() => router.push("/profile")}
+          >
+            <Settings className="h-6 w-6 " />
+            <div className=" p-2 rounded-md font-normal">Manage Account</div>
           </Button>
           <Button
             onClick={() => signOut()}

@@ -1,73 +1,25 @@
-"use client";
+'use client';
 
-import { useTimeout } from "@/hooks/use-timeout";
-import { topBoats } from "@/data/user-working-data/top-boats";
-import Section from "@/components/platform/section";
-import SeeMore from "@/components/platform/see-more";
-import ListingCardLoader from "@/components/loader/listing-card-loader";
-import ListingCard from "./live-auction-card";
-import { useGetAuctionsWithStatus } from "@/lib/react-query/queries";
-import { AuctionStatus } from "@/types/dashboard";
+import {destinations} from '@/data/user-working-data/destinations'
+import { useTimeout } from '@/hooks/use-timeout';
+import Section from '@/components/platform/section';
+import BlockLoader from '@/components/loader/block_loader';
+import DestinationCarousel from './live-auction-carousel';
+import { useGetAuctionsWithStatus } from '@/lib/react-query/queries';
+import { AuctionStatus } from '@/types/dashboard';
 
-function AuctionGrid() {
-  const { data: liveAuction, isLoading } = useGetAuctionsWithStatus(AuctionStatus.END);
-  if (isLoading) {
-    return <ListingCardLoader />;
-  }
-
-
-  return (
-    <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-      {liveAuction?.data.slice(0, 8).map((item, index) => (
-        <ListingCard
-          key={`top-boat-grid-${index}`}
-          id={item.id}
-          idCss={`top-boat-grid-${index}`}
-          productName= {item.productName}
-          productCode= {item.productCode}
-          startPrice= {item.startPrice}
-          endPrice= {item.endPrice}
-          status= {item.status}
-          depositPrice= {item.depositPrice}
-          quantity= {item.quantity}
-          modifiedBy= {item.modifiedBy}
-          created_at= {item.created_at}
-          updated_at= {item.updated_at}
-          remindAt= {item.remindAt}
-          image_url={item.image_url}
-        />
-        // <ListingCard
-        //   key={`top-boat-grid-${index}`}
-        //   idCss={`top-boat-grid-${index}`}
-        //   slides={item.thumbnail}
-        //   time={item.time}
-        //   caption={item.caption}
-        //   title={item.title}
-        //   slug={item.slug}
-        //   location={item.location}
-        //   price={item.price}
-        //   ratingCount={item.ratingCount}
-        //   rating={item.rating}
-        //   user={item.user}
-        // />
-      ))}
-    </div>
-  );
-}
-
-export default function LiveAuctions() {
+export default function TopAuction() {
   const { state } = useTimeout();
-
+  const { data: commingAuction, isLoading } = useGetAuctionsWithStatus(AuctionStatus.LIVE);
   return (
     <Section
-      className="group/section container-fluid mt-12 overflow-hidden lg:mt-16"
       title="Live Auction"
-      description="Join us for an enchanting evening auction of rare and exotic flowers"
-      headerClassName="items-end mb-4 md:mb-5 xl:mb-6 gap-5"
-      rightElement={<SeeMore />}
+      description=" Đấu Giá Thời Gian Thực, Dẫn Dắt Bởi Người Đấu Giá, Cạnh Tranh, Người Ra Giá Cao Nhất Chiến Thắng."
+      className="lg:container-fluid mt-12 pl-4 sm:pl-6 lg:mt-16"
+      headerClassName="mb-4 md:mb-5 xl:mb-6"
     >
-      {!state && <ListingCardLoader />}
-      {state && <AuctionGrid />}
+      {!state && <BlockLoader />}
+      {state && <DestinationCarousel data={commingAuction?.data!} />}
     </Section>
   );
 }

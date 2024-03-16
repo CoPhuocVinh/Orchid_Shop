@@ -16,6 +16,11 @@ import {
 } from "@/components/ui/dialog";
 import { useModal } from "@/hooks/use-modal";
 import { Button } from "../ui/button";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+
+import { api } from "@/lib/api-interceptor/api";
+import { registerAttendAuction } from "@/lib/actions";
 
 enum STEPS {
   INFO_AUCTION = 0,
@@ -24,7 +29,8 @@ enum STEPS {
 
 export const RegiterAuctionModal = () => {
   const router = useRouter();
-  const { isOpen, onOpen, onClose, type } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
+  const { data: session } = useSession();
   const isOpenModal = isOpen && type === "registerAtendAction";
 
   const [isLoading, setIsLoading] = useState(false);
@@ -38,12 +44,29 @@ export const RegiterAuctionModal = () => {
     setStep((value) => value + 1);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (step !== STEPS.CONFIRM_TO_ATTEND) {
       return onNext();
     }
 
     setIsLoading(true);
+
+    try {
+      const { success, error } = await registerAttendAuction(session?.user.id!, data.auction?.id.toString()!);
+      if (success) {
+        toast.success("Đăng kí đấu giá thành công");
+        onClose();
+      } else if (error) {
+        toast.error(error);
+      } else {
+        toast.error('An unexpected error occurred during registration');
+      }
+    } catch (error) {
+      toast.error('An unexpected error occurred');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const actionLabel = useMemo(() => {
@@ -68,19 +91,21 @@ export const RegiterAuctionModal = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p className="text-gray-600 mb-2">Tên buổi đấu giá:</p>
-            <p className="font-semibold">Đấu giá tranh nghệ thuật</p>
+            <p className="font-semibold">{data.auction?.productName}</p>
           </div>
           <div>
             <p className="text-gray-600 mb-2">Ngày bắt đầu:</p>
-            <p className="font-semibold">15/06/2023</p>
+            <p className="font-semibold">
+              {data.auction?.startDate?.toString()}
+            </p>
           </div>
           <div>
-            <p className="text-gray-600 mb-2">Giá tiền:</p>
-            <p className="font-semibold">Từ 10.000.000 VNĐ</p>
+            <p className="text-gray-600 mb-2">Tiền cọc tham gia:</p>
+            <p className="font-semibold">{data.auction?.depositPrice}</p>
           </div>
           <div>
             <p className="text-gray-600 mb-2">Tên người đấu giá:</p>
-            <p className="font-semibold">Nguyễn Văn A</p>
+            <p className="font-semibold">{session?.user.name}</p>
           </div>
         </div>
       </div>
