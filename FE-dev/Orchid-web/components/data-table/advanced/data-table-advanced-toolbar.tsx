@@ -5,7 +5,7 @@ import type {
   DataTableFilterableColumn,
   DataTableFilterOption,
   DataTableSearchableColumn,
-} from "@/types"
+} from "@/types/table"
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons"
 import type { Table } from "@tanstack/react-table"
 

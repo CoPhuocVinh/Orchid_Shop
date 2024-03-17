@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jio.orchidbe.dtos.common.BaseFilterRequest;
+import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.orders.Order;
+import org.jio.orchidbe.models.orders.PaymentMethod;
 import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
@@ -27,7 +29,8 @@ public class GetAllOrderRequest extends BaseFilterRequest<Order> {
     private String auctionTitle;
     private String userId;
     private Boolean confirmed;
-
+    private OrderStatus status;
+    private PaymentMethod paymentMethod;
     @Override
     public Specification<Order> getSpecification() {
         return (root, query, cb) -> {
@@ -55,7 +58,13 @@ public class GetAllOrderRequest extends BaseFilterRequest<Order> {
                     predicates.add(cb.isFalse(root.get(Order.Fields.confirmed)));
                 }
             }
+            if (status != null && !status.toString().isEmpty()) {
+                predicates.add(cb.equal(root.get(Order.Fields.status), status));
+            }
 
+            if (paymentMethod != null && !paymentMethod.toString().isEmpty()) {
+                predicates.add(cb.equal(root.get(Order.Fields.paymentMethod), paymentMethod));
+            }
             // Add deleted=false criteria
             predicates.add(cb.equal(root.get(BaseEntity.Fields.deleted), false));
 

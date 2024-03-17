@@ -8,6 +8,7 @@ import MassagePopup from "./massage-popup";
 import StorePopUp from "./store-popup";
 import ProfilePopup from "./profile-popup";
 import { ToggleMode } from "@/components/toggle-mode";
+import { useSession } from "next-auth/react";
 // import { ToggleMode } from "@/components/Toggle-mode";
 
 interface Popup {
@@ -22,6 +23,7 @@ interface HeaderOneProps {
   handleSidebar: () => void;
 }
 const HeaderOne = ({ handleSidebar }: HeaderOneProps) => {
+  const { data: session } = useSession();
   const [popup, setPopup] = useState<Popup>({
     notification: false,
     massage: false,
@@ -34,7 +36,7 @@ const HeaderOne = ({ handleSidebar }: HeaderOneProps) => {
   };
 
   return (
-    <header className="header-wrapper fixed z-30 hidden w-full md:block">
+    <header className="header-wrapper fixed z-30 hidden w-full md:block ">
       <div className="relative flex h-[108px] w-full items-center justify-between bg-white px-10 dark:bg-darkblack-600 2xl:px-[76px]">
         <button
           aria-label="none"
@@ -70,9 +72,7 @@ const HeaderOne = ({ handleSidebar }: HeaderOneProps) => {
           <h3 className="text-xl font-bold text-bgray-900 dark:text-bgray-50 lg:text-3xl lg:leading-[36.4px]">
             Dashboard
           </h3>
-          <p className="text-xs font-medium text-bgray-600 dark:text-bgray-50 lg:text-sm lg:leading-[25.2px]">
-            Let’s check your update today
-          </p>
+
         </div>
         {/* search-bar */}
         <SearchBar />

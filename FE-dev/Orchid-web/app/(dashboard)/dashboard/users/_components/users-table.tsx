@@ -7,22 +7,36 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { DataTable } from "@/components/data-table/data-table";
 
 import {
-  Task,
   fetchTasksTableColumnDefs,
   filterableColumns,
   searchableColumns,
 } from "./users-table-column-def";
-import { getDataFake } from "./fake-data";
+import { IUser } from "@/types/dashboard";
+import { getUserWithRoleCustomer, getUserWithRoleStaff } from "@/lib/actions";
 
-interface TasksTableProps {
-  tasksPromise: ReturnType<typeof getDataFake>;
+interface UsersTableProps {
+  // userType: "staff" | "user";
+  // staffs?: IUser[];
+  // users?: IUser[];
+  // pageCount: number;
+  usersPromise: ReturnType<
+    typeof getUserWithRoleCustomer | typeof getUserWithRoleStaff
+  >;
 }
 
-export function TasksTable({ tasksPromise }: TasksTableProps) {
-  const {data, pageCount} = React.use(tasksPromise);
-  const [isPending, startTransition] = React.useTransition();
+export function UsersTable({
+  usersPromise,
+  // staffs
+//  , users
+//   , userType
+//   , pageCount
+}: 
 
-  const columns = React.useMemo<ColumnDef<Task, unknown>[]>(
+UsersTableProps) {
+  const { data, pageCount } = React.use(usersPromise);
+  const [isPending, startTransition] = React.useTransition();
+  // const data = userType === "staff" ? staffs : users
+  const columns = React.useMemo<ColumnDef<IUser, unknown>[]>(
     () => fetchTasksTableColumnDefs(isPending, startTransition),
     [isPending]
   );

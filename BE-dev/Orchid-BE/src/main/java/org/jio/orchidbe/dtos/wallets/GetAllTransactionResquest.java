@@ -18,6 +18,8 @@ import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
+import org.jio.orchidbe.models.products.Category;
+import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
@@ -33,16 +35,17 @@ import java.util.List;
 @NoArgsConstructor
 public class GetAllTransactionResquest extends BaseFilterRequest<Transaction> {
 
-
     private String walletId;
     private PaymentMethod paymentMethod;
     private OrderStatus status;
     private String transactionCode;
     private String orderId;
+    private String userId;
     @Override
     public Specification<Transaction> getSpecification() {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
+
 
             // Add search criteria
             if (transactionCode != null && !transactionCode.isBlank()) {
@@ -64,7 +67,12 @@ public class GetAllTransactionResquest extends BaseFilterRequest<Transaction> {
 
             if (walletId != null && !walletId.isBlank()) {
                 predicates.add(root.join(Transaction.Fields.wallet).get(Wallet.Fields.id).in(walletId));
+
             }
+            if (userId != null && !userId.isBlank()) {
+                predicates.add(cb.equal(root.join(Transaction.Fields.wallet).get(Wallet.Fields.user).get(User.Fields.id), Long.parseLong(userId)));
+            }
+
             // Add deleted=false criteria
             predicates.add(cb.equal(root.get(BaseEntity.Fields.deleted), false));
 

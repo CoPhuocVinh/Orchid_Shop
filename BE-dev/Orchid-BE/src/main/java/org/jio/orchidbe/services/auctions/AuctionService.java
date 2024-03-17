@@ -4,12 +4,14 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.jio.orchidbe.constants.BaseConstants;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.enums.TypeTrans;
 import org.jio.orchidbe.exceptions.OptimisticException;
 
+import org.jio.orchidbe.firebase.FirebaseInitialization;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
 
 import org.jio.orchidbe.models.auctions.Bid;
@@ -25,6 +27,7 @@ import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.*;
 
+import org.jio.orchidbe.services.firebase.IFirebaseService;
 import org.jio.orchidbe.utils.GenerateCodeUtils;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.util.ReflectionUtils;
@@ -59,6 +62,7 @@ import org.springframework.web.util.WebUtils;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 
 @Service
@@ -91,11 +95,14 @@ public class AuctionService implements IAuctionService {
     @Autowired
     private OrderRepository orderRepository;
 
-
+    @Autowired
+    private IFirebaseService firebaseService;
+    @Autowired
+    private FirebaseInitialization firebaseInitialization;
 
     @Transactional
     @Override
-    public void endAuction(Auction auction) throws DataNotFoundException {
+    public void endAuction(Auction auction) throws DataNotFoundException, ExecutionException, InterruptedException {
 
         Bid bid = bidRepository.findByAuctionIdAndTop1(auction.getId(), true);
         if (bid != null) {
@@ -108,6 +115,9 @@ public class AuctionService implements IAuctionService {
 
                 auction.setModifiedBy("System");
                 auction.setStatus(Status.END);
+                String key = String.valueOf(auction.getId());
+                firebaseService.delete(key);
+
                 // auctionContainer.removeAuctionFromList(auction, Status.LIVE);
                 Order orderExisted = orderRepository.findByAuction(auction);
                 // Tạo entity Order từ auctionID bằng cách sử dụng OrderMapper
@@ -198,7 +208,7 @@ public class AuctionService implements IAuctionService {
     }
 
     @Override
-    public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException {
+    public AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException, ExecutionException, InterruptedException {
         Auction newAuction = auctionMapper.toEntity(createAuctionResquest);
         LocalDateTime endDate = LocalDateTime.parse(createAuctionResquest.getEndDate());
         LocalDateTime startDate = LocalDateTime.parse(createAuctionResquest.getStartDate());
@@ -224,13 +234,14 @@ public class AuctionService implements IAuctionService {
         newAuction.setProduct(product);
         newAuction.setStatus(Status.WAITING);
         auctionRepository.save(newAuction);
+
         auctionContainer.addAuction(newAuction);
         return auctionMapper.toResponse(newAuction);
     }
 
 
     @PostConstruct
-    public void initializeAuctions() {
+    public void initializeAuctions() throws ExecutionException, InterruptedException {
         List<Auction> allAuctions = auctionRepository.findAll();
         for (Auction auction : allAuctions) {
             auctionContainer.addAuction(auction);
@@ -257,13 +268,21 @@ public class AuctionService implements IAuctionService {
 
         Auction auction = auctionContainer.getAuctionById(id);
 
-        if ( auction.getStatus().equals(Status.LIVE) ||   auction.getStatus().equals(Status.END)){
-            throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
+        if (updateAuctionRequest.getRejected() == null) {
+            if (auction.getStatus().equals(Status.LIVE) || auction.getStatus().equals(Status.END)) {
+                throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
+            }
         }
 
         try {
             if (updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null) {
                 throw new BadRequestException("Fill the reason reject");
+            }
+
+            if (updateAuctionRequest.getRejected() == null) {
+                if (auction.getStatus().equals(Status.LIVE) || auction.getStatus().equals(Status.END)) {
+                    throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
+                }
             }
             auctionContainer.removeOnAuctionListById(id);
             auctionContainer.removeOnStatusLists(auction);
@@ -287,7 +306,7 @@ public class AuctionService implements IAuctionService {
                     if (auction.isRejected()) {
                         if (updateAuctionRequest.getReasonReject() != null && !updateAuctionRequest.getReasonReject().isBlank()) {
                             auction.setRejectReason(updateAuctionRequest.getReasonReject());
-                            auctionContainer.removeAuctionFromList(auction, Status.WAITING);
+
                             Product product = productRepository.findById(auction.getProduct().getId())
                                     .orElseThrow(() ->
                                             new DataNotFoundException(
@@ -297,6 +316,10 @@ public class AuctionService implements IAuctionService {
                             product.setQuantity(updatedProductQuantity);
                             productRepository.save(product);
                             auction.setStatus(Status.END);
+
+                            String key = String.valueOf(auction.getId());
+                            firebaseService.delete(key);
+
                         } else if (updateAuctionRequest.getReasonReject() == null || updateAuctionRequest.getReasonReject().isBlank()) {
                             throw new BadRequestException("Fill in the reason for reject");
                         }
@@ -338,20 +361,30 @@ public class AuctionService implements IAuctionService {
             errorMap.put("errorMessage", e.getMessage());
             apiResponse.error(errorMap);
             return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
 
     @Override
-    public AuctionDetailResponse getById(Long id) throws DataNotFoundException {
+    public AuctionDetailResponse getById(Long id) throws DataNotFoundException, ExecutionException, InterruptedException {
 
-        Auction auction = auctionRepository.findById(id).orElseThrow(
-                () -> new DataNotFoundException("Not found user_controller.")
-        );
-        List<Bid> bids = bidRepository.findByAuction_Id(auction.getId());
+        String key = String.valueOf(id);
+        AuctionDetailResponse response = firebaseService.getAuctionByKey(key, BaseConstants.COLLECTION_AUCTION);
 
-        AuctionDetailResponse response = auctionMapper.toResponseDetail(auction);
-        response.setBidList(bids.stream().map(biddingMapper::toResponse).toList());
+        if (response == null) {
+            Auction auction = auctionRepository.findById(id).orElseThrow(
+                    () -> new DataNotFoundException("Not found user_controller.")
+            );
+            List<Bid> bids = bidRepository.findByAuction_Id(auction.getId());
+
+            response = auctionMapper.toResponseDetail(auction);
+            response.setBidList(bids.stream().map(biddingMapper::toResponse).toList());
+        }
+
         return response;
 
     }
@@ -371,22 +404,21 @@ public class AuctionService implements IAuctionService {
         Auction auction = auctionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Not found auction.")
         );
-        if (auction.getStatus().equals(Status.COMING)
-                && !bidRepository.existsBidByAuction_IdAndUser_Id(auction.getId(), user.getId())) {
+        if (auction.getStatus().equals(Status.COMING)) {
+            if (!bidRepository.existsBidByAuction_IdAndUser_Id(auction.getId(), user.getId())) {
+                if (wallet.getBalance() >= auction.getStartPrice()) {
 
-            if (wallet.getBalance() >= auction.getStartPrice()) {
+                    String tranCode = GenerateCodeUtils
+                            .generateCode4Transaction(TypeTrans.RT, auction.getProductCode(), dto.getUserId());
 
-                String tranCode = GenerateCodeUtils
-                        .generateCode4Transaction(TypeTrans.RT, auction.getProductCode(), dto.getUserId());
-
-                Transaction transaction = Transaction.builder()
-                        .wallet(wallet)
-                        .amount(auction.getDepositPrice() )
-                        .status(OrderStatus.CONFIRMED)
-                        .paymentMethod(PaymentMethod.CARD)
-                        .transactionCode(tranCode)
-                        .build();
-                transactionRepository.save(transaction);
+                    Transaction transaction = Transaction.builder()
+                            .wallet(wallet)
+                            .amount(auction.getDepositPrice())
+                            .status(OrderStatus.CONFIRMED)
+                            .paymentMethod(PaymentMethod.CARD)
+                            .transactionCode(tranCode)
+                            .build();
+                    transactionRepository.save(transaction);
 
                 Double newBalance = wallet.getBalance() - auction.getStartPrice();
                 wallet.setBalance(newBalance);
@@ -399,14 +431,18 @@ public class AuctionService implements IAuctionService {
                         .ratings(0)
                         .build();
                 bidRepository.save(bid);
+
+                } else {
+                    throw new NotAcceptableStatusException("Insufficient balance in wallet.");
+                }
+
             } else {
-                throw new NotAcceptableStatusException("Insufficient balance in wallet.");
+                throw new DataNotFoundException("auction register failed by user was registered");
             }
 
         } else {
-            throw new BadRequestException("auction register failed by user was registered or auction not COMING to register!!!");
+            throw new BadRequestException("auction not COMING to register!!!");
         }
-
 
         return true;
     }

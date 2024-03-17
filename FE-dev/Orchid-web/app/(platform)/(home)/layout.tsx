@@ -5,11 +5,11 @@
 import Footer from "@/components/platform/footer/footer";
 import TransparentHeader from "@/components/platform/header/transparent";
 
-
-
-
-
-export default function HomeLayout({ children }: React.PropsWithChildren<{}>) {
+export default function HomeLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <TransparentHeader />

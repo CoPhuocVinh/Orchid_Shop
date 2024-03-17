@@ -29,7 +29,7 @@ public class ProductDTORequest {
 
     @Min(value = 0, message = "Quantity must be greater than or equal to 0")
     @Max(value = 1000, message = "Quantity must be less than or equal to 1000")
-    private int quantity;
+    private Integer quantity;
     private String description;
 
     @JsonProperty("category_id")

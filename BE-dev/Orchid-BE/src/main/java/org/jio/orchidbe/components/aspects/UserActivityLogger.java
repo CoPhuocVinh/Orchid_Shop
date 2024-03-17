@@ -5,11 +5,14 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.BiddingResponse;
+import org.jio.orchidbe.services.firebase.IFirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.net.InetAddress;
 import java.util.logging.Logger;
 
+import static org.jio.orchidbe.constants.BaseConstants.COLLECTION_AUCTION;
+
 @Component
 @Aspect
 public class UserActivityLogger {
@@ -27,6 +32,7 @@ public class UserActivityLogger {
     private AuctionRepository auctionRepository;
     @Autowired
     private AuctionContainer auctionContainer;
+
 
     //named pointcut
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
@@ -93,6 +99,8 @@ public class UserActivityLogger {
                     Long id = body.getPayload().getAuctionID();
                     Auction auction = auctionRepository.findById(id).get();
                     auctionContainer.addAuction(auction);
+
+
                     // Bây giờ bạn có thể làm cái gì đó với body ở đây
                 }
             }

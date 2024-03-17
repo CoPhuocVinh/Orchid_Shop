@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
@@ -26,7 +28,7 @@ const ProfilePopup = ({ active, handlePopup }: ProfilePopupProps) => {
           <div>
             <ul>
               <li className="w-full">
-                <Link href="/settings">
+                <Link href="dashboard/settings">
                   <div className="flex items-center space-x-[18px] rounded-lg p-[14px] text-bgray-600 hover:bg-bgray-100 hover:text-bgray-900 hover:dark:bg-darkblack-500">
                     <div className="w-[20px]">
                       <span>
@@ -67,36 +69,13 @@ const ProfilePopup = ({ active, handlePopup }: ProfilePopupProps) => {
                   </div>
                 </Link>
               </li>
+
               <li className="w-full">
-                <Link href="/messages">
-                  <div className="flex items-center space-x-[18px] rounded-lg p-[14px] text-bgray-600 hover:bg-bgray-100 hover:text-bgray-900 dark:text-bgray-300 dark:hover:bg-darkblack-500">
-                    <div className="w-[20px]">
-                      <span>
-                        <svg
-                          className="stroke-bgray-900 dark:stroke-gray-300"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M2 12V7C2 4.79086 3.79086 3 6 3H18C20.2091 3 22 4.79086 22 7V17C22 19.2091 20.2091 21 18 21H8M6 8L9.7812 10.5208C11.1248 11.4165 12.8752 11.4165 14.2188 10.5208L18 8M2 15H8M2 18H8"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <span className="text-sm font-semibold">Inbox</span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-              <li className="w-full">
-                <Link href="#">
-                  <div className="flex items-center space-x-[18px] rounded-lg p-[14px] text-success-300">
+                <Button
+                  onClick={() => signOut()}
+                  className="w-full flex justify-start hover:bg-gray-600 bg-gray-700"
+                >
+                  <div className="flex items-start space-x-[18px] rounded-lg p-[14px] text-success-300">
                     <div className="w-[20px]">
                       <span>
                         <svg
@@ -119,7 +98,7 @@ const ProfilePopup = ({ active, handlePopup }: ProfilePopupProps) => {
                       <span className="text-sm font-semibold">Log Out</span>
                     </div>
                   </div>
-                </Link>
+                </Button>
               </li>
             </ul>
           </div>
@@ -127,16 +106,9 @@ const ProfilePopup = ({ active, handlePopup }: ProfilePopupProps) => {
           <div>
             <ul>
               <li className="w-full">
-                <Link href="/settings">
+                <Link href="dashboard/settings">
                   <div className="rounded-lg p-[14px] text-bgray-600 hover:bg-bgray-100 hover:text-bgray-900 dark:text-bgray-50 dark:hover:bg-darkblack-500">
                     <span className="text-sm font-semibold">Settings</span>
-                  </div>
-                </Link>
-              </li>
-              <li className="w-full">
-                <Link href="/users">
-                  <div className="rounded-lg p-[14px] text-bgray-600 hover:bg-bgray-100 hover:text-bgray-900 dark:text-bgray-50 dark:hover:bg-darkblack-500">
-                    <span className="text-sm font-semibold">Users</span>
                   </div>
                 </Link>
               </li>

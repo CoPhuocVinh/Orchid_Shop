@@ -19,7 +19,7 @@ export default function DashboardLayout({
   const [sidebar, setSidebar] = useState(true);
 
   return (
-    <div className={`layout-wrapper ${sidebar && "active"}  w-full`}>
+    <div className={`layout-wrapper ${sidebar && "active"}  w-full h-full`}>
       <div className="relative flex w-full">
         <Sidebar handleActive={() => setSidebar(!sidebar)} />
         {overlay ? overlay : <Overlay />}

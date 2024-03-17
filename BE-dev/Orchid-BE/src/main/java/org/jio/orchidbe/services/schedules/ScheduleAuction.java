@@ -3,21 +3,26 @@ package org.jio.orchidbe.services.schedules;
 import lombok.extern.log4j.Log4j2;
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
+import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.services.auctions.IAuctionService;
+import org.jio.orchidbe.services.firebase.IFirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static org.jio.orchidbe.constants.BaseConstants.COLLECTION_AUCTION;
 import static org.jio.orchidbe.utils.WebUtils.convertCurrentToLocalDateTimeWithZone;
 
 
@@ -33,9 +38,12 @@ public class ScheduleAuction {
     @Autowired
     private ProductRepository productRepository;
     //private Logger logger = Logger.getLogger(getClass().getName());
-
+    @Autowired
+    private AuctionMapper auctionMapper;
+    @Autowired
+    private IFirebaseService<AuctionDetailResponse> firebaseAuctionService;
     @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
-    public void checkAuctionEndings() throws DataNotFoundException {
+    public void checkAuctionEndings() throws DataNotFoundException, ExecutionException, InterruptedException {
         LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
 
 
@@ -53,8 +61,9 @@ public class ScheduleAuction {
                 .collect(Collectors.toList());
     }
 
+    // FROM COMING TO LIVE
     @Scheduled(fixedRate = 10000) // Run every 1 minute
-    public void checkAuctionStatus() throws DataNotFoundException {
+    public void checkAuctionStatus() throws DataNotFoundException, ExecutionException, InterruptedException {
         LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
         List<Auction> remindingAuctions = getAuctionsRemindingAfter(currentTime, Status.COMING);
@@ -72,6 +81,9 @@ public class ScheduleAuction {
 
             auction = auctionRepository.findById(auction.getId()).get();
             auctionContainer.addAuction(auction);
+
+            /*AuctionDetailResponse response = auctionMapper.toResponseDetail(auction);
+            firebaseAuctionService.savev2(response,response.getId(),COLLECTION_AUCTION);*/
         }
 
     }

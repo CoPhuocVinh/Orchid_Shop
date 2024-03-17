@@ -1,14 +1,18 @@
-'use client';
+"use client";
 
-import { useTimeout } from '@/hooks/use-timeout';
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { useTimeout } from "@/hooks/use-timeout";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
-import BlockLoader from '@/components/loader/block_loader';
-import { Swiper, SwiperSlide, Navigation } from '@/components/platform/slider-custom/slider';
-import Section from '@/components/platform/section';
-import {instructions} from '@/data/user-working-data/instructions'
-import ActionIcon from '../action-icon';
-import InstructionCard from './instruction-auction-card';
+import BlockLoader from "@/components/loader/block_loader";
+import {
+  Swiper,
+  SwiperSlide,
+  Navigation,
+} from "@/components/platform/slider-custom/slider";
+import Section from "@/components/platform/section";
+import { instructions } from "@/data/user-working-data/instructions";
+import ActionIcon from "../action-icon";
+import InstructionCard from "./instruction-auction-card";
 
 function InstructionGrid() {
   return (
@@ -30,8 +34,8 @@ function InstructionGrid() {
           slidesPerView={4}
           spaceBetween={12}
           navigation={{
-            nextEl: '.instruction-button-next',
-            prevEl: '.instruction-button-prev',
+            nextEl: ".instruction-button-next",
+            prevEl: ".instruction-button-prev",
           }}
           breakpoints={{
             0: {
@@ -94,8 +98,8 @@ export default function InstructionBlock() {
   return (
     <Section
       className="group/section instruction-section lg:container-fluid mt-12 pl-4 sm:pl-6 lg:mt-16"
-      title="How to rent a boat"
-      description="Unsatiable it considered invitation he traveling insensible."
+      title="Cách tham gia đấu giá hoa lan"
+      description="Không thể mãn nguyện, nó được xem xét là một lời mời khi đi du lịch vô cảm."
       headerClassName="mb-4 md:mb-5 xl:mb-6"
     >
       {!state && <BlockLoader />}
