@@ -15,6 +15,7 @@ interface BodyOrderProps {
 }
 function BodyOrder({ orderPromisse }: BodyOrderProps) {
   const { data: orderData } = React.use(orderPromisse);
+  const router = useRouter();
 
   const [selectedMethod, setSelectedMethod] = useState("");
   const { data: session } = useSession();
@@ -24,6 +25,8 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showModal, setShowModal] = useState(false); // Thêm state để quản lý hiển thị modal
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false); // Thêm state để quản lý trạng thái thanh toán
+  const [isWaiting, setIsWaiting] = useState(false); // Thêm state để quản lý trạng thái "waiting"
+  const [orderConfirmed, setOrderConfirmed] = useState(false); // Thêm state để quản lý hiển thị modal khi đơn hàng đã được xác nhận
 
   const handleAddressSelect = (address: any) => {
     setSelectedAddress(address.id);
@@ -46,19 +49,8 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
     console.log(method);
     setSelectedMethod(method);
   };
-  const handleGetUserWalet = async () => {
-    try {
-      const orderId = orderData?.id;
-      const payload = {
-        paymentMethod: selectedMethod,
-        note: "string",
-        userIn4Id: selectedAddress,
-      };
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
+  const handleButtonModal = () => {};
   const handleUpdateOrder = async () => {
     try {
       const orderId = orderData?.id;
@@ -67,6 +59,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
         note: "string",
         userIn4Id: selectedAddress,
       };
+      setIsWaiting(selectedMethod === "BANK"); // Đặt trạng thái "waiting" nếu chọn BANK
 
       const response = await axios.put(
         `https://orchid.fams.io.vn/api/v1/orders/update-order/${orderId}`,
@@ -77,10 +70,24 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
       console.log(response.data.status);
       console.log(response.data.payload);
 
-      if (response.data.status === "SUCCESS") {
-        setIsPaymentSuccessful(true); // Đặt trạng thái thành công
-      } else if (response.data.status === "FAILURE") {
-        setIsPaymentSuccessful(false); // Đặt trạng thái thất bại
+      if (selectedMethod === "CARD" && response.data.status === "SUCCESS") {
+        setIsPaymentSuccessful(true);
+      } else if (
+        selectedMethod === "BANK" &&
+        response.data.status === "SUCCESS"
+      ) {
+        router.push(response.data.payload);
+        setIsPaymentSuccessful(true);
+      } else {
+        setIsPaymentSuccessful(false);
+      }
+
+      // Kiểm tra nếu đơn hàng đã được xác nhận
+      if (
+        (selectedMethod === "CARD" && response.data.status === "CONFIRMED") ||
+        (selectedMethod === "BANK" && response.data.status === "CONFIRMED")
+      ) {
+        setOrderConfirmed(true);
       }
 
       setShowModal(true); // Mở modal
@@ -91,6 +98,9 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
     }
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   return (
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -146,7 +156,6 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                           <div className="flex items-center ">
                             <AlertDescription className="order-1 mr-auto">
                               <input
-                                className=""
                                 type="radio"
                                 id={`address-${address.id}`} // Sử dụng id duy nhất dựa trên id của địa chỉ
                                 name="address"
@@ -239,61 +248,64 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
               >
                 Proceed to payment
               </Button>
+              {/* Modal */}
+              {/* Modal */}
               {showModal && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
                   <div className="bg-white rounded p-4 max-w-md w-full">
-                    <div className="flex items-center justify-center mb-4">
-                      {isPaymentSuccessful ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-12 w-12 text-green-500 mr-2"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-12 w-12 text-red-500 mr-2"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a1 1 0 100-2 1 1 0 000 2zM10 14a1 1 0 100-2 1 1 0 000 2zm0-8a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
-                      <p className="font-bold text-lg">
-                        {isPaymentSuccessful
-                          ? "Thanh toán thành công"
-                          : "Thanh toán thất bại"}
-                      </p>
-                    </div>
-                    <div className="mb-4">
-                      {isPaymentSuccessful ? (
-                        <p>Thanh toán của bạn đã được xử lý thành công.</p>
-                      ) : (
-                        <p>
-                          Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng
-                          thử lại sau.
+                    {/* Modal content */}
+                    {isWaiting ? (
+                      <div className="flex items-center justify-center mb-4">
+                        <p className="font-bold text-lg">Please wait...</p>
+                      </div>
+                    ) : orderConfirmed ? (
+                      <div className="flex items-center justify-center mb-4">
+                        <p className="font-bold text-lg">Order has been paid</p>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center mb-4">
+                        {isPaymentSuccessful ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-12 w-12 text-green-500 mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-12 w-12 text-red-500 mr-2"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a1 1 0 100-2 1 1 0 000 2zM10 14a1 1 0 100-2 1 1 0 000 2zm0-8a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        )}
+                        <p className="font-bold text-lg">
+                          {isPaymentSuccessful
+                            ? "Payment successful"
+                            : "Payment failed"}
                         </p>
-                      )}
-                    </div>
-                    <div className="flex justify-end">
+                      </div>
+                    )}
+                    <div className="flex justify-center">
                       <button
                         className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                        onClick={() => setShowModal(false)}
+                        onClick={handleCloseModal}
                       >
-                        Đóng
+                        OK
                       </button>
                     </div>
                   </div>

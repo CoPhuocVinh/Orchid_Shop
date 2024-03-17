@@ -145,7 +145,7 @@ function Fillter_Auction_Tab({
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger>Status</AccordionTrigger>
-              <AccordionContent className="overflow-visible">
+              <AccordionContent className="overflow-visible ">
                 <div className="space-y-4">
                   <RadioGroup
                     defaultValue="ALL"
