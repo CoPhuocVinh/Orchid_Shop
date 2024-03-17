@@ -39,3 +39,14 @@ export async function getOrderId(
 
   // return await fetchDataByID(url);
 }
+
+export async function confirmOrderDelivery({ orderId,  confirmed } : any) {
+
+  try {
+    const res = await api.put(`/orders/${orderId}`, {  confirmed: confirmed });
+
+    revalidatePath("/dashboard/orders");
+  } catch (error) {
+    console.log("FALI to updateStatusAcceptAuction");
+  }
+}

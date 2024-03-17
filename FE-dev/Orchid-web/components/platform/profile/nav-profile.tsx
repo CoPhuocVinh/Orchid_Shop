@@ -17,6 +17,7 @@ import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { Shell } from "@/components/shell";
 import { OrderTable } from "./order-table";
 import { auth } from "@/lib/auth";
+
 export interface IndexPageProps {
   searchParams: SearchParams;
 }
@@ -32,7 +33,7 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
               <div className="flex flex-row  justify-center  gap-10">
                 <div className="p-3 mt-6 w-full">
                   <Tabs defaultValue="dashboard" className="flex">
-                    <TabsList className="flex relative ">
+                    <TabsList className="flex relative bg-white ">
                       <ul className="flex flex-col gap-5 py-4 w-96 font-mono text-xl font-bold pt-80">
                         <li>
                           <TabsTrigger
@@ -49,7 +50,7 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                             className="w-full"
                           >
                             <AccordionItem value="item-1">
-                              <AccordionTrigger className="flex items-center justify-center font-normal text-xl ">
+                              <AccordionTrigger className="flex items-center justify-center font-normal   mr-2 py-2 text-xl text-gray-600">
                                 My Account
                               </AccordionTrigger>
                               <AccordionContent>
@@ -78,11 +79,6 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                           >
                             Order Biding
                           </TabsTrigger>
-                        </li>
-                        <li>
-                          <button className="hover:bg-green-500 text-xl font-normal text-black bg-white inline-block px-4 py-2 w-full rounded-md">
-                            Logout
-                          </button>
                         </li>
                       </ul>
                     </TabsList>

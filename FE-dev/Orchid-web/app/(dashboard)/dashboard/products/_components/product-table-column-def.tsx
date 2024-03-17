@@ -183,7 +183,7 @@ export function fetchProductsTableColumnDefs(
                       value={status.toString()}
                       className="capitalize"
                     >
-                      {status}
+                      {status ? "active sản phẩm" : "unactive sản phẩm"}
                     </DropdownMenuRadioItem>
                   ))}
                 </DropdownMenuRadioGroup>

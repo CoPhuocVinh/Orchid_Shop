@@ -14,6 +14,7 @@ export type IOrder = {
     auctionID: number,
     userID: number,
     created_at: Date,
-    updated_at: Date
+    updated_at: Date,
+    confirmed: boolean
   };
   

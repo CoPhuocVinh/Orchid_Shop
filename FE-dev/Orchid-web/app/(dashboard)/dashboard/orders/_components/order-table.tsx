@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { getTransactions } from "@/lib/actions/transaction";
 import { IOrder } from "@/types/dashboard";
 import { getOrders } from "@/lib/actions";
+import { useModal } from "@/hooks/use-modal";
 
 interface OrdersTableProps {
   orderPromise: ReturnType<typeof getOrders>;
@@ -23,11 +24,12 @@ interface OrdersTableProps {
 export function OrderTable({ orderPromise }: OrdersTableProps) {
   const { data, pageCount } = React.use(orderPromise);
   const [isPending, startTransition] = React.useTransition();
-  // console.log(data)
+
+  const { onOpen } = useModal();
   const router = useRouter();
   const columns = React.useMemo<ColumnDef<IOrder, unknown>[]>(
-    () => fetchOrderTableColumnDefs(isPending, startTransition, router),
-    [isPending, router]
+    () => fetchOrderTableColumnDefs(isPending, startTransition, router, onOpen),
+    [isPending, router, onOpen]
   );
   const { dataTable } = useDataTable({
     data,

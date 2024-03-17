@@ -1,11 +1,17 @@
-import { IAuction } from "@/types/dashboard";
+import { IAuction, IOrder } from "@/types/dashboard";
 import { create } from "zustand";
 
-export type ModalType = "registerAtendAction" | "walletModal" | "orderSheetModal";
+export type ModalType =
+  | "registerAtendAction"
+  | "walletModal"
+  | "orderSheetModal"
+  | "confirmOrder"
+  | "viewInfoOrder"
+  | "confirmAuction";
 
-interface ModalData {
-  auction?: IAuction
-
+export interface ModalData {
+  auction?: IAuction;
+  order?: IOrder
 }
 
 interface ModalStore {

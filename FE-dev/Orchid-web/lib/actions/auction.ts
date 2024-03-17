@@ -77,11 +77,11 @@ export async function updateStatusAcceptAuction({ id,  approved } : any) {
     console.log("FALI to updateStatusAcceptAuction");
   }
 }
-export async function updateStatusRejectAuction({ id,  rejected } : any) {
+export async function updateStatusRejectAuction({ id,  rejected, reasonReject } : any) {
 
   try {
 
-    const reasonReject = "Buổi đấu giá ko đạt yêu cầu"
+    // const reasonReject = "Buổi đấu giá ko đạt yêu cầu"
 
     const res = await api.put(`/auctions/update-auction/${id}`, {  rejected: rejected ,reasonReject: reasonReject});
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { addScrollingClass } from "@/utils/add-scrolling-class";
 import Menu from "./menu";
 import Link from "next/link";
@@ -9,12 +9,33 @@ import { Button } from "@/components/ui/button";
 import UserAvatar from "../user-avatar";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import useAxiosAuth from "@/lib/api-interceptor/use-axios-auth";
 
 export default function TransparentHeader() {
   const headerRef = useRef(null);
   addScrollingClass(headerRef);
-  const { data: session } = useSession();
+  const { data: session,status } = useSession();
+  const axiosAuth = useAxiosAuth();
+  const [testData, setTestData] = useState({});
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
 
+      const fetch = async () => {
+        try {
+          const res = await axiosAuth.get(
+            "https://orchid.fams.io.vn/api/v1/hello"
+          );
+          setLoading(true);
+          setTestData(res.data);
+        } catch (error) {
+          console.log("FALI");
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetch();
+    }, [axiosAuth, status]);
   const isAuthorized = session?.user;
   return (
     <header

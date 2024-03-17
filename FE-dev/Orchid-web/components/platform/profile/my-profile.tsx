@@ -53,7 +53,7 @@ const MyProfileForm = () => {
     { label: "Other", value: "OTHER" },
   ];
 
-  const RegisterSchema = z.object({
+  const ProfileSchema = z.object({
     image_url: z
       .string()
       .min(1, { message: "Please upload at least one image" }),
@@ -63,8 +63,8 @@ const MyProfileForm = () => {
     email: z.string().email(),
   });
 
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
+  const form = useForm<z.infer<typeof ProfileSchema>>({
+    resolver: zodResolver(ProfileSchema),
     defaultValues: {
       email: formatUser.email,
       name: formatUser.name,
@@ -74,19 +74,23 @@ const MyProfileForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = (values: z.infer<typeof ProfileSchema>) => {
     const dobFormat = values.dob
       ? new Date(values.dob).toISOString().replace("Z", "")
       : undefined;
 
     const formData = { ...values, dob: dobFormat };
 
-    //bug need to fix
     startTransition(() => {
       updateUserInfo(formatUser.id as string, formData)
         .then((data) => {
           if (data.success) {
-            update();
+            update({
+              ...session,
+              user: {
+                ...values,
+              },
+            });
             toast.success("cập nhật thông tin thành công");
           } else {
             toast.error("cập nhật thông tin thất bại");

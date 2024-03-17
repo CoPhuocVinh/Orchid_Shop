@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { useModal } from "@/hooks/use-modal";
 import {
   getAuctionsWithStatus,
   updateStatusAcceptAuction,
@@ -15,6 +16,8 @@ interface IntegrationProps {
 
 const Integration = ({ auctionPromise }: IntegrationProps) => {
   const { data } = React.use(auctionPromise);
+
+  const {onOpen} = useModal();
 
   return (
     <div className="grid lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-6">
@@ -77,21 +80,22 @@ const Integration = ({ auctionPromise }: IntegrationProps) => {
               Duyệt
             </Button>
             <Button
-              onClick={() => {
-                startTransition(() => {
-                  toast.promise(
-                    updateStatusRejectAuction({
-                      id: auction.id,
-                      approved: true,
-                    }),
-                    {
-                      loading: "Update...",
-                      success: () => "Auction update successfully.",
-                      error: () => "Dellete error",
-                    }
-                  );
-                });
-              }}
+              // onClick={() => {
+              //   startTransition(() => {
+              //     toast.promise(
+              //       updateStatusRejectAuction({
+              //         id: auction.id,
+              //         approved: true,
+              //       }),
+              //       {
+              //         loading: "Update...",
+              //         success: () => "Auction update successfully.",
+              //         error: () => "Dellete error",
+              //       }
+              //     );
+              //   });
+              // }}
+              onClick={() => onOpen("confirmAuction", {auction: auction})}
               className="text-base w-full text-red-600 font-medium h-12 rounded-md border border-red-600 hover:bg-red-600 hover:bg-opacity-75 hover:text-white transition-colors duration-300 ease-in-out"
             >
               Từ chối

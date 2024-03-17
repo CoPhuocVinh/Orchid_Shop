@@ -40,7 +40,7 @@ interface PersonalInfoFromProp {
   user: any;
 }
 function PersonalInfoFrom({ user }: PersonalInfoFromProp) {
-  const {update} = useSession()
+  const { update, data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const genderOptions = [
     { label: "Male", value: "MALE" },
@@ -70,25 +70,27 @@ function PersonalInfoFrom({ user }: PersonalInfoFromProp) {
   });
 
   const onSubmit = (values: z.infer<typeof updateInfoSchema>) => {
-
     const dobFormat = values.dob
       ? new Date(values.dob).toISOString().replace("Z", "")
       : undefined;
-  
+
     const formData = { ...values, dob: dobFormat };
-  
-    //bug need to fix
     startTransition(() => {
       updateUserInfo(user.id as string, formData)
         .then((data) => {
           if (data.success) {
-            update();
-            toast.success("cập nhật thông tin thành công")
+            update({
+              ...session,
+              user: {
+                ...values,
+              },
+            });
+            toast.success("cập nhật thông tin thành công");
           } else {
-            toast.error("cập nhật thông tin thất bại")
+            toast.error("cập nhật thông tin thất bại");
           }
         })
-        .catch(() =>   toast.error("Có lỗi xảy ra"));
+        .catch(() => toast.error("Có lỗi xảy ra"));
     });
   };
   const isLoading = form.formState.isSubmitting;

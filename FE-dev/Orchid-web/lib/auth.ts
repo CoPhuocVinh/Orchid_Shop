@@ -60,7 +60,12 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user , trigger, session }) {
+
+      if(trigger === "update"){
+        return {...token, ...session.user}
+      }
+
       return { ...token, ...user };
     },
     async session({ session, token, user }) {
@@ -72,7 +77,7 @@ export const authOptions = {
         session.user.email = token.email as string;
         session.user.img = token.img as string;
         session.user.dob = token.dob as string;
-        session.user.gender = token.genger as string;
+        session.user.gender = token.gender as string;
         session.user.access_token = token.access_token as string;
         session.user.refresh_token = token.refresh_token as string;
         session.user.tokenType = token.tokenType as string;
@@ -87,4 +92,4 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET as string,
 } satisfies NextAuthConfig;
 
-export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);
+export const { handlers, auth, signIn, signOut, unstable_update: update } = NextAuth(authOptions);
