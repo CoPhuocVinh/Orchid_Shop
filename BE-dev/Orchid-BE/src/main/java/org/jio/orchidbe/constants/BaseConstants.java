@@ -45,4 +45,9 @@ public class BaseConstants {
     public static String getHostReturn() {
         return HOST_RETURN;
     }
+
+    public static final String COLLECTION_AUCTION = "auctions";
+
+    public static final String COLLECTION_TEST = "test";
+
 }

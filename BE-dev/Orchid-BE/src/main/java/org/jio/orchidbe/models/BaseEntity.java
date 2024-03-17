@@ -35,13 +35,13 @@ public class BaseEntity{
     @PrePersist
 
     protected void onCreate() {
-        createdAt = convertCurrentToLocalDateTimeWithZone();
-        updatedAt = convertCurrentToLocalDateTimeWithZone();
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = convertCurrentToLocalDateTimeWithZone();
+        updatedAt = LocalDateTime.now();
     }
 
     @Column(name = "deleted", nullable = false)

@@ -15,12 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
 import java.text.ParseException;
+import java.util.concurrent.ExecutionException;
 
 public interface IAuctionService {
-    AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException;
+    AuctionResponse createAuction(CreateAuctionResquest createAuctionResquest) throws ParseException, DataNotFoundException, BadRequestException, ExecutionException, InterruptedException;
     Page<GetAuctionResponse> getAllAuctions(GetAllAuctionResquest getAllAuctionResquest);
 
-    void endAuction(Auction auction) throws DataNotFoundException;
+    void endAuction(Auction auction) throws DataNotFoundException, ExecutionException, InterruptedException;
 
     AuctionResponse DeteleById(Long id) throws DataNotFoundException;
 
@@ -29,7 +30,7 @@ public interface IAuctionService {
                                  BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException;
 
 
-    AuctionDetailResponse getById(Long id) throws DataNotFoundException;
+    AuctionDetailResponse getById(Long id) throws DataNotFoundException, ExecutionException, InterruptedException;
 
     Boolean registerAuction(Long id, RegisterAuctionDTO dto) throws DataNotFoundException, BadRequestException;
 }

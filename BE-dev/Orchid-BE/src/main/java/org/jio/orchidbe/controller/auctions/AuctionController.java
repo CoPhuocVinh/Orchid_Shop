@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.jio.orchidbe.constants.BaseConstants;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
@@ -16,6 +17,7 @@ import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.GetAuctionResponse;
 import org.jio.orchidbe.services.auctions.IAuctionService;
+import org.jio.orchidbe.services.firebase.IFirebaseService;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("${api.prefix}/auctions")
@@ -33,15 +37,15 @@ public class AuctionController {
     private final AuctionContainer auctionContainer;
     private final IAuctionService auctionService;
     private final ValidatorUtil validatorUtil;
-    private final AuctionRepository auctionRepository;
-    private final AuctionMapper auctionMapper;
+    private final IFirebaseService firebaseService;
+
     @PostMapping("create")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
 
     public ResponseEntity<?> createAuction(
             @Valid @RequestBody CreateAuctionResquest createAuctionResquest,
             BindingResult result
-    ) throws DataNotFoundException, ParseException, BadRequestException {
+    ) throws DataNotFoundException, ParseException, BadRequestException, ExecutionException, InterruptedException {
         ApiResponse apiResponse = new ApiResponse();
         if (result.hasErrors()) {
             apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
@@ -53,10 +57,6 @@ public class AuctionController {
         apiResponse.ok(newAuction);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-
-
-
-
 
     @PutMapping("update-auction/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -106,13 +106,44 @@ public class AuctionController {
 
     @GetMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<?> findAuctionById(@PathVariable Long id) throws DataNotFoundException {
+    public ResponseEntity<?> findAuctionById(@PathVariable Long id) throws DataNotFoundException, ExecutionException, InterruptedException {
         ApiResponse apiResponse = new ApiResponse();
         AuctionDetailResponse response = auctionService.getById(id);
         apiResponse.ok(response);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/realtime/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> findAuctionByIdRealtime(@PathVariable Long id) throws DataNotFoundException, ExecutionException, InterruptedException {
+        ApiResponse apiResponse = new ApiResponse();
+        String key = String.valueOf(id);
+        AuctionDetailResponse response = firebaseService.getAuctionByKey(key, BaseConstants.COLLECTION_AUCTION);
+        apiResponse.ok(response);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/realtime/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> DeleteByIdRealtime(@PathVariable Long id) throws DataNotFoundException, ExecutionException, InterruptedException {
+        ApiResponse apiResponse = new ApiResponse();
+        String key = String.valueOf(id);
+        Boolean response = firebaseService.delete(key);
+        apiResponse.ok(response);
+        apiResponse.setMessage("Delete successfully with auction id: " + id);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/realtime/getLiveAuctions")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<?> GetLiveRealtimeAuctions() throws DataNotFoundException, ExecutionException, InterruptedException {
+        ApiResponse apiResponse = new ApiResponse();
+
+        List<AuctionDetailResponse> response = firebaseService.getAuctions(BaseConstants.COLLECTION_AUCTION);
+        apiResponse.ok(response);
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
     @DeleteMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<?> DeleteById(@PathVariable Long id) throws DataNotFoundException {
