@@ -1,279 +1,249 @@
-'use client'
-import React, { useState } from "react";
-// import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid";
+"use client";
+import React, { startTransition, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-function Grid_My_Profile() {
-  // State for form fields
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  const [country, setCountry] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useSession } from "next-auth/react";
+import { parse } from "date-fns";
+import { ImageUploadOne } from "@/components/image-cloudinary-upload/image-upload";
+import { updateUserInfo } from "@/lib/actions";
+import { toast } from "sonner";
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Add logic to submit form data
+const MyProfileForm = () => {
+  const { data: session, update } = useSession();
+
+  const formatUser = {
+    id: session?.user.id,
+    name: session?.user.name,
+    email: session?.user.email,
+    image_url: session?.user.img,
+    gender: session?.user.gender,
+    dob: session?.user.dob ? format(session?.user.dob, "do-M-yyyy") : "",
   };
 
-  const [showPassword, setShowPassword] = useState(false);
+  const genderOptions = [
+    { label: "Nam", value: "MALE" },
+    { label: "Nữ", value: "FEMALE" },
+    { label: "Other", value: "OTHER" },
+  ];
 
-  const handleTogglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const RegisterSchema = z.object({
+    image_url: z
+      .string()
+      .min(1, { message: "Please upload at least one image" }),
+    name: z.string().min(2),
+    dob: z.date(),
+    gender: z.string(),
+    email: z.string().email(),
+  });
 
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      email: formatUser.email,
+      name: formatUser.name,
+      dob: parse(formatUser.dob, "do-MM-yyyy", new Date()),
+      gender: formatUser.gender || "MALE",
+      image_url: formatUser.image_url || "",
+    },
+  });
 
-  const handleToggleConFirmPasswordVisibility = () => {
-    setShowPasswordConfirm(!showPasswordConfirm);
-  };
-  document
-    .getElementById("avatar-upload")
-    ?.addEventListener("change", (event) => {
-      const input = event.target as HTMLInputElement;
-      const file = input.files?.[0];
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+    const dobFormat = values.dob
+      ? new Date(values.dob).toISOString().replace("Z", "")
+      : undefined;
 
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const newAvatarSrc = e.target?.result as string;
-          // Thực hiện cập nhật avatar với hình ảnh mới (newAvatarSrc)
-        };
-        reader.readAsDataURL(file);
-      }
+    const formData = { ...values, dob: dobFormat };
+
+    //bug need to fix
+    startTransition(() => {
+      updateUserInfo(formatUser.id as string, formData)
+        .then((data) => {
+          if (data.success) {
+            update();
+            toast.success("cập nhật thông tin thành công");
+          } else {
+            toast.error("cập nhật thông tin thất bại");
+          }
+        })
+        .catch(() => toast.error("Có lỗi xảy ra"));
     });
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="mx-auto mt-8 w-3/4">
-      <div className="flex items-center">
-        <label htmlFor="avatar-upload" className="mr-4 cursor-pointer">
-          <Avatar className="w-20 h-20">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        </label>
-        <div>
-          <h1 className="text-2xl font-semibold mb-4">My Profile</h1>
-        </div>
-        <input
-          type="file"
-          id="avatar-upload"
-          className="hidden"
-          accept="image/*"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mx-auto mt-8 max-w-3xl p-8 bg-white rounded-lg shadow-md"
+      >
+        <FormField
+          control={form.control}
+          name="image_url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Profile Image</FormLabel>
+              <FormControl>
+                <ImageUploadOne
+                  value={field.value}
+                  // disabled={isLoading}
+                  onChange={(imageUrl) => field.onChange(imageUrl)}
+                  onRemove={() => field.onChange(null)}
+                />
+              </FormControl>
+              <FormMessage className="dark:text-yellow-300" />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="flex">
-        <div className="w-1/2 pr-4">
-          <div className="mb-4">
-            <label className="block font-semibold mb-1" htmlFor="firstName">
-              First Name *
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              className="w-full px-4 py-2 border rounded-md"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Your first name"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block font-semibold mb-1" htmlFor="lastName">
-              Last Name *
-            </label>
-            <input
-              type="text"
-              id="lastName"
-              className="w-full px-4 py-2 border rounded-md"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Your last name"
-              required
-            />
-          </div>
-        </div>
-        <div className="w-1/2 pl-4">
-          <div className="mb-4">
-            <label className="block font-semibold mb-1" htmlFor="contactNumber">
-              Contact Number
-            </label>
-            <input
-              type="text"
-              id="contactNumber"
-              className="w-full px-4 py-2 border rounded-md"
-              value={contactNumber}
-              onChange={(e) => setContactNumber(e.target.value)}
-              placeholder="8801"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block font-semibold mb-1" htmlFor="email">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="w-full px-4 py-2 border rounded-md"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your Email"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="block font-semibold mb-1" htmlFor="address">
-          Address
-        </label>
-        <input
-          type="text"
-          id="address"
-          className="w-full px-4 py-2 border rounded-md"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Address"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <label className="block font-semibold mb-1" htmlFor="city">
-            City
-          </label>
-          <input
-            type="text"
-            id="city"
-            className="w-full px-4 py-2 border rounded-md"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="City"
-          />
-        </div>
-        <div>
-          <label className="block font-semibold mb-1" htmlFor="state">
-            State
-          </label>
-          <input
-            type="text"
-            id="state"
-            className="w-full px-4 py-2 border rounded-md"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-            placeholder="State"
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <label className="block font-semibold mb-1" htmlFor="zipCode">
-            Zip Code
-          </label>
-          <input
-            type="text"
-            id="zipCode"
-            className="w-full px-4 py-2 border rounded-md"
-            value={zipCode}
-            onChange={(e) => setZipCode(e.target.value)}
-            placeholder="00000"
-          />
-        </div>
-        <div>
-          <label className="block font-semibold mb-1" htmlFor="country">
-            Country
-          </label>
-          <input
-            type="text"
-            id="country"
-            className="w-full px-4 py-2 border rounded-md"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            placeholder="Country"
-          />
-        </div>
-      </div>
-      <div className="mb-4 relative">
-        <label className="block font-semibold mb-1" htmlFor="password">
-          Password *
-        </label>
-        <div>
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            className="w-full px-4 py-2 pr-10 border rounded-md"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Create A Password"
-            required
-          />
-          <button
-            type="button"
-            className="absolute inset-y-0 right-0 px-3 py-2 mt-7"
-            onClick={handleTogglePasswordVisibility}
-          >
-            {showPassword ? (
-              <EyeOffIcon className="h-6 w-6 text-gray-500" />
-            ) : (
-              <EyeIcon className="h-6 w-6 text-gray-500" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tên của bạn</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter your name"
+                    {...field}
+                    className="w-full px-4 py-2 border rounded-md"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
+          />
+
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    {...field}
+                    className="w-full px-4 py-2 border rounded-md"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <FormField
+            control={form.control}
+            name="dob"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Date of Birth</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <button
+                        type="button"
+                        className={`w-full px-4 py-2 border rounded-md text-left font-normal ${
+                          !field.value ? "text-gray-400" : ""
+                        }`}
+                      >
+                        {field.value
+                          ? format(field.value, "PPP")
+                          : "Pick a date"}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  Your date of birth is used to calculate your age.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="gender"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gender</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full px-4 py-2 border rounded-md">
+                      <SelectValue placeholder="Select your gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {genderOptions.map((gender) => (
+                        <SelectItem key={gender.value} value={gender.value}>
+                          <span>{gender.label}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex justify-end mt-8">
+          <button
+            type="submit"
+            className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Update Profile
           </button>
         </div>
-      </div>
-      <div className="mb-4 relative">
-        <label className="block font-semibold mb-1" htmlFor="confirmPassword">
-          Confirm Password *
-        </label>
-        <div>
-          <input
-            type={showPasswordConfirm ? "text" : "password"}
-            id="confirmPassword"
-            className="w-full px-4 py-2 pr-10 border rounded-md"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm Password A Password"
-            required
-          />
-          <button
-            type="button"
-            className="absolute inset-y-0 right-0 px-3 py-2 mt-7"
-            onClick={handleToggleConFirmPasswordVisibility}
-          >
-            {showPasswordConfirm ? (
-              <EyeOffIcon className="h-6 w-6 text-gray-500" />
-            ) : (
-              <EyeIcon className="h-6 w-6 text-gray-500" />
-            )}
-          </button>
-        </div>
-      </div>
-      <div className="flex justify-between items-center">
-        <button
-          type="submit"
-          className="cursor-pointer transition-all bg-blue-500 text-white px-6 py-2 rounded-lg
-border-blue-600
-border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
-active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
-        >
-          Update Profile
-        </button>
-        <button
-          type="button"
-          className="cursor-pointer transition-all bg-red-500 text-white px-6 py-2 rounded-lg
-border-red-600
-border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
-active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
-          onClick={() => console.log("Cancelled")}
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
-}
+};
 
-export default Grid_My_Profile;
+export default MyProfileForm;

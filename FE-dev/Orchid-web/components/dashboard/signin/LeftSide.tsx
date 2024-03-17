@@ -1,6 +1,5 @@
 "use client";
-import logoColor from "/public/static/images/logo/logo-color.svg";
-import logoWhite from "/public/static/images/logo/logo-white.svg";
+
 import Link from "next/link";
 
 import Image from "next/image";
@@ -19,13 +18,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { startTransition } from "react";
+import { startTransition, useState } from "react";
 
 function LeftSide() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const [showPassword, setShowPassword] = useState(false); // State để theo dõi việc ẩn/hiện mật khẩu
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const LoginSchema = z.object({
     email: z.string().email(),
     password: z.string().min(2),
@@ -39,11 +42,11 @@ function LeftSide() {
     },
   });
 
-  const onSubmit =  (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     try {
       // Use startTransition to indicate a low-priority update
       startTransition(() => {
-        signIn('credentials', {
+        signIn("credentials", {
           redirect: false,
           email: values.email,
           password: values.password,
@@ -51,29 +54,32 @@ function LeftSide() {
         })
           .then((res) => {
             if (!res?.error) {
-              // router.push(callbackUrl);
-              window.location.href = callbackUrl
-              toast.success('Đăng nhập thành công');
+              router.push(callbackUrl);
+              // window.location.href = callbackUrl;
+              toast.success("Đăng nhập thành công");
               form.reset();
             } else {
-              toast.error('Tên đăng nhập hoặc mật khẩu sai');
+              toast.error("Tên đăng nhập hoặc mật khẩu sai");
             }
           })
           .catch((error) => {
             console.log(error);
-            toast.error('Có lỗi xảy ra rồi');
+            toast.error("Có lỗi xảy ra rồi");
           });
       });
     } catch (error) {
       console.log(error);
-      toast.error('Có lỗi xảy ra rồi');
+      toast.error("Có lỗi xảy ra rồi");
     }
   };
   const isLoading = form.formState.isSubmitting;
   return (
     <div className="lg:w-1/2 px-5 xl:pl-12 pt-10">
       <header>
-      <Link href="/" className="flex items-center font-bold dark:text-blue-200  ">
+        <Link
+          href="/"
+          className="flex items-center font-bold dark:text-blue-200  "
+        >
           <Image
             alt="logo"
             src="/images/logo.svg"
@@ -180,12 +186,59 @@ function LeftSide() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      className="text-bgray-800 focus-visible:ring-0  focus-visible:ring-offset-0 text-base border border-bgray-300 dark:border-darkblack-400 dark:bg-darkblack-500 dark:text-white h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-bgray-500 placeholder:text-base"
-                      placeholder="Nhập mật khẩu..."
-                      disabled={isLoading}
-                      {...field}
-                    />
+                    <div className="relative mb-6">
+                      <Input
+                        className="text-bgray-800 focus-visible:ring-0  focus-visible:ring-offset-0 text-base border border-bgray-300 dark:border-darkblack-400 dark:bg-darkblack-500 dark:text-white h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-bgray-500 placeholder:text-base"
+                        placeholder="Nhập mật khẩu..."
+                        disabled={isLoading}
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                      />
+                      <button
+                        aria-label="none"
+                        className="absolute top-4 right-4 bottom-4"
+                        type="button"
+                        onClick={toggleShowPassword}
+                      >
+                        {showPassword ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className="w-6 h-6"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className="w-6 h-6"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M7 12a5 5 0 019.9-1"
+                            />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
