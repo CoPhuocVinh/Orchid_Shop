@@ -257,12 +257,12 @@ public class OrderService implements IOrderService {
                 .orElseThrow(() ->
                         new DataNotFoundException(
                                 "Cannot find wallet with user_id: " + order.getUser().getId()));
-        Float walletBalance = userWallet.getBalance();
-        Float orderTotal = order.getTotal();
+        Double walletBalance = userWallet.getBalance();
+        Double orderTotal = order.getTotal();
         transaction.setContent("Thanh toan don hang: " + order.getId());
         if (walletBalance >= orderTotal) {
             // Cập nhật số dư mới cho ví
-            Float newBalance = walletBalance - orderTotal;
+            Double newBalance = walletBalance - orderTotal;
             userWallet.setBalance(newBalance);
             walletRepository.save(userWallet);
 

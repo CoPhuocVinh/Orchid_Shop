@@ -35,7 +35,7 @@ public class Transaction extends BaseEntity {
     private String resource;
 
     @Column(name = "amount")
-    private Float amount;
+    private double amount;
 
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)

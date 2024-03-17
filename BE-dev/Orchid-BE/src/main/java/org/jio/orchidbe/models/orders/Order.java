@@ -28,7 +28,7 @@ public class Order extends BaseEntity {
     private Long id;
 
     @Column(name = "total")
-    private Float total;
+    private Double total;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

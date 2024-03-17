@@ -44,7 +44,7 @@ public class AuctionDetailResponse {
     private Float endPrice;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime remindAt;
-    private Float biddingPrice;
+    private Double biddingPrice;
     private Long productID;
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)

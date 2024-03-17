@@ -13,7 +13,7 @@ import org.jio.orchidbe.models.orders.PaymentMethod;
 @Builder
 public class CreateOrderRequest {
     private String auctionTitle;;
-    private Float total;
+    private Double total;
     private PaymentMethod paymentMethod;
 //    private String phone;
 //    private String address;

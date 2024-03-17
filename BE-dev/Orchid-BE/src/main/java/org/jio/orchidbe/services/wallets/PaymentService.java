@@ -36,7 +36,7 @@ public class PaymentService implements IPaymentService{
     private WalletRepository walletRepository;
 
     @Override
-    public String createPayment(Float total, String context, Long id) throws UnsupportedEncodingException {
+    public String createPayment(Double total, String context, Long id) throws UnsupportedEncodingException {
         String orderType = "other";
 
         long amount = (long) (total * 100);
@@ -119,7 +119,7 @@ public class PaymentService implements IPaymentService{
         try {
 
             Transaction existingTrans = null;
-            Float total = Float.valueOf(amount) / 100;
+            Double total = Double.valueOf(amount) / 100;
             //cắt chuỗi orderInfo thành 3 phần Order/wallet  - id của đối tượng đó - transaction tương ứng
             String[] parts = orderInfo.split("-");
 
@@ -179,7 +179,7 @@ public class PaymentService implements IPaymentService{
                         if (!existingOrder.getStatus().equals(OrderStatus.CONFIRMED)) {
                             // check total of bank == total of database (order)
 
-                            if (existingOrder.getTotal().equals(total)) {
+                            if (existingOrder.getTotal() == total) {
                                 existingOrder.setStatus(OrderStatus.CONFIRMED);
 
                                 existingTrans.setResource(bankTranNo);
@@ -206,7 +206,7 @@ public class PaymentService implements IPaymentService{
                                 () -> new DataNotFoundException("wallet id by payment not found! " + objectId)
                         );
 
-                        Float balance = existingWallet.getBalance() + total;
+                        Double balance = existingWallet.getBalance() + total;
                         existingWallet.setBalance(balance);
 
                         existingTrans.setResource(bankTranNo);

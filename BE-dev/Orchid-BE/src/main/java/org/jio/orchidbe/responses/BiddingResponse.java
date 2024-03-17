@@ -13,7 +13,7 @@ public class BiddingResponse {
     private Long id;
     private Integer ratings;
 
-    private Float biddingPrice;
+    private Double biddingPrice;
     private boolean top1;
     private Long auctionID;
     private Long userID;

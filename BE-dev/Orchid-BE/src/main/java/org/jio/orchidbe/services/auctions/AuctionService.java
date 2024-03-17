@@ -388,7 +388,7 @@ public class AuctionService implements IAuctionService {
                         .build();
                 transactionRepository.save(transaction);
 
-                Float newBalance = wallet.getBalance() - auction.getStartPrice();
+                Double newBalance = wallet.getBalance() - auction.getStartPrice();
                 wallet.setBalance(newBalance);
                 walletRepository.save(wallet);
 

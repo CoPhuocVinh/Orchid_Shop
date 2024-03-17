@@ -26,7 +26,7 @@ public class Wallet extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "balance")
-    private Float balance;
+    private Double balance;
 
     @Version
     @Column(name = "version", nullable = true)

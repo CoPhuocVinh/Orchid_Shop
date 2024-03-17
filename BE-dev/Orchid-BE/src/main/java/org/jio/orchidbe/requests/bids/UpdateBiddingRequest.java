@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UpdateBiddingRequest {
     private Long userId;
-    private Float biddingPrice;
+    private Double biddingPrice;
 }

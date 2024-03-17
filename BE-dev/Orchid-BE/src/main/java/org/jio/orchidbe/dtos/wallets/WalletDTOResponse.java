@@ -24,5 +24,5 @@ public class WalletDTOResponse {
 
     private Long userId;
     private Long id;
-    private Float balance;
+    private Double balance;
 }

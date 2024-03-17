@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateBidRequest {
 
-    private Float biddingPrice;
+    private Double biddingPrice;
     private Long auctionID;
     private Long userID;
 }

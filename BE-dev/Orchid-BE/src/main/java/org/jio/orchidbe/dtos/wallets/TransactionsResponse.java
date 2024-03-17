@@ -30,7 +30,7 @@ public class TransactionsResponse {
 
     private String resource;
 
-    private Float amount;
+    private Double amount;
 
     private PaymentMethod paymentMethod;
 

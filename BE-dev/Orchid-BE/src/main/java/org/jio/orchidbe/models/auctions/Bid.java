@@ -31,7 +31,7 @@ public class Bid extends BaseEntity {
     private Long id;
 
     @Column(name = "bidding_price")
-    private Float biddingPrice = 0f;
+    private double biddingPrice = 0f;
 
 
     @Column(name = "top1", nullable = false)

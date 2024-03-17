@@ -71,7 +71,7 @@ public class WalletService implements IWallerService {
         return walletMapper.toResponse(wallet);
     }
 
-    private String handleVNPayPayment(Wallet wallet, Transaction transaction, Float total) throws UnsupportedEncodingException {
+    private String handleVNPayPayment(Wallet wallet, Transaction transaction, Double total) throws UnsupportedEncodingException {
         // Gọi phương thức generatePaymentUrl từ paymentService và trả về URL thanh toán VNPay
         String context = "Wallet-" + wallet.getUser().getName() + "-" + wallet.getId() + "-" + transaction.getId();
 

@@ -11,7 +11,7 @@ import java.io.UnsupportedEncodingException;
 public interface IPaymentService {
 
 
-    String createPayment(Float total, String context, Long id) throws UnsupportedEncodingException;
+    String createPayment(Double total, String context, Long id) throws UnsupportedEncodingException;
 
     @Transactional
     String processPayment(String amount, String bankCode,

@@ -72,7 +72,7 @@ public class UserService implements IUserService{
             userRepository.save(newUser);
             Wallet walletUser = Wallet.builder()
                     .user(newUser)
-                    .balance(0f)
+                    .balance(0d)
                     .build();
             walletRepository.save(walletUser);
         } catch (DataIntegrityViolationException e) {

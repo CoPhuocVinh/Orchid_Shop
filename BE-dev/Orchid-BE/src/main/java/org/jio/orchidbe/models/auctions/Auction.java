@@ -82,7 +82,7 @@ public class Auction extends BaseEntity {
    private LocalDateTime remindAt;
 
    @Column(name = "bidding_price")
-   private Float biddingPrice;
+   private Double biddingPrice;
 
     @Column(name = "description")
     private String description;

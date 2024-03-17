@@ -21,7 +21,7 @@ public class OrderResponse {
     private Long id;
     private OrderStatus status;
     private PaymentMethod paymentMethod;
-    private Float total;
+    private Double total;
     private String phone;
     private String address;
     private String createdBy;
