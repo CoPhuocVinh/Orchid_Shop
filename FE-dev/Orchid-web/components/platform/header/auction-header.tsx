@@ -18,14 +18,7 @@ import { WalletSkeleton } from "@/components/loader/wallet_loader";
 import Image from "next/image";
 import { useModal } from "@/hooks/use-modal";
 import { useRouter } from "next/navigation";
-// import SearchIconBtn from '@/components/ui/search-icon-btn';
-// import SideNavButton from '@/components/ui/side-nav-button';
-// import ProfileMenu from '@/components/header/profile-menu';
-// import { useModal } from '@/components/modals/context';
-// import Searchbox from '@/components/ui/search-box';
-// import Button from '@/components/ui/button';
-// import Logo from '@/components/ui/logo';
-// import { useIsMounted } from '@/hooks/use-is-mounted';
+
 const menuItems = [
   {
     id: 1,
@@ -68,7 +61,7 @@ export default function AuctionHeader() {
       ref={headerRef}
       className="dashboard-header sticky top-0 z-30 flex h-16 w-full bg-white md:flex md:items-center lg:h-[72px] 2xl:h-20 4xl:h-24"
     >
-      <div className="container-fluid grid w-full grid-cols-3 items-center gap-0 lg:grid-cols-3 3xl:!px-12">
+      <div className="container-fluid w-full flex justify-between items-center gap-0 lg:grid-cols-3 3xl:!px-12 space-x-4">
         <div className="flex items-center gap-2 md:gap-4 2xl:gap-5">
           <Link
             href="/"
@@ -85,7 +78,7 @@ export default function AuctionHeader() {
             <span className="text-2xl ml-2 font-bold">Orchid</span>
           </Link>
         </div>
-        <ul className="hidden flex-wrap justify-center md:flex space-x-2">
+        <ul className="hidden md:flex justify-center  space-x-2">
           {menuItems.map((item) => (
             <li key={item.id}>
               <button
@@ -97,7 +90,7 @@ export default function AuctionHeader() {
             </li>
           ))}
         </ul>
-        <div className="flex items-center justify-end gap-5">
+        <div className="flex items-center md:justify-end space-x-2">
           <SearchIconBtn className="hidden" />
           {/* {mounted ? ( */}
           <>
@@ -107,7 +100,7 @@ export default function AuctionHeader() {
                   <div className="mr-2">
                     <Wallet className="text-black hover:text-red-600 group-hover:text-red-600" />
                   </div>
-                  <div className="font-semibold ">Ví tiền</div>
+                  <div className="font-semibold hidden md:block ">Ví tiền</div>
                 </div>
               </button>
             )}
@@ -117,7 +110,7 @@ export default function AuctionHeader() {
                   <div className="mr-2">
                     <ShoppingBag className="text-black group-hover:text-green-600" />
                   </div>
-                  <div className="font-semibold ">Đơn hàng</div>
+                  <div className="font-semibold hidden md:block ">Đơn hàng</div>
                 </div>
               </button>
             )}

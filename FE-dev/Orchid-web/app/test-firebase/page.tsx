@@ -81,6 +81,7 @@
 import { useState, useEffect } from 'react'
 import { doc, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
+import { IAuction } from '@/types/dashboard'
 
 interface Bid {
   biddingPrice: number
@@ -88,13 +89,14 @@ interface Bid {
 }
 
 const AuctionPage = () => {
-  const [auctionData, setAuctionData] = useState<any>(null)
+  const [auctionData, setAuctionData] = useState<IAuction| null>(null)
   const [newBidPrice, setNewBidPrice] = useState('')
 
+  //add 
   useEffect(() => {
-    const auctionRef = doc(db, 'auctions', '68')
+    const auctionRef = doc(db, 'auctions', '1')
     const unsubscribe = onSnapshot(auctionRef, (snapshot) => {
-      setAuctionData(snapshot.data())
+      setAuctionData(snapshot.data() as IAuction)
     })
 
     return () => {
@@ -103,7 +105,7 @@ const AuctionPage = () => {
   }, [])
 
   const placeBid = async () => {
-    const auctionRef = doc(db, 'auctions', '68')
+    const auctionRef = doc(db, 'auctions', '1')
     const newBid: Bid = {
       biddingPrice: parseInt(newBidPrice, 10),
       timestamp: Date.now(),
@@ -136,12 +138,13 @@ const AuctionPage = () => {
           <h3>Lịch sử đấu giá</h3>
           <ul>
             {auctionData.bidList &&
-              auctionData.bidList.map((bid: Bid) => (
+              auctionData.bidList.map((bid: any) => (
                 <li key={bid.timestamp}>
                   Giá: {bid.biddingPrice}
                 </li>
               ))}
           </ul>
+          <p>{auctionData.productID}</p>
         </div>
       ) : (
         <p>Loading...</p>

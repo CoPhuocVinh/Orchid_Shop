@@ -37,7 +37,7 @@ const LeftSideAuction = ({ productId }: LeftSideAuctionProps) => {
   }
 
   return (
-    <div className="w-full md:w-2/3">
+    <div className="w-full lg:w-2/3">
       <EmblaCarousel
         slides={Array.from(Array(product.productImages.length).keys())}
         options={OPTIONS}
