@@ -2,7 +2,10 @@ import React from "react";
 
 import BreadCrumb from "@/components/platform/bread-crumb";
 import BodyOrder from "@/components/platform/order/order";
-function pagesOrder() {
+import { getOrderId, getWalletByUserId } from "@/lib/actions";
+function pagesOrder({ params }: { params: { orderId: string } }) {
+  const orderPromisse = getOrderId(params.orderId);
+
   return (
     <>
       <BreadCrumb
@@ -10,7 +13,10 @@ function pagesOrder() {
         middlePath="Order"
         routeUrl="order"
       />
-      <BodyOrder />
+
+      <React.Suspense fallback={<div>...loading</div>}>
+        <BodyOrder orderPromisse={orderPromisse} />
+      </React.Suspense>
     </>
   );
 }
