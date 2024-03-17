@@ -24,7 +24,7 @@ export const OrderSheet = () => {
   const { isOpen, onClose, type } = useModal();
   const { data: session } = useSession();
   const isOpenModal = isOpen && type === "orderSheetModal";
-  const searchParams = { page: "1", per_page: "100" };
+  const searchParams = { page: "1", per_page: "100", status: "PENDING" }; //TODO: add status
   const { data: orders, isLoading } = useGetOrderByUserId(
     searchParams,
     session?.user.id!

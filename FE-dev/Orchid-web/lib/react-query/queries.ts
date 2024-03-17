@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./query-keys";
 import {
+  getOrderId,
   getOrdersByUserId,
   getProducts,
   getUserAddressInfo,
@@ -10,7 +11,14 @@ import {
   getUserWithRoleStaff,
 } from "../actions";
 import { SearchParams } from "@/types/table";
-import { AuctionStatus, IAuction, IOrder, IProduct,IUser, IWallet } from "@/types/dashboard";
+import {
+  AuctionStatus,
+  IAuction,
+  IOrder,
+  IProduct,
+  IUser,
+  IWallet,
+} from "@/types/dashboard";
 import { getAuctions, getAuctionsWithStatus } from "../actions/auction";
 import { getWalletByUserId } from "../actions/wallet";
 
@@ -30,7 +38,7 @@ export const useGetUsers = (searchTerm: SearchParams) => {
 };
 
 export const useGetAddress = (params: string) => {
-  return useQuery<{ data: any}>({
+  return useQuery<{ data: any }>({
     queryKey: [QUERY_KEYS.GET_USERS, params],
     queryFn: () => getUserAddressInfo(params),
   });
@@ -44,41 +52,35 @@ export const useGetProducts = (searchTerm: SearchParams) => {
   });
 };
 
-
-
-
 //AUCTION
 
-
 export const useGetAuctionsWithStatus = (status: AuctionStatus) => {
-  return useQuery<{ data: IAuction[]}>({
-    queryKey: [QUERY_KEYS.GET_AUCTIONS,status],
+  return useQuery<{ data: IAuction[] }>({
+    queryKey: [QUERY_KEYS.GET_AUCTIONS, status],
     queryFn: () => getAuctionsWithStatus(status),
   });
 };
 
-
-
 export const useGetTableAuction = () => {
-  return useQuery<{ data: IAuction[]}>({
+  return useQuery<{ data: IAuction[] }>({
     queryKey: [QUERY_KEYS.GET_TBL_AUCTIONS],
     queryFn: () => getAuctions(),
   });
 };
 
-
 // WALLET
 export const useGetWallet = (params: string) => {
-  return useQuery<{ data: IWallet | null}>({
+  return useQuery<{ data: IWallet | null }>({
     queryKey: [QUERY_KEYS.GET_WALLET, params],
     queryFn: () => getWalletByUserId(params),
   });
 };
 
-
-
 //ORDER
-export const useGetOrderByUserId = (searchTerm: SearchParams, userId: string) => {
+export const useGetOrderByUserId = (
+  searchTerm: SearchParams,
+  userId: string
+) => {
   return useQuery<{ data: IOrder[]; pageCount: number }>({
     queryKey: [QUERY_KEYS.GET_ORDERS, searchTerm, userId],
     queryFn: () => getOrdersByUserId(searchTerm, userId),

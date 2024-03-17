@@ -227,14 +227,14 @@ function Sidebar({ handleActive }: any) {
               </li>
 
               <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/history">
+                <Link href="/dashboard/orders">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
                       <span className="item-ico">
                         <Icons.historySidebarIcon />
                       </span>
                       <span className="item-text text-lg font-medium leading-none">
-                        History
+                        Order
                       </span>
                     </div>
                   </div>
@@ -248,7 +248,7 @@ function Sidebar({ handleActive }: any) {
             </h4>
             <ul className="mt-2.5">
               <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/setting">
+                <Link href="/dashboard/settings">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
                       <span className="item-ico">
