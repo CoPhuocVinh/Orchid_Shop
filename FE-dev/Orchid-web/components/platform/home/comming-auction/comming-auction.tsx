@@ -36,7 +36,9 @@ function AuctionGrid() {
           updated_at={item.updated_at}
           remindAt={item.remindAt}
           image_url={item.image_url}
+          startDate={item.startDate!}
         />
+
         // <ListingCard
         //   key={`top-boat-grid-${index}`}
         //   idCss={`top-boat-grid-${index}`}

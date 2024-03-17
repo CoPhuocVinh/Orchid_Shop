@@ -17,7 +17,8 @@ import { IAuction } from "@/types/dashboard";
 import { format } from "date-fns";
 
 import Fillter_Auction_Date from "./fillter-auction-date";
-import Price_Slider from "./price-slider";
+
+import PriceSlider from "./price-slider";
 //import Fillter_CheckBox from "./Fillter_CheckBox";
 
 interface FilterTypes {
@@ -141,96 +142,88 @@ function Fillter_Auction_Tab({
       <div className="grid grid-cols-1 gap-8 px-20 pb-3 md:px-7 xl:p-0 xl:pb-0  ">
         Component filter
         <form className=" h-full top-2">
-          {fillters.map((session, i) => (
-            <Accordion key={i} type="single" collapsible className="w-full">
-              <AccordionItem value={`item-${i}`}>
-                <AccordionTrigger>
-                  <span>
-                    {session.name}
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Status</AccordionTrigger>
+              <AccordionContent className="overflow-visible">
+                <div className="space-y-4">
+                  <RadioGroup
+                    defaultValue="ALL"
+                    value={value}
+                    onChange={handleChange as any}
+                  >
+                    <div className=" ml-4">
+                      <input
+                        type="radio"
+                        id="all"
+                        name="filter"
+                        value="ALL"
+                        defaultChecked
+                        onChange={handleChange as any}
+                      />
+                      <Label
+                        htmlFor="all"
+                        className="font-serif ml-4 text-base font-medium cursor-pointer select-none"
+                      >
+                        ALL
+                      </Label>
+                    </div>
+                    <div className=" ml-4">
+                      <input
+                        type="radio"
+                        id="coming"
+                        name="filter"
+                        value="COMING"
+                        onChange={handleChange as any}
+                      />
+                      <Label
+                        htmlFor="coming"
+                        className="font-serif ml-4 text-base font-medium cursor-pointer select-none"
+                      >
+                        COMING
+                      </Label>
+                    </div>
+                    <div className=" ml-4">
+                      <input
+                        type="radio"
+                        id="live"
+                        name="filter"
+                        value="LIVE"
+                        onChange={handleChange as any}
+                      />
+                      <Label
+                        htmlFor="live"
+                        className="font-serif ml-4 text-base font-medium cursor-pointer select-none"
+                      >
+                        LIVE
+                      </Label>
+                    </div>
+                    <div className=" ml-4">
+                      <input
+                        type="radio"
+                        id="end"
+                        name="filter"
+                        value="END"
+                        onChange={handleChange as any}
+                      />
+                      <Label
+                        htmlFor="end"
+                        className="font-serif ml-4 text-base font-medium cursor-pointer select-none"
+                      >
+                        END
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
 
-                    <span className="ml-1 text-sm uppercase text-gray-400"></span>
-                  </span>
-                </AccordionTrigger>
-
-                <AccordionContent>
-                  <div className="space-y-4">
-                    <RadioGroup
-                      defaultValue="ALL"
-                      value={value}
-                      onChange={handleChange as any}
-                    >
-                      <div className=" ml-4">
-                        <input
-                          type="radio"
-                          id="all"
-                          name="filter"
-                          value="ALL"
-                          defaultChecked
-                          onChange={handleChange as any}
-                        />
-                        <Label
-                          htmlFor="all"
-                          className="font-serif ml-4 text-xl "
-                        >
-                          ALL
-                        </Label>
-                      </div>
-                      <div className=" ml-4">
-                        <input
-                          type="radio"
-                          id="coming"
-                          name="filter"
-                          value="COMING"
-                          onChange={handleChange as any}
-                        />
-                        <Label
-                          htmlFor="coming"
-                          className="font-serif ml-4 text-xl "
-                        >
-                          COMING
-                        </Label>
-                      </div>
-                      <div className=" ml-4">
-                        <input
-                          type="radio"
-                          id="live"
-                          name="filter"
-                          value="LIVE"
-                          onChange={handleChange as any}
-                        />
-                        <Label
-                          htmlFor="live"
-                          className="font-serif ml-4 text-xl "
-                        >
-                          LIVE
-                        </Label>
-                      </div>
-                      <div className=" ml-4">
-                        <input
-                          type="radio"
-                          id="end"
-                          name="filter"
-                          value="END"
-                          onChange={handleChange as any}
-                        />
-                        <Label
-                          htmlFor="end"
-                          className="font-serif ml-4 text-xl "
-                        >
-                          END
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ))}
           <div>
             <Fillter_Auction_Date onChangeDate={handleChangeDate as any} />
           </div>
           <div>
-            <Price_Slider onChangePrice={handleChangePrice as any} />
+            <PriceSlider onChangePrice={handleChangePrice as any} />
           </div>
         </form>
       </div>

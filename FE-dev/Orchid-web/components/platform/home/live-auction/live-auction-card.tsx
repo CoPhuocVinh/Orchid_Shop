@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import useCountdownTimer from "@/hooks/use-countdown-time";
+import FancyText from "@carefully-coded/react-text-gradient";
+
 // Make sure to import the useCountdownTimer hook
 
 interface LiveAuctionsCardProps {
@@ -34,31 +36,50 @@ export default function DestinationCard({
         />
         <div className="absolute bottom-0 z-10 h-1/4 w-full bg-gradient-to-t from-gray-dark/90 to-gray-dark/0 transition-all duration-500 group-hover/item:h-1/2 3xl:from-gray-dark/60"></div>
         <div className="relative z-10 mt-auto px-6 pb-6 md:px-7 md:pb-7 3xl:px-9 3xl:pb-9 4xl:px-12 4xl:pb-12">
-          <h3 className="text-xl font-bold leading-7 text-lime-400 3xl:text-2xl">
-            {productName}
-          </h3>
-          <p className="text-sm font-normal leading-7 text-lime-400 lg:text-base 3xl:pt-1.5 4xl:text-lg">
-            {productCode}
-          </p>
+          <div className="w-full mb-5   ">
+            <div
+              className=" items-center justify-center text-center text-transparent bg-clip-text h-28 w-full rounded-lg cursor-pointer transition-all 
+              relative group   duration-200  bg-slate-400 text-gray-50"
+            >
+              <div className="absolute w-full text-white text-shadow-md font-sans font-bold text-xl opacity-75">
+                <div className="absolute w-96  p-0 -bottom-40 -left-20 pb-10 duration-500 group-hover:-translate-y-2">
+                  <div className="absolute -z-10  w-screen h-40 duration-500 opacity-50 bg-gray-500 "></div>
+                  <span className="text-xl font-bold ml-28">{productName}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span className="inline-flex items-center mt-5 translate-x-12">
+            <span className="mr-2 mb-1 text-white text-sm absolute ">Code</span>
+            <p className="absolute ml-10 text-base mb-1 leading-7 text-white text-shadow-md font-sans font-bold opacity-75">
+              {productCode}
+            </p>
+          </span>
         </div>
         {countdown && (
           <div className="absolute top-0 right-2 m-4 text-green-300 text-lg font-bold">
-            <span className="inline-block w-6 text-center">{`${countdown.days
-              .toString()
-              .padStart(2, "0")}`}</span>
-            d&nbsp; :&nbsp;
-            <span className="inline-block w-6 text-center">{`${countdown.hours
-              .toString()
-              .padStart(2, "0")}`}</span>
-            h&nbsp; :&nbsp;
-            <span className="inline-block w-6 text-center">{`${countdown.minutes
-              .toString()
-              .padStart(2, "0")}`}</span>
-            m&nbsp; :&nbsp;
-            <span className="inline-block w-6 text-center">{`${countdown.seconds
-              .toString()
-              .padStart(2, "0")}`}</span>
-            s
+            <FancyText
+              gradient={{ from: "#F858E0", to: "#77156C", type: "linear" }}
+              animateTo={{ from: "#6DEDD0", to: "#7AE23A" }}
+              animateDuration={1000}
+            >
+              <span className="inline-block w-6 text-center">{`${countdown.days
+                .toString()
+                .padStart(2, "0")}`}</span>
+              d&nbsp; :&nbsp;
+              <span className="inline-block w-6 text-center">{`${countdown.hours
+                .toString()
+                .padStart(2, "0")}`}</span>
+              h&nbsp; :&nbsp;
+              <span className="inline-block w-6 text-center">{`${countdown.minutes
+                .toString()
+                .padStart(2, "0")}`}</span>
+              m&nbsp; :&nbsp;
+              <span className="inline-block w-6 text-center">{`${countdown.seconds
+                .toString()
+                .padStart(2, "0")}`}</span>
+              s
+            </FancyText>
           </div>
         )}
       </div>
