@@ -94,9 +94,9 @@ public class TokenService implements ITokenService{
                 userDetails, null,
                 userDetails.getAuthorities()
         );
-        authenticationToken.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
+//        authenticationToken.setDetails(
+//                new WebAuthenticationDetailsSource().buildDetails(request)
+//        );
         //authenticate with Java Spring security
         //authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
