@@ -87,7 +87,9 @@ public class WebSecurityConfig {
                                     String.format("%s/products/**", apiPrefix)).permitAll()
 //                            .anyRequest().authenticated();
                             .anyRequest().permitAll();
-                });
+                })
+               // .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/user", true));
+        ;
 
 
             //http.securityMatcher(String.valueOf(EndpointRequest.toAnyEndpoint()));

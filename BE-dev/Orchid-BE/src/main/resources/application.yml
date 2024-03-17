@@ -16,6 +16,9 @@ spring:
           google:
             client-id: 1057856726587-gbad25fkcea5rbr3u18p02l769tcota3.apps.googleusercontent.com
             client-secret: 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
+            scope:
+              - email
+              - profile
 
     #  datasource:
 #    url: jdbc:mysql://localhost:3306/db_orchid

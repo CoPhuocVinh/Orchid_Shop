@@ -61,12 +61,6 @@ public class SecurityConfig {
     ) throws Exception {
         return config.getAuthenticationManager();
     }
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
-
 
 
 }

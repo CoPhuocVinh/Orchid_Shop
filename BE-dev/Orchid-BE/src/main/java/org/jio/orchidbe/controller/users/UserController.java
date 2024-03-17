@@ -22,8 +22,12 @@ import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
@@ -97,19 +101,20 @@ public class UserController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/register_by_google")
-    public ResponseEntity<?> registerUser (@RequestBody UserLoginGoogle request,
-                                                     BindingResult result
-    ) throws Exception {
-            ApiResponse apiResponse = new ApiResponse();
-            if (result.hasErrors()) {
-                apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
-                return ResponseEntity.badRequest().body(apiResponse);
-            }
+//    @GetMapping("/register_by_google")
+//    public ResponseEntity<?> registerUser (@RequestBody UserLoginGoogle request,
+//                                                     BindingResult result
+//    ) throws Exception {
+//            ApiResponse apiResponse = new ApiResponse();
+//            if (result.hasErrors()) {
+//                apiResponse.error(validatorUtil.handleValidationErrors(result.getFieldErrors()));
+//                return ResponseEntity.badRequest().body(apiResponse);
+//            }
+//
+//            UserDTOResponse newUser = userService.createUserLoginGg(request,result);
+//            apiResponse.ok( newUser);
+//            return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+//    }
 
-            UserDTOResponse newUser = userService.createUserLoginGg(request,result);
-            apiResponse.ok( newUser);
-            return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
-    }
 
 }
