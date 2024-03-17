@@ -64,7 +64,7 @@ jwt:
 logging:
   level:
     org:
-      springframework.security: DEBUG
+      springframework.security: TRACE
 
 #health check
 management:

@@ -3,12 +3,14 @@ package org.jio.orchidbe.configs;
 import org.jio.orchidbe.filters.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 
+import org.jio.orchidbe.services.SecurityOAuth2UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,9 +20,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
@@ -35,6 +39,7 @@ public class WebSecurityConfig {
     @Value("${api.prefix}")
     private String apiPrefix;
     private final AuthenticationProvider authenticationProvider;
+    private final SecurityOAuth2UserService securityOAuth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception{
@@ -68,6 +73,7 @@ public class WebSecurityConfig {
                                     "/swagger-ui/index.html"
 
                             )
+
                             .permitAll()
                             .requestMatchers(GET,
                                     String.format("%s/categories/**", apiPrefix)).permitAll()
@@ -85,10 +91,15 @@ public class WebSecurityConfig {
                                     String.format("%s/hello**", apiPrefix)).authenticated()
                             .requestMatchers(GET,
                                     String.format("%s/products/**", apiPrefix)).permitAll()
+                            .requestMatchers("/api/v1/auth/").permitAll()
 //                            .anyRequest().authenticated();
                             .anyRequest().permitAll();
                 })
-               // .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/user", true));
+                .oauth2Login(withDefaults())
+                .formLogin(withDefaults())
+
+
+        // .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/user", true));
         ;
 
 
