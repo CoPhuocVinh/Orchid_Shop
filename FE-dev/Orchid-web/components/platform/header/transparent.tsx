@@ -14,28 +14,27 @@ import useAxiosAuth from "@/lib/api-interceptor/use-axios-auth";
 export default function TransparentHeader() {
   const headerRef = useRef(null);
   addScrollingClass(headerRef);
-  const { data: session,status } = useSession();
+  const { data: session, status } = useSession();
   const axiosAuth = useAxiosAuth();
   const [testData, setTestData] = useState({});
   const [loading, setLoading] = useState(false);
   useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await axiosAuth.get(
+          "https://orchid.fams.io.vn/api/v1/hello"
+        );
+        setLoading(true);
+        setTestData(res.data);
+      } catch (error) {
+        console.log("FALI");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      const fetch = async () => {
-        try {
-          const res = await axiosAuth.get(
-            "https://orchid.fams.io.vn/api/v1/hello"
-          );
-          setLoading(true);
-          setTestData(res.data);
-        } catch (error) {
-          console.log("FALI");
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetch();
-    }, [axiosAuth, status]);
+    fetch();
+  }, [axiosAuth, status]);
   const isAuthorized = session?.user;
   return (
     <header

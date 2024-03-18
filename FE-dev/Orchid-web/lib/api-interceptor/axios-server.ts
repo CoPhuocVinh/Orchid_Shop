@@ -1,8 +1,9 @@
 import { Session } from "next-auth";
 import { axiosAuth } from "./api";
 import refreshToken from "./refresh-token-server";
+import { update, auth } from "../auth";
 
-const setupAxiosAuth = (session: Session | null) => {
+const setupAxiosAuth = async (session: Session | null) => {
   axiosAuth.interceptors.request.use(
     (config) => {
       if (!config.headers["Authorization"]) {
@@ -23,10 +24,16 @@ const setupAxiosAuth = (session: Session | null) => {
         prevRequest.sent = true;
 
         const updatedSession = await refreshToken(session);
-        console.log("updatedSession", updatedSession);
+
+        const sessionChange = await update({
+          user: {
+            access_token: updatedSession,
+          },
+        });
+
         prevRequest.headers[
           "Authorization"
-        ] = `Bearer ${updatedSession.user.access_token}`;
+        ] = `Bearer ${sessionChange?.user?.access_token}`;
         return axiosAuth(prevRequest);
       }
       return Promise.reject(error);
