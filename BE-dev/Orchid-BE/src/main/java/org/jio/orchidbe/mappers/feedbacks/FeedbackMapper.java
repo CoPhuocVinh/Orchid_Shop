@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 @Component
 public interface FeedbackMapper {
+
+    @Mapping(source = "feedbacks.auction.id", target = "auctionID")
+    @Mapping(source = "feedbacks.user.id", target = "userID")
     FeedbackResponse toResponse(Feedbacks feedbacks);
 
 
