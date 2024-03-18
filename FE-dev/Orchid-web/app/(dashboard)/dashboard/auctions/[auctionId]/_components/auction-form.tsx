@@ -59,13 +59,13 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const waitingStatus = initialData?.status === "WAITING"
-  const comingStatus = initialData?.status === "COMING"
-  const liveStatus = initialData?.status === "LIVE" ;
+  const waitingStatus = initialData?.status === "WAITING";
+  const comingStatus = initialData?.status === "COMING";
+  const liveStatus = initialData?.status === "LIVE";
   const endStatus = initialData?.status === "END";
 
-  const notPermissionAlowEdit = liveStatus || endStatus
-  const comingNotPermissionEdit = comingStatus 
+  const notPermissionAlowEdit = liveStatus || endStatus;
+  const comingNotPermissionEdit = comingStatus;
 
   const title = initialData ? "Chỉnh sửa buổi đấu giá" : "Tạo buổi đấu giá";
   const description = initialData
@@ -99,6 +99,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
         quantity: 0,
         productID: 0,
         image_url: "",
+        title: "",
       };
 
   const form = useForm<AuctionFormValues>({
@@ -208,7 +209,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
               name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="datetime">Start time</FormLabel>
+                  <FormLabel htmlFor="datetime">Ngày bắt đầu</FormLabel>
                   <FormControl>
                     <DateTimePicker
                       granularity="minute"
@@ -230,7 +231,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
               name="endDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="datetime">End time</FormLabel>
+                  <FormLabel htmlFor="datetime">Ngày kết thúc</FormLabel>
                   <FormControl>
                     <DateTimePicker
                       granularity="minute"
@@ -260,7 +261,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
               name="remindAt"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="datetime">Remind time</FormLabel>
+                  <FormLabel htmlFor="datetime">Ngày remindAt</FormLabel>
                   <FormControl>
                     <DateTimePicker
                       granularity="minute"
@@ -281,6 +282,26 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                       )}
                     />
                   )}
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input
+                     autoComplete="off"
+                      disabled={isLoading || notPermissionAlowEdit}
+                      placeholder="vd: đấu giá lan..."
+                      {...field}
+                      className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
+                    />
+                  </FormControl>
+                  <FormMessage className="dark:text-yellow-300" />
                 </FormItem>
               )}
             />
@@ -310,7 +331,9 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                         <SelectItem
                           key={product.productID}
                           value={product.productID.toString()}
-                          disabled={notPermissionAlowEdit || comingNotPermissionEdit}
+                          disabled={
+                            notPermissionAlowEdit || comingNotPermissionEdit
+                          }
                         >
                           <span>
                             {product.productName
@@ -354,7 +377,11 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      disabled={isLoading || notPermissionAlowEdit || comingNotPermissionEdit}
+                      disabled={
+                        isLoading ||
+                        notPermissionAlowEdit ||
+                        comingNotPermissionEdit
+                      }
                       placeholder="0"
                       {...field}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
@@ -369,11 +396,15 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
               name="depositPrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>depositPrice</FormLabel>
+                  <FormLabel>Bước nhảy giá</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      disabled={isLoading || notPermissionAlowEdit || comingNotPermissionEdit}
+                      disabled={
+                        isLoading ||
+                        notPermissionAlowEdit ||
+                        comingNotPermissionEdit
+                      }
                       placeholder="0"
                       {...field}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"

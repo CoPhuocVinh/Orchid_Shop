@@ -27,6 +27,10 @@ export const auctionSchema = z
     image_url: z.string().min(MIN_IMAGE_URL_LENGTH, {
       message: "Hãy thêm ít nhất 1 ảnh",
     }),
+    title: z
+    .string()
+    .min(3, { message: "Hãy nhập title cho buổi đấu giá" })
+    .max(20, "Tên quá dài"),
     endDateInValid: z.any().nullish(),
     remindAtDateInValid: z.any().nullish(),
   })

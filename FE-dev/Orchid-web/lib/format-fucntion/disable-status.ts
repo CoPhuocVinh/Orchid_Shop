@@ -3,9 +3,9 @@ export const isStatusDisabled = (currentStatus: any, targetStatus: any) => {
       case "WAITING":
         return ["COMING", "LIVE", "END"].includes(targetStatus);
       case "COMING":
-        return targetStatus === "WAITING";
+        return ["WAITING", "END"].includes(targetStatus);
       case "LIVE":
-        return ["WAITING", "COMING"].includes(targetStatus);
+        return ["WAITING", "COMING", "END"].includes(targetStatus);
       case "END":
         return ["WAITING", "COMING", "LIVE"].includes(targetStatus);
       default:

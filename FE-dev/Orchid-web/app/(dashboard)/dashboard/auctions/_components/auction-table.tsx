@@ -14,6 +14,7 @@ import {
 } from "./auction-table-column-def";
 import { getTableAuctions } from "@/lib/actions/auction";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal";
 
 interface AutionsTableProps {
   auctionPromise: ReturnType<typeof getTableAuctions>;
@@ -23,10 +24,11 @@ export function AuctionTable({ auctionPromise }: AutionsTableProps) {
   const { data, pageCount } = React.use(auctionPromise);
   const [isPending, startTransition] = React.useTransition();
   const router = useRouter();
+  const { onOpen } = useModal();
   // console.log(data)
   const columns = React.useMemo<ColumnDef<IAuction, unknown>[]>(
-    () => fetchAutionsTableColumnDefs(isPending, startTransition, router),
-    [isPending, router]
+    () => fetchAutionsTableColumnDefs(isPending, startTransition, router, onOpen),
+    [isPending, router, onOpen]
   );
 
   const { dataTable } = useDataTable({

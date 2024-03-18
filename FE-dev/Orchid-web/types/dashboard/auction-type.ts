@@ -20,6 +20,7 @@ export type IAuction = {
   depositPrice: number;
   description: string;
   // product: IProduct;
+  title: string;
   bidList: IBidList[]
   biddingPrice?: number;
   image_url: string;
@@ -37,6 +38,7 @@ export type IAuctionCreateField = {
   quantity: number;
   depositPrice: number;
   startPrice: number;
+  title: string;
   productID: number;
   startDate?: string;
   endDate?: string;

@@ -23,7 +23,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { CircleDashed, Edit, Eye } from "lucide-react";
-import { ModalData, ModalType, useModal } from "@/hooks/use-modal";
+import { ModalData, ModalType } from "@/hooks/use-modal";
 
 export function fetchOrderTableColumnDefs(
   isPending: boolean,

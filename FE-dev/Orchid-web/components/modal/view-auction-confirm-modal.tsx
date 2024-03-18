@@ -31,7 +31,9 @@ import { updateStatusRejectAuction } from "@/lib/actions";
 export const ViewConfirmModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const { data: session } = useSession();
-  const isOpenModal = isOpen && type === "confirmAuction";
+  const isOpenModal =
+    (isOpen && type === "confirmAuction") ||
+    (isOpen && type === "rejectAuction");
 
   const ResonSchema = z.object({
     reasonReject: z.string().min(3, "Vui lòng nhập lý do từ chối"),
@@ -59,9 +61,8 @@ export const ViewConfirmModal = () => {
       );
     });
 
-    form.reset()
+    form.reset();
     onClose();
-
   };
 
   const handleClose = () => {
@@ -75,7 +76,12 @@ export const ViewConfirmModal = () => {
     <Dialog open={isOpenModal} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Đơn từ chối lên buổi đấu giá</DialogTitle>
+          <DialogTitle>
+            {type === "confirmAuction" && (
+              <span>Đơn từ chối lên buổi đấu giá</span>
+            )}
+            {type === "rejectAuction" && <span>Can thiệp buổi đấu giá</span>}
+          </DialogTitle>
           <DialogDescription>
             Hành động này không thể quay lại nếu tiếp tục.
           </DialogDescription>

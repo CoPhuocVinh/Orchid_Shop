@@ -103,7 +103,9 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                               />
                             }
                           >
-                            <OrderTable orderPromise={orders} />
+                            <div className="overflow-x-auto">
+                              <OrderTable orderPromise={orders} />
+                            </div>
                           </React.Suspense>
                         </Shell>
                       </TabsContent>

@@ -41,15 +41,17 @@ import {
   updateStatusAuction,
   updateStatusRejectAuction,
 } from "@/lib/actions/auction";
-import { Edit } from "lucide-react";
+import { Edit, Eye } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { formatDate } from "@/lib/format-fucntion/format-dns";
 import { isStatusDisabled } from "@/lib/format-fucntion/disable-status";
+import { ModalData, ModalType } from "@/hooks/use-modal";
 
 export function fetchAutionsTableColumnDefs(
   isPending: boolean,
   startTransition: React.TransitionStartFunction,
-  router: AppRouterInstance
+  router: AppRouterInstance,
+  onOpen: (type: ModalType, data: ModalData) => void
 ): ColumnDef<IAuction, unknown>[] {
   return [
     {
@@ -85,6 +87,21 @@ export function fetchAutionsTableColumnDefs(
       cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
       enableSorting: false,
       enableHiding: false,
+    },
+    {
+      accessorKey: "title",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Title" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+              {row.getValue("title") ? row.getValue("title") : "Chưa có"}
+            </span>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "productCode",
@@ -378,62 +395,18 @@ export function fetchAutionsTableColumnDefs(
                 </DropdownMenuRadioGroup>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Duyệt bài</DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                <div className="flex flex-col space-y-2 p-2">
-                  <button
-                    className={`px-4 py-2 rounded-md ${
-                      row.original.rejected
-                        ? "bg-red-500 text-white"
-                        : "bg-white text-red-500 hover:bg-red-100"
-                    }`}
-                    onClick={() => {
-                      startTransition(() => {
-                        toast.promise(
-                          updateStatusRejectAuction({
-                            id: row.original.id,
-                            rejected: !row.original.rejected,
-                          }),
-                          {
-                            loading: "Update...",
-                            success: () => "Auction update successfully.",
-                            error: () => "Dellete error",
-                          }
-                        );
-                      });
-                    }}
-                  >
-                    {row.original.rejected ? "Đã từ chối" : "Từ chối"}
-                  </button>
 
-                  <button
-                    className={`px-4 py-2 rounded-md ${
-                      row.original.approved
-                        ? "bg-green-500 text-white"
-                        : "bg-white text-green-500 hover:bg-green-100"
-                    }`}
-                    onClick={() => {
-                      startTransition(() => {
-                        toast.promise(
-                          updateStatusAcceptAuction({
-                            id: row.original.id,
-                            approved: !row.original.approved,
-                          }),
-                          {
-                            loading: "Update...",
-                            success: () => "Auction update successfully.",
-                            error: () => "Dellete error",
-                          }
-                        );
-                      });
-                    }}
-                  >
-                    {row.original.approved ? "Đã duyệt" : "Duyệt"}
-                  </button>
-                </div>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
+            {row.original.status === "COMING" &&
+              !!row.original.approved  &&
+              !row.original.rejected  && (
+                <DropdownMenuItem
+                  onClick={() =>
+                    onOpen("rejectAuction", { auction: row.original })
+                  }
+                >
+                  <Eye className="mr-2 h-4 w-4" /> Can thiệp
+                </DropdownMenuItem>
+              )}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {

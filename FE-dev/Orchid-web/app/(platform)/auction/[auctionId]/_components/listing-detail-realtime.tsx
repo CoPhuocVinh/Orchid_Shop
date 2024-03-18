@@ -52,6 +52,7 @@ export default function ListingDetailsRealTime({ auctionId}: ListingDetailsProps
     manualBidAmount: z.coerce
       .number()
       .min(10000, "Please enter a bid amount of 10000 or higher")
+      .max(10000000000000, "số tiền quá mức quy định")
       .refine((value) => value > biddingPrice, {
         message: "Nhập giá tiền lớn hơn giá hiện tại mới đấu giá được",
       }),

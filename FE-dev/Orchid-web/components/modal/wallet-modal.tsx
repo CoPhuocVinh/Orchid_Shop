@@ -162,7 +162,7 @@ export const WalletModal = () => {
                 <p className="text-gray-600 font-semibold">Số dư:</p>
               </div>
               <p className="text-3xl font-bold text-green-600">
-                {formatter.format(wallet?.data?.balance!)} đ
+                {formatter.format(wallet?.data?.balance!)} 
               </p>
             </div>
             <div className="bg-gray-100 rounded-lg p-4 flex flex-col">
