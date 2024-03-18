@@ -4,7 +4,6 @@ import { useRef } from "react";
 import Image from "next/image";
 import LineChart from "@/components/dashboard/chart/line-chart";
 
-
 const createGradient = (ctx: any) => {
   const gradient = ctx.createLinearGradient(0, 0, 0, 450);
   gradient.addColorStop(0, "rgba(34, 197, 94,0.41)");
@@ -170,9 +169,7 @@ const TotalWidgetCard = ({
             <span className="text-sm font-medium text-success-300">
               {groth}
             </span>
-            <span className="text-sm font-medium text-bgray-700 dark:text-bgray-50">
-              from last week
-            </span>
+            <span className="text-sm font-medium text-bgray-700 dark:text-bgray-50"></span>
           </div>
         </div>
         <div className="w-[106px] h-[68px]">

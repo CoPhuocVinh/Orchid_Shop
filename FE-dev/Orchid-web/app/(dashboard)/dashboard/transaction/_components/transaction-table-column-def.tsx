@@ -18,6 +18,7 @@ import { FaRegCircleCheck } from "react-icons/fa6";
 import { FcCancel } from "react-icons/fc";
 import { BiSolidBank } from "react-icons/bi";
 import { FaWallet } from "react-icons/fa";
+import { format } from "date-fns";
 
 export function fetchTransactionTableColumnDefs(
   isPending: boolean,
@@ -65,10 +66,40 @@ export function fetchTransactionTableColumnDefs(
         <DataTableColumnHeader column={column} title="transactionCode" />
       ),
       cell: ({ row }) => {
+        const transactionCode = row.getValue("transactionCode") as string;
+        const parts = transactionCode.split("-");
+
+        const firstPart = parts[0];
+        const secondPart = parts[1];
+        const thirdPart = parts[2];
+        // Tách chuỗi thời gian thành các phần nhỏ hơn
+        const year = secondPart.substring(0, 4);
+        const month = secondPart.substring(4, 6);
+        const day = secondPart.substring(6, 8);
+        const hour = secondPart.substring(8, 10);
+        const minute = secondPart.substring(10, 12);
+
+        // Định dạng ngày tháng từ các phần đã tách
+        const formattedDate = format(
+          new Date(`${year}-${month}-${day} ${hour}:${minute}`),
+          "yyyy-MM-dd HH:mm"
+        );
+
+        // Định dạng màu cho các phần của firstPart dựa trên điều kiện
+        let firstPartColor;
+        if (firstPart.includes("RT")) {
+          firstPartColor = "text-red-500";
+        } else if (firstPart.includes("NT")) {
+          firstPartColor = "text-green-500";
+        } else if (firstPart.includes("HT")) {
+          firstPartColor = "text-yellow-500";
+        }
+
         return (
           <div className="flex space-x-2">
             <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("transactionCode")}
+              <span className={firstPartColor}>{firstPart}</span>{" "}
+              <span>{formattedDate}</span> <span>code: {thirdPart}</span>
             </span>
           </div>
         );
