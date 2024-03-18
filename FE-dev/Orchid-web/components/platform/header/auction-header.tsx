@@ -78,7 +78,11 @@ export default function AuctionHeader() {
             <span className="text-2xl ml-2 font-bold">Orchid</span>
           </Link>
         </div>
-        <ul className="hidden md:flex justify-center  space-x-2">
+
+        <div className="flex items-center md:justify-end space-x-2">
+          <SearchIconBtn className="hidden" />
+          {/* {mounted ? ( */}
+          <ul className="hidden md:flex justify-center  space-x-2">
           {menuItems.map((item) => (
             <li key={item.id}>
               <button
@@ -90,9 +94,6 @@ export default function AuctionHeader() {
             </li>
           ))}
         </ul>
-        <div className="flex items-center md:justify-end space-x-2">
-          <SearchIconBtn className="hidden" />
-          {/* {mounted ? ( */}
           <>
             {isAuthorized && (
               <button onClick={() => onOpen("walletModal", {})}>
