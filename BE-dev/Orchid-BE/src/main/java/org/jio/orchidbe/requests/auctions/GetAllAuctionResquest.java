@@ -58,35 +58,49 @@ public class GetAllAuctionResquest extends BaseFilterRequest<Auction> {
 
                     predicates.add(root.get(Auction.Fields.status).in(statusList));
                 }
-                    //predicates.add(cb.equal(root.get(Auction.Fields.status), status));
+
             }
 
-
-            if (search != null && !search.isBlank()) {
+    /*        if (search != null && !search.isBlank()) {
                 String searchTrim = "%" + search.trim().toLowerCase() + "%";
                 predicates.add(cb.like(cb.lower(root.get(Auction.Fields.product).get("productName")), searchTrim));
-            }
+                 // Tạo các điều kiện cho truy vấn
+                Predicate titlePredicate = cb.like(cb.lower(root.get(Auction.Fields.title)), searchTrim);
+                Predicate categoryPredicate = cb.equal(root.join(Auction.Fields.product)
+                        .get(Product.Fields.category).get(Category.Fields.type), searchTrim);
+
+                // Kết hợp hai điều kiện bằng phép "hoặc"
+                Predicate combinedPredicate = cb.or(titlePredicate, categoryPredicate);
+
+                // Thêm điều kiện đã kết hợp vào danh sách các điều kiện của truy vấn
+                predicates.add(combinedPredicate);
+            }*/
 
             if (search != null && !search.isBlank()) {
                 String searchTrim = "%" + search.trim().toLowerCase() + "%";
-                predicates.add(cb.like(cb.lower(root.get(Auction.Fields.title)), searchTrim));
+                // Tạo các điều kiện cho truy vấn
+                Predicate titlePredicate = cb.like(cb.lower(root.get(Auction.Fields.title)), searchTrim);
+                Predicate categoryPredicate = cb.like(root.join(Auction.Fields.product)
+                        .get(Product.Fields.category).get(Category.Fields.type), searchTrim);
+
+                // Kết hợp hai điều kiện bằng phép "và"
+                Predicate combinedPredicate = cb.and(titlePredicate, categoryPredicate);
+
+                // Thêm điều kiện đã kết hợp vào danh sách các điều kiện của truy vấn
+                predicates.add(combinedPredicate);
+
             }
 
-            if (search != null && !search.isBlank()) {
+      /*      if (search != null && !search.isBlank()) {
                 String searchTrim = "%" + search.trim().toLowerCase() + "%";
                 predicates.add(cb.equal(root.join(Auction.Fields.product)
                         .get(Product.Fields.category).get(Category.Fields.type), searchTrim));
-            }
+            }*/
 
             if (productCode != null && !productCode.isBlank()) {
                 String codeTrim = "%" + productCode.trim().toLowerCase() + "%";
                 predicates.add(cb.like(cb.lower(root.get(Auction.Fields.productCode).get("productCode")), codeTrim));
             }
-//            if (status != null && !status.toString().isEmpty()) {
-//                predicates.add(cb.equal(root.get(Auction.Fields.status), status));
-//            }
-            predicates.add(cb.equal(root.get(BaseEntity.Fields.deleted), false));
-
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };

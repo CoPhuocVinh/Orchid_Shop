@@ -277,22 +277,17 @@ public class AuctionService implements IAuctionService {
             throw new BadRequestException("Auction is close edit because End, can not edit !!! ");
 
         }
-        if (updateAuctionRequest.getRejected() == null) {
-            if (auction.getStatus().equals(Status.LIVE)) {
-                throw new BadRequestException("Auction is close edit because Live, can not edit !!! ");
-            }
+
+        if (auction.getStatus().equals(Status.LIVE)) {
+            throw new BadRequestException("Auction is close edit because Live, can not edit !!! ");
         }
+
 
         try {
             if (updateAuctionRequest.getRejected() != null && updateAuctionRequest.getReasonReject() == null) {
                 throw new BadRequestException("Fill the reason reject");
             }
 
-            if (updateAuctionRequest.getRejected() == null) {
-                if (auction.getStatus().equals(Status.LIVE) || auction.getStatus().equals(Status.END)) {
-                    throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
-                }
-            }
             auctionContainer.removeOnAuctionListById(id);
             auctionContainer.removeOnStatusLists(auction);
             // Update auction fields
