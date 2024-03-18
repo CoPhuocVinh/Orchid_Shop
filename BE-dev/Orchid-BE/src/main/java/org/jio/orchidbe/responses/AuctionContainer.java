@@ -55,8 +55,7 @@ public class AuctionContainer {
                 return auction;
             }
         }
-        throw new DataNotFoundException(
-                "Cannot find auction with id: " + id);
+        return null;
     }
 
     public Auction getAuctionOnStatusById(Long id,Status status) throws DataNotFoundException {

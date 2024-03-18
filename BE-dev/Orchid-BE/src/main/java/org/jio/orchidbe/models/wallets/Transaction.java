@@ -35,8 +35,7 @@ public class Transaction extends BaseEntity {
     private String resource;
 
     @Column(name = "amount")
-    private double amount;
-
+    private Double amount;
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
@@ -56,4 +55,8 @@ public class Transaction extends BaseEntity {
 
     @Column(name = "created_by", nullable = true)
     private String createdBy = "";
+
+    public Double getAmount() {
+        return amount != null ? amount : 0;
+    }
 }

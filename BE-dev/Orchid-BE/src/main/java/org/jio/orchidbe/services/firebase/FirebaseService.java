@@ -140,9 +140,28 @@ public class FirebaseService<T> implements IFirebaseService<T> {
     public void testListener(){
         Firestore db = FirestoreClient.getFirestore();
         CollectionReference auctionsRef = db.collection(COLLECTION_AUCTION);
+        // Thêm SnapshotListener để theo dõi sự thay đổi trong các tài liệu của users
+        auctionsRef.addSnapshotListener((snapshots, e) -> {
+            if (e != null) {
+                System.err.println("Listen failed: " + e);
+                return;
+            }
+            for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                String auctionId = dc.getDocument().getId();
+                String productName = dc.getDocument().getString("productName");
 
-
+                switch (dc.getType()) {
+                    case ADDED:
+                        System.out.println("New event added: " + auctionId + ", productName: " + productName);
+                        break;
+                    case MODIFIED:
+                        System.out.println("productName changed for auction " + auctionId + ": " + productName);
+                        break;
+                    case REMOVED:
+                        System.out.println("Auction removed: " + auctionId);
+                        break;
+                }
+            }
+        });
     }
-
-
 }

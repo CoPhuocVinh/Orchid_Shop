@@ -24,6 +24,13 @@ public class TransactionService implements ITransactionService{
     private TransactionMapper transactionMapper;
     @Override
     public Page<TransactionsResponse> getAll(GetAllTransactionResquest request) {
-        return transactionRepository.findAll(request.getSpecification(),request.getPageable()).map(transactionMapper::toResponse);
+        try{
+            return transactionRepository.findAll(request.getSpecification(),request.getPageable()).map(transactionMapper::toResponse);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }

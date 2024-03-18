@@ -188,8 +188,11 @@ public class AuctionService implements IAuctionService {
                                     "Cannot find wallet with id: " + bidFalse.getUser().getId()));
 
             // t t
+            Double startPrice = auction.getStartPrice() != null ? Double.valueOf(auction.getStartPrice()) : 0;
+
+
             Transaction transaction = Transaction.builder()
-                    .amount(auction.getStartPrice()) // Giả sử giá trị thanh toán là tổng số tiền đơn hàng
+                    .amount(startPrice) // Giả sử giá trị thanh toán là tổng số tiền đơn hàng
                     .status(OrderStatus.PENDING) // Trạng thái của giao dịch là chờ xử lý ban đầu
                     .transactionCode(tranCode)
                     .wallet(walletUser)
@@ -270,9 +273,13 @@ public class AuctionService implements IAuctionService {
 
         Auction auction = auctionContainer.getAuctionById(id);
 
+        if (auction == null){
+            throw new BadRequestException("Auction is close edit because End, can not edit !!! ");
+
+        }
         if (updateAuctionRequest.getRejected() == null) {
-            if (auction.getStatus().equals(Status.LIVE) || auction.getStatus().equals(Status.END)) {
-                throw new BadRequestException("Auction is close edit because Live or End, can not edit !!! ");
+            if (auction.getStatus().equals(Status.LIVE)) {
+                throw new BadRequestException("Auction is close edit because Live, can not edit !!! ");
             }
         }
 
@@ -426,10 +433,12 @@ public class AuctionService implements IAuctionService {
 
                     String tranCode = GenerateCodeUtils
                             .generateCode4Transaction(TypeTrans.RT, auction.getProductCode(), dto.getUserId());
+                    //Double depositPrice = auction.getDepositPrice() != null ? Double.valueOf(auction.getDepositPrice()) : 0;
+                    Double startPrice = auction.getStartPrice() != null ? Double.valueOf(auction.getStartPrice()) : 0;
 
                     Transaction transaction = Transaction.builder()
                             .wallet(wallet)
-                            .amount(auction.getDepositPrice())
+                            .amount(startPrice)
                             .status(OrderStatus.CONFIRMED)
                             .paymentMethod(PaymentMethod.CARD)
                             .transactionCode(tranCode)
