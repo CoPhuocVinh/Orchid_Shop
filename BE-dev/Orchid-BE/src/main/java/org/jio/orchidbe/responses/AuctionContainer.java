@@ -6,17 +6,15 @@ import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
-import org.jio.orchidbe.repositorys.products.BidRepository;
+import org.jio.orchidbe.repositorys.auctions.BidRepository;
 import org.jio.orchidbe.services.firebase.IFirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import static org.jio.orchidbe.constants.BaseConstants.COLLECTION_AUCTION;
 
@@ -87,8 +85,7 @@ public class AuctionContainer {
             default:
                 break;
         }
-        throw new DataNotFoundException(
-                "Cannot find auction with id: " + id);
+        return null;
     }
 
     public Boolean removeOnAuctionListById(Long id) throws DataNotFoundException {

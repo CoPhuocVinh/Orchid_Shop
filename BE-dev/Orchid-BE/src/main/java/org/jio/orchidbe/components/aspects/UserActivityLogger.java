@@ -5,14 +5,11 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
-import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.models.auctions.Auction;
-import org.jio.orchidbe.repositorys.products.AuctionRepository;
+import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
 import org.jio.orchidbe.responses.AuctionContainer;
-import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.BiddingResponse;
-import org.jio.orchidbe.services.firebase.IFirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,8 +18,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.net.InetAddress;
 import java.util.logging.Logger;
-
-import static org.jio.orchidbe.constants.BaseConstants.COLLECTION_AUCTION;
 
 @Component
 @Aspect
@@ -57,7 +52,9 @@ public class UserActivityLogger {
     public Object logAuctionActivity(ProceedingJoinPoint joinPoint) throws Throwable {
         // Ghi log trước khi thực hiện method
         String methodName = joinPoint.getSignature().getName();
-        String remoteAddress = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+        String remoteAddress = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes(
+
+        ))
                 .getRequest().getRemoteAddr();
         String computerName = InetAddress.getLocalHost().getHostName();
         logger.info("User activity started: " + methodName + ", IP address: " + remoteAddress);

@@ -10,8 +10,8 @@ import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
-import org.jio.orchidbe.repositorys.products.AuctionRepository;
-import org.jio.orchidbe.repositorys.products.BidRepository;
+import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
+import org.jio.orchidbe.repositorys.auctions.BidRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.bids.CreateBidRequest;
 import org.jio.orchidbe.requests.bids.GetAllBidRequest;
@@ -59,6 +59,10 @@ public class BidService implements IBidService{
 
             Auction auction = auctionContainer.getAuctionOnStatusById(createBidRequest.getAuctionID(), Status.LIVE);
             //* THAY THẾ = LIST LIVE AUCTION TRONG AUCTION CONTAINER
+            if (auction == null){
+                throw new DataNotFoundException("auction not live, can not Bidding");
+            }
+
 
             // check user register auction
             Bid userBid = bidRepository.findByUser_IdAndAuction_Id(createBidRequest.getUserID(),createBidRequest.getAuctionID())

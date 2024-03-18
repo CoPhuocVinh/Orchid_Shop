@@ -1,4 +1,4 @@
-package org.jio.orchidbe.repositorys.products;
+package org.jio.orchidbe.repositorys.wallets;
 
 import org.jio.orchidbe.models.wallets.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;

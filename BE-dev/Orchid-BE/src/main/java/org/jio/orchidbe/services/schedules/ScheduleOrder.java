@@ -5,8 +5,8 @@ import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.products.Product;
-import org.jio.orchidbe.repositorys.products.AuctionRepository;
-import org.jio.orchidbe.repositorys.products.OrderRepository;
+import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
+import org.jio.orchidbe.repositorys.orders.OrderRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.responses.OrderContainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static org.jio.orchidbe.utils.WebUtils.convertCurrentToLocalDateTimeWithZone;

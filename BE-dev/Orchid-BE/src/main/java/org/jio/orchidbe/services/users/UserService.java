@@ -9,25 +9,21 @@ package org.jio.orchidbe.services.users;/*  Welcome to Jio word
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
-import org.jio.orchidbe.dtos.category.CategoryDTOResponse;
 import org.jio.orchidbe.dtos.users.GetAllUserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.users.UserMapper;
-import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
 import org.jio.orchidbe.models.wallets.Wallet;
-import org.jio.orchidbe.repositorys.products.WalletRepository;
+import org.jio.orchidbe.repositorys.wallets.WalletRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +31,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 
 import java.lang.reflect.Field;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor

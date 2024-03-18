@@ -24,7 +24,7 @@ public class ProductDTOCreateRequest {
     private String productName;
 
     @Min(value = 0, message = "Quantity must be greater than or equal to 0")
-    @Max(value = 1000, message = "Quantity must be less than or equal to 1000")
+    @Max(value = Integer.MAX_VALUE, message = "Quantity must be less than or equal to 1000")
     private int quantity;
 
     @Size(min = 80, max = 500, message = "description must be between 80 and 500 characters")

@@ -1,4 +1,4 @@
-package org.jio.orchidbe.repositorys.products;
+package org.jio.orchidbe.repositorys.auctions;
 
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.models.auctions.Auction;

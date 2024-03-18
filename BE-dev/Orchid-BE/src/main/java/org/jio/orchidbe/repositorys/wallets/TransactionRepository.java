@@ -1,4 +1,4 @@
-package org.jio.orchidbe.repositorys.products;
+package org.jio.orchidbe.repositorys.wallets;
 
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.wallets.Transaction;

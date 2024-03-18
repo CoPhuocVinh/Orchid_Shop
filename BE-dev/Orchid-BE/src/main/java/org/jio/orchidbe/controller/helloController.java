@@ -29,8 +29,10 @@ import java.io.IOException;
 @RequestMapping("${api.prefix}/hello")
 public class helloController {
     @GetMapping("")
-    //@Operation(security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<?> getUsers(){
+    @Operation(summary = "Test security ở đây",
+            description = "Phương thức này phải add Token mới lấy GET được.")
+    @SecurityRequirement(name = "bearer-key")
+    public ResponseEntity<?> getHello(){
 
         return new ResponseEntity<>("hello", HttpStatus.OK);
     }

@@ -48,6 +48,8 @@ public class BaseConstants {
 
     public static final String COLLECTION_AUCTION = "auctions";
 
+    public static final String COLLECTION_NOTIFICATION = "notifications";
+
     public static final String COLLECTION_TEST = "test";
 
 }

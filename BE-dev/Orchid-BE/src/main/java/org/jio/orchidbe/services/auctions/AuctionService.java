@@ -21,9 +21,12 @@ import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
-import org.jio.orchidbe.repositorys.products.*;
+import org.jio.orchidbe.repositorys.auctions.BidRepository;
+import org.jio.orchidbe.repositorys.orders.OrderRepository;
 import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
+import org.jio.orchidbe.repositorys.wallets.TransactionRepository;
+import org.jio.orchidbe.repositorys.wallets.WalletRepository;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.*;
 
@@ -39,7 +42,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.jio.orchidbe.models.auctions.Auction;
 
@@ -50,7 +52,7 @@ import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.models.products.Product;
 
-import org.jio.orchidbe.repositorys.products.AuctionRepository;
+import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 
 import org.springframework.data.domain.Page;
@@ -58,7 +60,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.NotAcceptableStatusException;
-import org.springframework.web.util.WebUtils;
 
 import java.text.ParseException;
 import java.util.*;
@@ -116,7 +117,8 @@ public class AuctionService implements IAuctionService {
                 auction.setModifiedBy("System");
                 auction.setStatus(Status.END);
                 String key = String.valueOf(auction.getId());
-                firebaseService.delete(key);
+                firebaseService.delete(key,BaseConstants.COLLECTION_AUCTION);
+
 
                 // auctionContainer.removeAuctionFromList(auction, Status.LIVE);
                 Order orderExisted = orderRepository.findByAuction(auction);
@@ -318,7 +320,7 @@ public class AuctionService implements IAuctionService {
                             auction.setStatus(Status.END);
 
                             String key = String.valueOf(auction.getId());
-                            firebaseService.delete(key);
+                            firebaseService.delete(key,BaseConstants.COLLECTION_AUCTION);
 
                         } else if (updateAuctionRequest.getReasonReject() == null || updateAuctionRequest.getReasonReject().isBlank()) {
                             throw new BadRequestException("Fill in the reason for reject");
@@ -383,8 +385,22 @@ public class AuctionService implements IAuctionService {
 
             response = auctionMapper.toResponseDetail(auction);
             response.setBidList(bids.stream().map(biddingMapper::toResponse).toList());
-        }
 
+
+        }else {
+            Auction auction = auctionContainer.getAuctionOnStatusById(id,Status.LIVE);
+
+            if (auction == null) {
+                firebaseService.delete(key,BaseConstants.COLLECTION_AUCTION);
+                 auction = auctionRepository.findById(id).orElseThrow(
+                        () -> new DataNotFoundException("Not found user_controller.")
+                );
+                List<Bid> bids = bidRepository.findByAuction_Id(auction.getId());
+
+                response = auctionMapper.toResponseDetail(auction);
+                response.setBidList(bids.stream().map(biddingMapper::toResponse).toList());
+            }
+        }
         return response;
 
     }

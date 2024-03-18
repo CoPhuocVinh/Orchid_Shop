@@ -9,8 +9,6 @@ import org.jio.orchidbe.constants.BaseConstants;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
-import org.jio.orchidbe.mappers.auctions.AuctionMapper;
-import org.jio.orchidbe.repositorys.products.AuctionRepository;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
@@ -128,7 +126,7 @@ public class AuctionController {
     public ResponseEntity<?> DeleteByIdRealtime(@PathVariable Long id) throws DataNotFoundException, ExecutionException, InterruptedException {
         ApiResponse apiResponse = new ApiResponse();
         String key = String.valueOf(id);
-        Boolean response = firebaseService.delete(key);
+        Boolean response = firebaseService.delete(key, BaseConstants.COLLECTION_AUCTION);
         apiResponse.ok(response);
         apiResponse.setMessage("Delete successfully with auction id: " + id);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

@@ -20,7 +20,6 @@ public abstract class BaseFilterRequest<T> {
 
     private int page = BaseConstants.DEFAULT_PAGE_NUMBER;
     private int per_page = BaseConstants.DEFAULT_PAGE_SIZE;
-
     private String sortBy = BaseConstants.DEFAULT_SORT_BY;
 
     private Sort.Direction sortDir = BaseConstants.DEFAULT_SORT_DIRECTION;

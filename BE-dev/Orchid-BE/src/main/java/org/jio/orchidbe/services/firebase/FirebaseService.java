@@ -9,12 +9,10 @@ package org.jio.orchidbe.services.firebase;/*  Welcome to Jio word
 
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.*;
 
-import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
+import org.jio.orchidbe.constants.BaseConstants;
 import org.jio.orchidbe.dtos.TestDTO;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
@@ -58,7 +56,7 @@ public class FirebaseService<T> implements IFirebaseService<T> {
         return "bibi";
     }
     @Override
-    public String savev2(T  saveObj, Long id, String collectionName) throws ExecutionException, InterruptedException {
+    public String savev2(T saveObj, Long id, String collectionName) throws ExecutionException, InterruptedException {
         try {
             //Firestore dbFirestore = FirestoreClient.getFirestore();
             Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -90,7 +88,6 @@ public class FirebaseService<T> implements IFirebaseService<T> {
                 //throw new DataNotFoundException("Not found live auction with id" + key);
             }
 
-
         }catch (Exception e){
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -100,7 +97,7 @@ public class FirebaseService<T> implements IFirebaseService<T> {
 
 
     @Override
-    public Boolean delete(String key) throws ExecutionException, InterruptedException {
+    public Boolean delete(String key, String Collection) throws ExecutionException, InterruptedException {
         try {
             Firestore dbFirestore = FirestoreClient.getFirestore();
             ApiFuture<WriteResult> collectionApiFuture = dbFirestore.collection(COLLECTION_AUCTION).document(key).delete();
@@ -138,6 +135,13 @@ public class FirebaseService<T> implements IFirebaseService<T> {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public void testListener(){
+        Firestore db = FirestoreClient.getFirestore();
+        CollectionReference auctionsRef = db.collection(COLLECTION_AUCTION);
+
+
     }
 
 

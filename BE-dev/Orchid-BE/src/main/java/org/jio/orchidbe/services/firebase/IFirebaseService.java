@@ -23,7 +23,7 @@ public interface IFirebaseService<T> {
 
     AuctionDetailResponse getAuctionByKey(String key, String collectionName) throws ExecutionException, InterruptedException;
 
-    Boolean delete(String key) throws ExecutionException, InterruptedException;
+    Boolean delete(String key, String Collection) throws ExecutionException, InterruptedException;
 
     List<AuctionDetailResponse> getAuctions(String collectionName) throws ExecutionException, InterruptedException;
 }

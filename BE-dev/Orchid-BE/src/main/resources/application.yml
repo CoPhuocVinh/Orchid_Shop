@@ -47,7 +47,8 @@ data:
   format: "yyyy-MM-dd'T'HH:mm:ss.SSS"
 jwt:
 #  expiration: 2592000 #30 days = 30 * 24 * 60 * 60
-  expiration: 1800 #30 days = 30 * 24 * 60 * 60
+#  expiration: 1800 #30 min = 30 * 60
+  expiration: 60
   expiration-refresh-token: 5184000 #60 days = 60 * 24 * 60 * 60
   secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
 logging:

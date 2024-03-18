@@ -10,7 +10,7 @@ package org.jio.orchidbe.services.wallets;/*  Welcome to Jio word
 import org.jio.orchidbe.dtos.wallets.GetAllTransactionResquest;
 import org.jio.orchidbe.dtos.wallets.TransactionsResponse;
 import org.jio.orchidbe.mappers.wallets.TransactionMapper;
-import org.jio.orchidbe.repositorys.products.TransactionRepository;
+import org.jio.orchidbe.repositorys.wallets.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

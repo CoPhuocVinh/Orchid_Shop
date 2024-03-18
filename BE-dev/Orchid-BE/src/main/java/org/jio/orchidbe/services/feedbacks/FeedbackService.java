@@ -8,7 +8,7 @@ import org.jio.orchidbe.models.FBStatus;
 import org.jio.orchidbe.models.feedbacks.Feedbacks;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
-import org.jio.orchidbe.repositorys.products.FeedbackRepository;
+import org.jio.orchidbe.repositorys.feedbacks.FeedbackRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.feedbacks.CreateFeedbackRequest;
