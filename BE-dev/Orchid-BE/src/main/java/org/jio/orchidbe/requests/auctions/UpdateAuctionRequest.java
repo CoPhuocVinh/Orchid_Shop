@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,9 @@ public class UpdateAuctionRequest {
     private Float biddingPrice;
     @Min(value = 0, message = "Deposit Price must be greater than or equal to 0")
     private Float depositPrice;
+
+    @Size(min = 3, max = 200, message = "title must be between 3 and 200 characters")
+    private String title;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime endDate;

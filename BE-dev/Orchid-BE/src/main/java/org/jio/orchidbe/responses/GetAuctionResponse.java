@@ -3,6 +3,7 @@ package org.jio.orchidbe.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class GetAuctionResponse extends BaseResponse {
     private Integer quantity;
     private String modifiedBy;
 
+    private String title;
     @JsonProperty("image_url")
     private String imageUrl;
     private boolean rejected;

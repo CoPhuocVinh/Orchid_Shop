@@ -9,6 +9,7 @@ package org.jio.orchidbe.responses;/*  Welcome to Jio word
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.jio.orchidbe.enums.Status;
 
@@ -27,6 +28,8 @@ public class AuctionDetailResponse {
     private String endDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private String startDate;
+
+    private String title;
     private Status status;
     private Float depositPrice;
     private Integer quantity;

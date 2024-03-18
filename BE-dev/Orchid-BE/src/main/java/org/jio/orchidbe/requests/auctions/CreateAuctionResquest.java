@@ -20,6 +20,8 @@ public class CreateAuctionResquest {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private String startDate;
 
+    @Size(min = 3, max = 200, message = "title must be between 3 and 200 characters")
+    private String title;
 
     @Min(value = 50000, message = "Deposit Price must be greater than or equal to 50000")
     private Float depositPrice;

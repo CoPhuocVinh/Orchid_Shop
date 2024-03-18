@@ -14,6 +14,8 @@ import org.jio.orchidbe.models.products.Category;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.user_enum.Gender;
+import org.jio.orchidbe.models.wallets.Transaction;
+import org.jio.orchidbe.models.wallets.Wallet;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -34,7 +36,6 @@ public class GetAllAuctionResquest extends BaseFilterRequest<Auction> {
     private String productCode;
 
     private String status;
-
     @Override
     public Specification<Auction> getSpecification() {
         return (root, query, cb) -> {
@@ -64,6 +65,17 @@ public class GetAllAuctionResquest extends BaseFilterRequest<Auction> {
             if (search != null && !search.isBlank()) {
                 String searchTrim = "%" + search.trim().toLowerCase() + "%";
                 predicates.add(cb.like(cb.lower(root.get(Auction.Fields.product).get("productName")), searchTrim));
+            }
+
+            if (search != null && !search.isBlank()) {
+                String searchTrim = "%" + search.trim().toLowerCase() + "%";
+                predicates.add(cb.like(cb.lower(root.get(Auction.Fields.title)), searchTrim));
+            }
+
+            if (search != null && !search.isBlank()) {
+                String searchTrim = "%" + search.trim().toLowerCase() + "%";
+                predicates.add(cb.equal(root.join(Auction.Fields.product)
+                        .get(Product.Fields.category).get(Category.Fields.type), searchTrim));
             }
 
             if (productCode != null && !productCode.isBlank()) {

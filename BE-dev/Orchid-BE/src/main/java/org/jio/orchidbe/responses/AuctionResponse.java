@@ -3,6 +3,7 @@ package org.jio.orchidbe.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,9 @@ public class AuctionResponse extends BaseResponse {
     private LocalDateTime startDate;
     private Status status;
     private Float depositPrice;
+
+
+    private String title;
     private Integer quantity;
     private String modifiedBy;
 
