@@ -17,3 +17,14 @@ export async function getTransactions(
   revalidatePath("/")
   return await fetchListDataWithSearchParam(url, searchParams);
 }
+
+
+export async function getTransactionByUserId(
+  searchParams: SearchParams,
+  userId: string
+): Promise<{ data: ITransaction[]; pageCount: number }> {
+  noStore();
+  const url = `/transactions?userId=${userId}`;
+
+  return await fetchListDataWithSearchParam(url, searchParams);
+}

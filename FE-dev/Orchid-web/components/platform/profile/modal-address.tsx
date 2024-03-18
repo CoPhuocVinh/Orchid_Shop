@@ -1,8 +1,16 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
+import { createUserAddressInfo } from "@/lib/actions";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const GetApi_Province: React.FC = () => {
+
+  const {data: session} = useSession()
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [selectedProvince, setSelectedProvince] = useState("");
@@ -87,12 +95,27 @@ const GetApi_Province: React.FC = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // const fullAddress = `${selectedProvince}, ${selectedDistrict}, ${selectedWard}, ${address}`;
     const fullAddress = `${address}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince} `;
-    const value = { phone: phoneNumber, address: fullAddress };
+    const value = { phone: parseInt(phoneNumber), address: fullAddress };
     console.log(value); // You can replace this with your desired action like API call
+  
+    try {
+      React.startTransition(() => {
+        toast.promise(
+          createUserAddressInfo(session?.user.id.toString()!, value),
+          {
+            loading: "Creating...",
+            success: () => "Address created successfully.",
+            error: (err) => `Error: ${err.message}`,
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Error creating address:", error);
+    }
   };
 
   return (

@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import FormPopoverUser from "../popover-user-info";
 import UserAvatar from "../user-avatar";
-import { Plus, ShoppingBag, Wallet } from "lucide-react";
+import { ShoppingBag, Wallet } from "lucide-react";
 
 const menuItems = [
   {
@@ -38,7 +38,7 @@ export default function Menu() {
   // const isCustomer = session?.user.role === "CUSTOMER";
 
   return (
-    <nav className="primary-nav hidden items-center justify-between md:flex space-x-2">
+    <nav className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
       <ul className="hidden flex-wrap md:flex space-x-2">
         {menuItems.map((item) => (
           <li key={item.id}>

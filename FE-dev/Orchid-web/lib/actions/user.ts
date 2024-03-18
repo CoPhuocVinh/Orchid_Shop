@@ -1,5 +1,7 @@
+'use server'
+
 import { fetchListDataWithSearchParam } from "@/lib/generics";
-import { IUser } from "@/types/dashboard";
+import { IAdress, IUser } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { api } from "../api-interceptor/api";
@@ -68,6 +70,27 @@ export async function getUserAddressInfo(
   } catch (error) {
     console.log(error);
     return { data: [] };
+    
+  }
+}
+
+
+export async function createUserAddressInfo(
+  params: string,
+  data: IAdress
+ 
+): Promise<void> {
+
+  const url = `/userInfo/CreateUserIn4ByUserId/${params}`;
+
+  try {
+     await api.post(url,data);
+
+     revalidatePath("/profile");
+  
+  } catch (error) {
+    console.log(error);
+    throw error;
     
   }
 }

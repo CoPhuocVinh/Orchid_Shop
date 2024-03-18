@@ -15,8 +15,10 @@ import { SearchParams } from "@/types/table";
 import { getOrdersByUserId } from "@/lib/actions";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { Shell } from "@/components/shell";
-import { OrderTable } from "./order-table";
+import { OrderTable } from "./profile-order/order-table";
 import { auth } from "@/lib/auth";
+import { getTransactionByUserId } from "@/lib/actions/transaction";
+import { TransactionTable } from "./profile-transaction/transaction-table";
 
 export interface IndexPageProps {
   searchParams: SearchParams;
@@ -24,6 +26,7 @@ export interface IndexPageProps {
 async function Nav_Menu({ searchParams }: IndexPageProps) {
   const session = await auth();
   const orders = getOrdersByUserId(searchParams, session?.user.id!);
+  const transactions = getTransactionByUserId(searchParams, session?.user.id!)
   return (
     <div className="flex flex-row">
       <div className="container mx-auto mt-12 h-full w-88">
@@ -80,6 +83,14 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                             Order Biding
                           </TabsTrigger>
                         </li>
+                        <li>
+                          <TabsTrigger
+                            value="transactions"
+                            className="hover:bg-green-500 w-full  inline-block px-4 py-2 font-normal text-xl  text-gray-600 bg-white rounded"
+                          >
+                            Transaction
+                          </TabsTrigger>
+                        </li>
                       </ul>
                     </TabsList>
 
@@ -105,6 +116,22 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                           >
                             <div className="overflow-x-auto">
                               <OrderTable orderPromise={orders} />
+                            </div>
+                          </React.Suspense>
+                        </Shell>
+                      </TabsContent>
+                      <TabsContent value="transactions">
+                        <Shell>
+                          <React.Suspense
+                            fallback={
+                              <DataTableSkeleton
+                                columnCount={4}
+                                filterableColumnCount={2}
+                              />
+                            }
+                          >
+                            <div className="overflow-x-auto">
+                              <TransactionTable transactionPromise={transactions} />
                             </div>
                           </React.Suspense>
                         </Shell>

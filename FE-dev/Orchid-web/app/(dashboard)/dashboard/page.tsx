@@ -1,11 +1,19 @@
+'use client'
 import React from "react";
 import TotalWidget from "@/components/dashboard/widget/total-widget";
 import RevenueFlow from "@/components/dashboard/revenueFlow/page";
 import Efficiency from "@/components/dashboard/revenueFlow/Efficiency";
 import ListTab from "@/components/dashboard/listTab/page";
 import Wallet from "@/components/dashboard/wallet/page";
+import { useSession } from "next-auth/react";
 
 const DashboardPage = () => {
+
+  const {data: session} = useSession();
+
+  const isAdmin = session?.user.role === "ADMIN"
+
+
   return (
     <main className="w-full min-h-screen  px-6 pb-6 pt-[100px] sm:pt-[156px] xl:px-12 xl:pb-12">
       {/* write your code here */}

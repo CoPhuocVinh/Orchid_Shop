@@ -4,13 +4,17 @@ import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import { Icons } from "@/components/icons";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 
 function Sidebar({ handleActive }: any) {
   const [activeUser, setActiveUser] = useState(false);
   const [activeProduct, setActiveProduct] = useState(false);
   const [activeAcution, setActiveAcution] = useState(false);
+
+  const { data: session } = useSession();
+
+  const isAdmin = session?.user.role === "ADMIN";
 
   return (
     <aside className="sidebar-wrapper fixed top-0 z-30 block h-full w-[308px] bg-white dark:bg-darkblack-600 sm:hidden xl:block">
@@ -62,20 +66,22 @@ function Sidebar({ handleActive }: any) {
                   </div>
                 </Link>
               </li>
-              <li className="item py-[11px] text-bgray-900 dark:text-white">
-                <Link href="/dashboard/transaction">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.transactionSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        Transaction
-                      </span>
+              {isAdmin && (
+                <li className="item py-[11px] text-bgray-900 dark:text-white">
+                  <Link href="/dashboard/transaction">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2.5">
+                        <span className="item-ico">
+                          <Icons.transactionSidebarIcon />
+                        </span>
+                        <span className="item-text text-lg font-medium leading-none">
+                          Transaction
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </li>
+                  </Link>
+                </li>
+              )}
 
               {/* <li className="item py-[11px] text-bgray-900 dark:text-white">
                 <Link href="/dashboard/integrations">
@@ -91,48 +97,51 @@ function Sidebar({ handleActive }: any) {
                   </div>
                 </Link>
               </li> */}
-              <li
-                className="item py-[11px] text-bgray-900 dark:text-white"
-                onClick={() => setActiveUser(!activeUser)}
-              >
-                <a className="cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="item-ico">
-                        <Icons.userSidebarIcon />
-                      </span>
-                      <span className="item-text text-lg font-medium leading-none">
-                        User
+              {isAdmin && (
+                <li
+                  className="item py-[11px] text-bgray-900 dark:text-white"
+                  onClick={() => setActiveUser(!activeUser)}
+                >
+                  <a className="cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2.5">
+                        <span className="item-ico">
+                          <Icons.userSidebarIcon />
+                        </span>
+                        <span className="item-text text-lg font-medium leading-none">
+                          User
+                        </span>
+                      </div>
+                      <span>
+                        <Icons.sidebarChevonLeftIcon />
                       </span>
                     </div>
-                    <span>
-                      <Icons.sidebarChevonLeftIcon />
-                    </span>
-                  </div>
-                </a>
-                <ul
-                  className={`sub-menu ml-2.5 mt-[22px] border-l border-success-100 pl-5 ${
-                    activeUser && "active"
-                  }`}
-                >
-                  <li>
-                    <Link
-                      href="/dashboard/users"
-                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
-                    >
-                      View Info user
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/dashboard/create-staff"
-                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
-                    >
-                      Create
-                    </Link>
-                  </li>
-                </ul>
-              </li>
+                  </a>
+                  <ul
+                    className={`sub-menu ml-2.5 mt-[22px] border-l border-success-100 pl-5 ${
+                      activeUser && "active"
+                    }`}
+                  >
+                    <li>
+                      <Link
+                        href="/dashboard/users"
+                        className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                      >
+                        View Info user
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/dashboard/create-staff"
+                        className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                      >
+                        Create
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
+              )}
+
               <li
                 className="item py-[11px] text-bgray-900 dark:text-white"
                 onClick={() => setActiveProduct(!activeProduct)}
@@ -215,14 +224,16 @@ function Sidebar({ handleActive }: any) {
                       Create auction
                     </Link>
                   </li>
-                  <li>
-                    <Link
-                      href="/dashboard/censorship"
-                      className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
-                    >
-                      Censorship auctions
-                    </Link>
-                  </li>
+                  {isAdmin && (
+                    <li>
+                      <Link
+                        href="/dashboard/censorship"
+                        className="text-md inline-block py-1.5 font-medium text-bgray-600 transition-all hover:text-bgray-800 dark:text-bgray-50 hover:dark:text-success-300"
+                      >
+                        Censorship auctions
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               </li>
 

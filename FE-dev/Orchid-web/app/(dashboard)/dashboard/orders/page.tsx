@@ -25,9 +25,6 @@ const HistoryPage = ({ searchParams }: IndexPageProps) => {
             </React.Suspense>
           </Shell>
         </section>
-        <section className="">
-          <Wallet />
-        </section>
       </div>
     </main>
   );

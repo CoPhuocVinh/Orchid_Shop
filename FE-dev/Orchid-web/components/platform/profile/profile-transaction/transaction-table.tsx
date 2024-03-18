@@ -9,24 +9,24 @@ import { DataTable } from "@/components/data-table/data-table";
 import {
   searchableColumns,
   filterableColumns,
-  fetchOrderTableColumnDefs
-} from "./order-table-column-def";
+  fetchTransactionTableColumnDefs
+} from "./transaction-table-column-def";
 import { useRouter } from "next/navigation";
-import { getTransactions } from "@/lib/actions/transaction";
-import { IOrder } from "@/types/dashboard";
+import { getTransactionByUserId, getTransactions } from "@/lib/actions/transaction";
+import { IOrder, ITransaction } from "@/types/dashboard";
 import { getOrders } from "@/lib/actions";
 
 interface OrdersTableProps {
-  orderPromise: ReturnType<typeof getOrders>;
+  transactionPromise: ReturnType<typeof getTransactionByUserId>;
 }
 
-export function OrderTable({ orderPromise }: OrdersTableProps) {
-  const { data, pageCount } = React.use(orderPromise);
+export function TransactionTable({ transactionPromise }: OrdersTableProps) {
+  const { data, pageCount } = React.use(transactionPromise);
   const [isPending, startTransition] = React.useTransition();
   // console.log(data)
   const router = useRouter();
-  const columns = React.useMemo<ColumnDef<IOrder, unknown>[]>(
-    () => fetchOrderTableColumnDefs(isPending, startTransition, router),
+  const columns = React.useMemo<ColumnDef<ITransaction, unknown>[]>(
+    () => fetchTransactionTableColumnDefs(isPending, startTransition, router),
     [isPending, router]
   );
   const { dataTable } = useDataTable({

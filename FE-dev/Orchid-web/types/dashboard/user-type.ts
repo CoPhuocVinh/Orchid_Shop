@@ -19,3 +19,11 @@ export type IUser = {
      dob: number,
      gender: Gender
 }
+
+
+export type IAdress = {
+    address: string,
+    phone: number,
+    defaulted?: boolean,
+    info_name?: string
+}
