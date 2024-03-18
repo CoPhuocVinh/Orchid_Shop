@@ -76,54 +76,57 @@ export default function ListingCard({
             <p className="mb-3 text-gray-light xl:mb-3">
               Giá khởi điểm: {startPrice}
             </p>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <p className="text-gray-light">
-                  <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">
-                    Bắt đầu sau :
-                  </span>
-                </p>
-                {countdown && (
-                  <div className="bottom-0 right-5 text-sm font-bold flex items-center gap-1">
-                    <FancyText
-                      gradient={{
-                        from: "#fb4646",
-                        to: "#ff7171",
-                        type: "linear",
-                      }}
-                      animateTo={{ from: "#ed9a6d", to: "#e23a56" }}
-                      animateDuration={10000}
-                    >
-                      <span className="inline-block w-6 text-center">{`${countdown.days
-                        .toString()
-                        .padStart(2, "0")}`}</span>
-                      d&nbsp; :&nbsp;
-                      <span className="inline-block w-6 text-center">{`${countdown.hours
-                        .toString()
-                        .padStart(2, "0")}`}</span>
-                      h&nbsp; :&nbsp;
-                      <span className="inline-block w-6 text-center">{`${countdown.minutes
-                        .toString()
-                        .padStart(2, "0")}`}</span>
-                      m&nbsp; :&nbsp;
-                      <span className="inline-block w-6 text-center">{`${countdown.seconds
-                        .toString()
-                        .padStart(2, "0")}`}</span>
-                      s
-                    </FancyText>
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center gap-3 leading-7">
-                {/* <Rate
+            {status === "COMING" && (
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <p className="text-gray-light">
+                    <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">
+                      Bắt đầu sau :
+                    </span>
+                  </p>
+                  {countdown && (
+                    <div className="bottom-0 right-5 text-sm font-bold flex items-center gap-1">
+                      <FancyText
+                        gradient={{
+                          from: "#fb4646",
+                          to: "#ff7171",
+                          type: "linear",
+                        }}
+                        animateTo={{ from: "#ed9a6d", to: "#e23a56" }}
+                        animateDuration={10000}
+                      >
+                        <span className="inline-block w-6 text-center">{`${countdown.days
+                          .toString()
+                          .padStart(2, "0")}`}</span>
+                        d&nbsp; :&nbsp;
+                        <span className="inline-block w-6 text-center">{`${countdown.hours
+                          .toString()
+                          .padStart(2, "0")}`}</span>
+                        h&nbsp; :&nbsp;
+                        <span className="inline-block w-6 text-center">{`${countdown.minutes
+                          .toString()
+                          .padStart(2, "0")}`}</span>
+                        m&nbsp; :&nbsp;
+                        <span className="inline-block w-6 text-center">{`${countdown.seconds
+                          .toString()
+                          .padStart(2, "0")}`}</span>
+                        s
+                      </FancyText>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-3 leading-7">
+                  {/* <Rate
       allowHalf
       allowClear
       defaultValue={rating}
       characterClassName="h-[14px] w-[14px] 3xl:h-[18px] 3xl:w-[18px]"
     /> */}
-                {/* ({ratingCount}) */}
+                  {/* ({ratingCount}) */}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </Link>
       </div>
