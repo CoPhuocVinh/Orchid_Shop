@@ -5,6 +5,9 @@ import { IWallet } from "@/types/dashboard";
 export async function getWalletByUserId(
   params: string
 ): Promise<{ data: IWallet | null }> {
+  if (!params) {
+    return { data: null };
+  }
   const url = `/wallets/get-balance-by-userId/${params}`;
 
   try {

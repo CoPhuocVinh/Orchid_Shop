@@ -1,5 +1,5 @@
 import React from "react";
-
+import { reviewsData } from '@/data/user-working-data/reviews'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LeftSideAuction from "@/components/platform/auction/left-side-auction";
 import RelatedListingBlock from "@/components/platform/auction/related-listings-block";
@@ -9,6 +9,7 @@ import Bidding from "./_components/bidding";
 import BiddingHistory from "./_components/bidding-history";
 import ListingDetails from "./_components/listing-detail-block";
 import ListingDetailsRealTime from "./_components/listing-detail-realtime";
+import ReviewBlock from "./_components/review";
 
 const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
   const auction = await getAuctionByID(params.auctionId);
@@ -68,6 +69,9 @@ const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
         </div>
       </div>
 
+      <div className="container mx-auto px-4 md:px-12">
+      <ReviewBlock reviewsData={reviewsData} />
+      </div>
       <div className="container mx-auto px-4 md:px-12">
         <RelatedListingBlock />
       </div>
