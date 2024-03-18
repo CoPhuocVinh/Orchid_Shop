@@ -43,7 +43,7 @@ const MyProfileForm = () => {
     id: session?.user.id,
     name: session?.user.name,
     email: session?.user.email,
-    image_url: session?.user.image_url,
+    image_url: session?.user.img,
     gender: session?.user.gender,
     dob: session?.user.dob ? format(session?.user.dob, "do-M-yyyy") : "",
   };
@@ -92,6 +92,7 @@ const MyProfileForm = () => {
               ...session,
               user: {
                 ...values,
+                img: values.image_url
               },
             });
             toast.success("cập nhật thông tin thành công");

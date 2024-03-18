@@ -13,7 +13,7 @@ const PersonalInfo =  ({ name, activeTab }: any) => {
     id: session?.user.id,
     name: session?.user.name,
     email: session?.user.email,
-    img: session?.user.image_url,
+    img: session?.user.img,
     dob: session?.user.dob ?format(session?.user.dob,'do-M-yyyy') : ''
   }
 

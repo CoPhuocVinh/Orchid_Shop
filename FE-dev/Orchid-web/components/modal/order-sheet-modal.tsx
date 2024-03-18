@@ -27,7 +27,7 @@ export const OrderSheet = () => {
   const searchParams = { page: "1", per_page: "100", status: "PENDING" }; //TODO: add status
   const { data: orders, isLoading } = useGetOrderByUserId(
     searchParams,
-    session?.user.id!
+    session?.user.id || ''
   );
 
   const getDataOrderList = () => {

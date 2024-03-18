@@ -83,6 +83,7 @@ function PersonalInfoFrom({ user }: PersonalInfoFromProp) {
               ...session,
               user: {
                 ...values,
+                img: values.image_url
               },
             });
             toast.success("cập nhật thông tin thành công");

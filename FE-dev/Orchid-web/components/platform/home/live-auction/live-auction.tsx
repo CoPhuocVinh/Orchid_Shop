@@ -18,7 +18,7 @@ export default function TopAuction() {
       className="lg:container-fluid mt-12 pl-4 sm:pl-6 lg:mt-16"
       headerClassName="mb-4 md:mb-5 xl:mb-6"
     >
-      {!state && <BlockLoader />}
+      {!state && isLoading &&  <BlockLoader />}
       {state && <DestinationCarousel data={commingAuction?.data!} />}
     </Section>
   );
