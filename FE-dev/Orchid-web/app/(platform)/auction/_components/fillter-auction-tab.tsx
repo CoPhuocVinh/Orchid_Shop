@@ -137,6 +137,11 @@ function Fillter_Auction_Tab({
       setFilterData(filteredAuctions);
     }
   };
+  const [isOpen, setIsOpen] = useState(true); // Khởi tạo trạng thái isOpen với giá trị true
+
+  const toggleAccordion = () => {
+    setIsOpen(!isOpen); // Đảo ngược giá trị của isOpen khi click vào AccordionTrigger
+  };
 
   return (
     <div className={clsx(" h-full bg-white xl:px-0.5 mx-4", className)}>

@@ -13,8 +13,8 @@ export interface IndexPageProps {
 const TransactionPage = ({ searchParams }: IndexPageProps) => {
   const transaction = getTransactions(searchParams);
 
-  const search_all = {page:"1", per_page: "200"}
-  const transactionDashboard = getTransactions(search_all)
+  const search_all = { page: "1", per_page: "100" };
+  const transactionDashboard = getTransactions(search_all);
 
   return (
     <>
@@ -25,6 +25,7 @@ const TransactionPage = ({ searchParams }: IndexPageProps) => {
               <DataTableSkeleton columnCount={4} filterableColumnCount={2} />
             }
           >
+            {/* dữ liệu chưa vào nè */}
             <TotalWidget transactionPromise={transactionDashboard} />
             <TransactionTable transactionPromise={transaction} />
           </React.Suspense>

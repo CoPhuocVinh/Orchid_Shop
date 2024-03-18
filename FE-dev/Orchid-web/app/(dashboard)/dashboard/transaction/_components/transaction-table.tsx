@@ -24,7 +24,7 @@ export function TransactionTable({
 }: TransactionsTableProps) {
   const { data, pageCount } = React.use(transactionPromise);
   const [isPending, startTransition] = React.useTransition();
-  // console.log(data)
+  // console.log(data);
   const router = useRouter();
   const columns = React.useMemo<ColumnDef<ITransaction, unknown>[]>(
     () => fetchTransactionTableColumnDefs(isPending, startTransition, router),
