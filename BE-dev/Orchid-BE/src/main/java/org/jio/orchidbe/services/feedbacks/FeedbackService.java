@@ -1,19 +1,25 @@
 package org.jio.orchidbe.services.feedbacks;
 
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
+import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.feedbacks.FeedbackMapper;
 import org.jio.orchidbe.models.FBStatus;
+import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.feedbacks.Feedbacks;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.repositorys.products.AuctionRepository;
+import org.jio.orchidbe.repositorys.products.BidRepository;
 import org.jio.orchidbe.repositorys.products.FeedbackRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.feedbacks.CreateFeedbackRequest;
 import org.jio.orchidbe.requests.feedbacks.GetAllFeedbackRequest;
 import org.jio.orchidbe.requests.feedbacks.UpdateFeedbackRequest;
+import org.jio.orchidbe.responses.AuctionContainer;
 import org.jio.orchidbe.responses.FeedbackResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -42,6 +49,12 @@ public class FeedbackService implements IFeedbackService{
     @Autowired
     private ProductRepository productRepository;
     @Autowired
+    private AuctionRepository auctionRepository;
+    @Autowired
+    private AuctionContainer auctionContainer;
+    @Autowired
+    private BidRepository bidRepository;
+    @Autowired
     private UserRepository userRepository;
 
 
@@ -49,16 +62,17 @@ public class FeedbackService implements IFeedbackService{
     public FeedbackResponse createFeedback(CreateFeedbackRequest createFeedbackRequest) throws DataNotFoundException {
         Feedbacks feedbacks1 = feedbackMapper.toEntity(createFeedbackRequest);
 
-        Product product = productRepository.findById(createFeedbackRequest.getProductID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find product with id: "+ createFeedbackRequest.getProductID()));
-        User user = userRepository.findById(createFeedbackRequest.getUserID())
-                .orElseThrow(() ->
-                        new DataNotFoundException(
-                                "Cannot find product with id: "+ createFeedbackRequest.getUserID()));
-        feedbacks1.setProduct(product);
-        feedbacks1.setUser(user);
+        Auction auction = auctionContainer.getAuctionOnStatusById(createFeedbackRequest.getAuctionID(), Status.LIVE);
+        //* THAY THẾ = LIST LIVE AUCTION TRONG AUCTION CONTAINER
+
+        // check user register auction
+        Bid userBid = bidRepository.findByUser_IdAndAuction_Id(createFeedbackRequest.getUserID(),createFeedbackRequest.getAuctionID())
+                .orElseThrow(
+                        () -> new NotAcceptableStatusException("user must register to bidding")
+                );
+
+        feedbacks1.setAuction(auction);
+        feedbacks1.setUser(userBid.getUser());
         feedbacks1.setStatus(FBStatus.OPEN);
         feedbackRepository.save(feedbacks1);
 

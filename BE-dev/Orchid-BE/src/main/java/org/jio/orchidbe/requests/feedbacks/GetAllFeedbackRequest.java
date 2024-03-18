@@ -24,7 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GetAllFeedbackRequest extends BaseFilterRequest<Feedbacks> {
     private String search;
-    private Long productID; // Add auctionId field for searching by auction ID
+    private Long auctionID; // Add auctionId field for searching by auction ID
     @Override
     public Specification<Feedbacks> getSpecification() {
         return (root, query, cb) -> {
@@ -39,8 +39,8 @@ public class GetAllFeedbackRequest extends BaseFilterRequest<Feedbacks> {
             }
 
             // Add auctionID criteria
-            if (productID != null) {
-                predicates.add(cb.equal(root.get(Feedbacks.Fields.product).get(Product.Fields.id), productID));
+            if (auctionID != null) {
+                predicates.add(cb.equal(root.get(Feedbacks.Fields.auction).get(Product.Fields.id), auctionID));
             }
 
 

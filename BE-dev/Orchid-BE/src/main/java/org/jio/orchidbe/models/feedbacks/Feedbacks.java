@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.models.FBStatus;
+import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
 
@@ -26,8 +27,8 @@ public class Feedbacks extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "auction_id")
+    private Auction auction;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

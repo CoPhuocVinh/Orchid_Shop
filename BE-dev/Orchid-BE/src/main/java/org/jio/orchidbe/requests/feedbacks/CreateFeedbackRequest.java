@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateFeedbackRequest {
     private String content;
-    private Long productID;
+    private Long auctionID;
     private Long userID;
 }
