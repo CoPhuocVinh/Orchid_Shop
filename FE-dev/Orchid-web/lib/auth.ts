@@ -6,7 +6,7 @@ interface CustomJWT extends JWT {
   id: string;
   name: string;
   email: string;
-  img: string;
+  image_url: string;
   role: string;
   dob: string;
   gender:string;
@@ -75,7 +75,7 @@ export const authOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        session.user.img = token.img as string;
+        session.user.image_url = token.image_url as string;
         session.user.dob = token.dob as string;
         session.user.gender = token.gender as string;
         session.user.access_token = token.access_token as string;

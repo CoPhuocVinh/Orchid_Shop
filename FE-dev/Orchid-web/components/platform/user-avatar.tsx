@@ -8,8 +8,8 @@ const UserAvatar = () => {
   
   const { data: session } = useSession();
 
-  const image = session?.user.img
-    ? session?.user.img
+  const image = session?.user.image_url
+    ? session?.user.image_url
     : "/images/avatar.jpg";
 
   return (

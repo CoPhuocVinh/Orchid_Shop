@@ -34,6 +34,7 @@ import { parse } from "date-fns";
 import { ImageUploadOne } from "@/components/image-cloudinary-upload/image-upload";
 import { updateUserInfo } from "@/lib/actions";
 import { toast } from "sonner";
+import { DateTimePicker } from "@/components/date-time-picker/date-time-picker";
 
 const MyProfileForm = () => {
   const { data: session, update } = useSession();
@@ -42,10 +43,12 @@ const MyProfileForm = () => {
     id: session?.user.id,
     name: session?.user.name,
     email: session?.user.email,
-    image_url: session?.user.img,
+    image_url: session?.user.image_url,
     gender: session?.user.gender,
     dob: session?.user.dob ? format(session?.user.dob, "do-M-yyyy") : "",
   };
+
+  console.log(formatUser)
 
   const genderOptions = [
     { label: "Nam", value: "MALE" },
@@ -165,47 +168,27 @@ const MyProfileForm = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <FormField
-            control={form.control}
-            name="dob"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Date of Birth</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <button
-                        type="button"
-                        className={`w-full px-4 py-2 border rounded-md text-left font-normal ${
-                          !field.value ? "text-gray-400" : ""
-                        }`}
-                      >
-                        {field.value
-                          ? format(field.value, "PPP")
-                          : "Pick a date"}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormDescription>
-                  Your date of birth is used to calculate your age.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="dob"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="dob">Chỉnh sửa năm sinh</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  granularity="minute"
+                  jsDate={field.value ? new Date(field.value) : null}
+                  onJsDateChange={field.onChange}
+                  aria-label="Time Field"
+                  // isDisabled={
+                  //   field.value && new Date(field.value) < new Date()
+                  // }
+                />
+              </FormControl>
+              <FormMessage className="dark:text-yellow-300" />
+            </FormItem>
+          )}
+        />
 
           <FormField
             control={form.control}
