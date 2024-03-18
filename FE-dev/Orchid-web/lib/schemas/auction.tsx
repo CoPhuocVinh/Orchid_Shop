@@ -30,7 +30,7 @@ export const auctionSchema = z
     title: z
     .string()
     .min(3, { message: "Hãy nhập title cho buổi đấu giá" })
-    .max(20, "Tên quá dài"),
+    .max(60, "Tên quá dài"),
     endDateInValid: z.any().nullish(),
     remindAtDateInValid: z.any().nullish(),
   })
