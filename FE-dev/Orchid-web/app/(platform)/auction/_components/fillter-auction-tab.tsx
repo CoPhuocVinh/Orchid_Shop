@@ -11,7 +11,7 @@ import { RadioGroup } from "@/components/ui/radio-group";
 
 import clsx from "clsx";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { IAuction } from "@/types/dashboard";
 import { format } from "date-fns";
@@ -56,6 +56,7 @@ function Fillter_Auction_Tab({
         return auction.status === e.target.value;
       });
       setFilterData(newFilteredAuctions);
+
       // console.log(newFilteredAuctions);
     } else if (e.target.value == "LIVE") {
       const newFilteredAuctions = liveAuction?.filter((auction: IAuction) => {
@@ -145,7 +146,7 @@ function Fillter_Auction_Tab({
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger>Status</AccordionTrigger>
-              <AccordionContent className="overflow-visible">
+              <AccordionContent className="overflow-visible ">
                 <div className="space-y-4">
                   <RadioGroup
                     defaultValue="ALL"
@@ -225,6 +226,7 @@ function Fillter_Auction_Tab({
           <div>
             <PriceSlider onChangePrice={handleChangePrice as any} />
           </div>
+          <div></div>
         </form>
       </div>
     </div>

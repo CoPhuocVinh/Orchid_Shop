@@ -15,7 +15,6 @@ import Fillter_Auction_Date from "./_components/fillter-auction-date";
 const AuctionPage = () => {
   //console.log(liveAuction?.data);
   const [filterData, setFilterData] = useState<IAuction[]>([]);
-  const [filteredData, setFilteredData] = useState<IAuction[]>([]);
 
   // useEffect(() => {
   //   setFilteredData(filterData);
