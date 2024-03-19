@@ -11,6 +11,8 @@ import { SearchParams } from "@/types/table";
 import { getProducts } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
+import TestPage from "./_component/test-page";
+import Notification from "@/components/platform/header/notification";
 
 export interface IndexPageProps {
   searchParams: SearchParams;
@@ -68,12 +70,14 @@ const TestFucntionPage = ({ searchParams }: IndexPageProps) => {
   if (isLoading) return <div>...Loading</div>;
   console.log(data);
 
-
- 
-
   return (
     <div>
       <h1>TestFucntionPage</h1>
+      <TestPage />
+
+      <div className="flex justify-center items-center h-screen">
+        <Notification />
+      </div>
     </div>
   );
 };

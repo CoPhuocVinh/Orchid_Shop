@@ -280,7 +280,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                       <div className="flex items-center justify-center mb-4">
                         <p className="font-bold text-lg">Order has been paid</p>
                         <button onClick={() => router.push("/")}>
-                          Back to home after 5s...
+                          Back to home
                         </button>
                       </div>
                     ) : (
@@ -300,7 +300,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                               d="M5 13l4 4L19 7"
                             />
                             <button onClick={() => router.push("/")}>
-                              Back to home after 5s...
+                              Back to home
                             </button>
                           </svg>
                         ) : (
@@ -316,7 +316,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                               clipRule="evenodd"
                             />
                             <button onClick={() => router.push("/")}>
-                              Back to home after 5s...
+                              Back to home
                             </button>
                           </svg>
                         )}
@@ -332,7 +332,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                         className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                         onClick={handleCloseModal}
                       >
-                        Back to home after 5s...
+                        Back to home
                       </button>
                     </div>
                   </div>
