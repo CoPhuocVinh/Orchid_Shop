@@ -51,6 +51,7 @@ public class AuctionContainer {
         this.waitingAuctions = new ArrayList<>();
         this.comingAuctions = new ArrayList<>();
         this.liveAuctions = new ArrayList<>();
+        this.remindAuctions = new ArrayList<>();
     }
 
     public void addAuction(Auction auction) throws ExecutionException, InterruptedException {
