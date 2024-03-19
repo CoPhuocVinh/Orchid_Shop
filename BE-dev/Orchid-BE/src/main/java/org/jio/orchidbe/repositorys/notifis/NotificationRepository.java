@@ -8,9 +8,16 @@ package org.jio.orchidbe.repositorys.notifis;/*  Welcome to Jio word
 */
 
 import org.jio.orchidbe.models.Notification;
+import org.jio.orchidbe.models.auctions.Auction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Range;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
+    Page<Notification> findAll(Specification<Notification> specification, Pageable pageable);
+
 }

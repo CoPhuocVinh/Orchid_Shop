@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.listener.NotificationListener;
 import org.jio.orchidbe.models.users.User;
 
@@ -13,6 +14,7 @@ import org.jio.orchidbe.models.users.User;
 @Builder
 @Data
 @NoArgsConstructor
+@FieldNameConstants
 @Entity
 @Table(name="tbl_notifications")
 @EntityListeners(NotificationListener.class)
