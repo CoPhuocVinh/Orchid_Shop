@@ -33,6 +33,7 @@ import {
 import { Input } from "../ui/input";
 import { useGetWallet } from "@/lib/react-query/queries";
 import { WalletSkeleton } from "../loader/wallet_loader";
+import TestPageSuccess from "@/app/test-success/page";
 
 enum STEPS {
   WALLET_INFO = 0,
@@ -77,9 +78,7 @@ export const WalletModal = () => {
   const { isOpen, onClose, type } = useModal();
   const isOpenModal = isOpen && type === "walletModal";
 
-  const { data: wallet, isLoading: walletLoading } = useGetWallet(
-    userId!
-  );
+  const { data: wallet, isLoading: walletLoading } = useGetWallet(userId!);
 
   const WalletSchema = z.object({
     price: z.coerce.number().min(10000, "Vui lòng nhập mệnh giá 10000 trở lên"),
@@ -115,8 +114,10 @@ export const WalletModal = () => {
       const paymentUrl = await addMoneyToWallet(userId!, price);
 
       console.log(paymentUrl);
+
       if (paymentUrl) {
         window.location.href = paymentUrl;
+        openPaymentSuccessModal();
       } else {
         toast.error("Vui lòng nhập số tiền lớn hơn 10,000VNĐ để thanh toán.");
       }
@@ -162,7 +163,7 @@ export const WalletModal = () => {
                 <p className="text-gray-600 font-semibold">Số dư:</p>
               </div>
               <p className="text-3xl font-bold text-green-600">
-                {formatter.format(wallet?.data?.balance!)} 
+                {formatter.format(wallet?.data?.balance!)}
               </p>
             </div>
             <div className="bg-gray-100 rounded-lg p-4 flex flex-col">
@@ -276,40 +277,78 @@ export const WalletModal = () => {
       break;
   }
 
+  const [paymentSuccessModalOpen, setPaymentSuccessModalOpen] = useState(false);
+
+  const openPaymentSuccessModal = () => {
+    setPaymentSuccessModalOpen(true);
+  };
+
+  const closePaymentSuccessModal = () => {
+    setPaymentSuccessModalOpen(false);
+  };
   return (
-    <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
-        <DialogHeader className="pt-2 px-6">
-          <DialogTitle className="text-2xl text-center font-bold">
-            Ví của bạn
-          </DialogTitle>
-          <DialogDescription>
-            <div className="mt-2 text-sm text-muted-foreground">
-              {bodyContent}
-            </div>
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="bg-gray-100 px-6 py-4">
-          <div className="flex items-center justify-end space-x-4  w-full">
-            {secondaryActionLabel && (
-              <Button type="button" onClick={onBack} disabled={isLoading}>
-                {secondaryActionLabel}
+    <>
+      <Dialog open={isOpenModal} onOpenChange={onClose}>
+        <DialogContent className="bg-white text-black p-0 overflow-hidden">
+          <DialogHeader className="pt-2 px-6">
+            <DialogTitle className="text-2xl text-center font-bold">
+              Ví của bạn
+            </DialogTitle>
+            <DialogDescription>
+              <div className="mt-2 text-sm text-muted-foreground">
+                {bodyContent}
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="bg-gray-100 px-6 py-4">
+            <div className="flex items-center justify-end space-x-4  w-full">
+              {secondaryActionLabel && (
+                <Button type="button" onClick={onBack} disabled={isLoading}>
+                  {secondaryActionLabel}
+                </Button>
+              )}
+              <Button
+                type="submit"
+                variant="primary"
+                onClick={onSubmit}
+                disabled={
+                  isLoading ||
+                  (step === STEPS.ADD_MONEY && form.getValues("price") < 10000)
+                }
+              >
+                {actionLabel}
               </Button>
-            )}
-            <Button
-              type="submit"
-              variant="primary"
-              onClick={onSubmit}
-              disabled={
-                isLoading ||
-                (step === STEPS.ADD_MONEY && form.getValues("price") < 10000)
-              }
-            >
-              {actionLabel}
-            </Button>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={paymentSuccessModalOpen}
+        onOpenChange={closePaymentSuccessModal}
+      >
+        <DialogContent className="bg-white text-black p-0 overflow-hidden">
+          <DialogHeader className="pt-2 px-6">
+            <DialogTitle className="text-2xl text-center font-bold">
+              Thanh toán thành công
+            </DialogTitle>
+          </DialogHeader>
+          <DialogFooter className="bg-gray-100 px-6 py-4">
+            <div className="flex items-center justify-end space-x-4  w-full">
+              <Button
+                type="button"
+                onClick={() => {
+                  closePaymentSuccessModal();
+                  // Thực hiện chuyển hướng về trang chủ
+                  window.location.href = "/";
+                }}
+              >
+                OK
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

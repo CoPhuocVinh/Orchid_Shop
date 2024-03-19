@@ -51,6 +51,7 @@ const SignUpForm = () => {
     { label: "Nữ", value: "FEMALE" },
     { label: "Other", value: "OTHER" },
   ];
+
   const RegisterSchema = z.object({
     email: z.string().email(),
     password: z.string().min(6),
@@ -85,7 +86,7 @@ const SignUpForm = () => {
           console.log(response.data);
 
           form.reset();
-          router.push("/signin")
+          router.push("/signin");
         })
         .catch((error) => {
           console.error("Đăng ký thất bại");
