@@ -8,6 +8,9 @@ import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
+import org.jio.orchidbe.repositorys.orders.OrderRepository;
+import org.jio.orchidbe.requests.OrderStatusDTORequest;
+import org.jio.orchidbe.requests.StatusDTOResquest;
 import org.jio.orchidbe.requests.orders.ConfirmedOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
@@ -31,6 +34,7 @@ public class OrderController {
     private final ValidatorUtil validatorUtil;
     private final OrderContainer orderContainer;
     private final OrderMapper orderMapper;
+    private final OrderRepository orderRepository;
 
 //    @PostMapping("create")
 //    public ResponseEntity<?> createOrder(
@@ -127,4 +131,19 @@ public class OrderController {
 //        // Chuyển đổi danh sách các phiên đấu giá thành danh sách các phản hồi
 //        return orderMapper.toResponseList(pendingOrders);
 //    }
+
+    @PostMapping("/count")
+    public Long countOrdersByStatus(@RequestBody(required = false) OrderStatusDTORequest orderStatusDTORequest) {
+        if (orderStatusDTORequest == null || orderStatusDTORequest.getStatus() == null) {
+            // Trường hợp không có trạng thái được cung cấp, đếm toàn bộ phiên đấu giá
+            return orderRepository.count();
+        } else {
+            // Trường hợp có trạng thái được cung cấp, đếm theo trạng thái
+            try {
+                return orderRepository.countByStatus(orderStatusDTORequest.getStatus());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid status provided");
+            }
+        }
+    }
 }
