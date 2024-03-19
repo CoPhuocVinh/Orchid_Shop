@@ -8,9 +8,8 @@ package org.jio.orchidbe.services.wallets;/*  Welcome to Jio word
 */
 
 import org.jio.orchidbe.dtos.wallets.GetAllTransactionResquest;
-import org.jio.orchidbe.dtos.wallets.TransactionsResponse;
-import org.springframework.data.domain.Page;
+import org.jio.orchidbe.dtos.wallets.TransactionResponseWrapper;
 
 public interface ITransactionService {
-    Page<TransactionsResponse> getAll(GetAllTransactionResquest request);
+    TransactionResponseWrapper getAll(GetAllTransactionResquest request, Double total);
 }
