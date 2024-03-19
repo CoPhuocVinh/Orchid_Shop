@@ -14,7 +14,7 @@ const TotalWidget = () => {
           groth="+ 3.5%"
           id="totalEarn"
         />
-        <TotalWidgetCard
+        {/* <TotalWidgetCard
           totalEarnImg={totalEarn}
           memberImg={memberImg}
           title="Total Spending"
@@ -29,7 +29,7 @@ const TotalWidget = () => {
           amount="7,245.00"
           groth="+ 3.5%"
           id="totalGoal"
-        />
+        /> */}
       </div>
     </div>
   );

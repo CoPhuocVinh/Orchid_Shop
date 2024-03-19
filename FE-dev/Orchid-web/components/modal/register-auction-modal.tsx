@@ -101,7 +101,7 @@ export const RegiterAuctionModal = () => {
           </div>
           <div>
             <p className="text-gray-600 mb-2">Tiền cọc tham gia:</p>
-            <p className="font-semibold">{data.auction?.depositPrice}</p>
+            <p className="font-semibold">{data.auction?.startPrice}</p>
           </div>
           <div>
             <p className="text-gray-600 mb-2">Tên người đấu giá:</p>

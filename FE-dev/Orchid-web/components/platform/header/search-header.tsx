@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Hash, Search } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -10,23 +10,42 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useEffect, useState } from "react";
+import { IAuction } from "@/types/dashboard";
+import { useSearchParams } from "next/navigation";
 
-interface ServerSearchProps {
-  data: {
-    label: string;
-    type: "title" | "type";
-    data:
-      | {
-          icon: React.ReactNode;
-          name: string;
-          id: string;
-        }[]
-      | undefined;
-  }[];
-}
+export const ServerSearch = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [auctions, setAuctions] = useState<IAuction[]>([]);
+  const [filteredAuctions, setFilteredAuctions] = useState<IAuction[]>([]);
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get("search") || "";
 
-export const ServerSearch: React.FC<ServerSearchProps> = ({ data }) => {
-  // console.log(data);
+  useEffect(() => {
+    setSearchQuery(initialSearch);
+  }, [initialSearch]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://orchid.fams.io.vn/api/v1/auctions/list?search=${searchQuery}`
+        );
+        const data = await response.json();
+        setAuctions(data.payload.content);
+      } catch (error) {
+        console.error("Error fetching auctions:", error);
+      }
+    };
+
+    fetchData();
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const filtered = auctions.filter((auction) =>
+      auction.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredAuctions(filtered);
+  }, [auctions, searchQuery]);
 
   const [open, setOpen] = useState(false);
 
@@ -48,7 +67,7 @@ export const ServerSearch: React.FC<ServerSearchProps> = ({ data }) => {
       <button
         onClick={() => setOpen(true)}
         className="flex items-center gap-x-1 px-2 py-2
-                     w-full bg-gray-200 rounded-md border border-gray-300 hover:bg-gray-100 transition group "
+                         w-full bg-gray-200 rounded-md border border-gray-300 hover:bg-gray-100 transition group "
       >
         <Search className="h-4 w-4 text-gray-500 group-hover:text-gray-400" />
         <p className="text-sm text-gray-500 group-hover:text-gray-400 transition">
@@ -59,28 +78,21 @@ export const ServerSearch: React.FC<ServerSearchProps> = ({ data }) => {
         </kbd>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        {/* <CommandInput placeholder="Type a command or search..." /> */}
-        <CommandInput placeholder="KAO ĐANG TO DO cái này nhé ....." />
+        <CommandInput
+          placeholder="KAO ĐANG TO DO cái này nhé ....."
+          value={searchQuery}
+          onValueChange={setSearchQuery}
+        />
 
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
 
-          {data.map(({ data, label, type }) => {
-            if (!data?.length) return null;
-
-            return (
-              <CommandGroup key={label} heading={label}>
-                {data.map(({ id, name, icon }) => {
-                  return (
-                    <CommandItem key={id} >
-                      {icon}
-                      <span>{name}</span>
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-            );
-          })}
+          {filteredAuctions.map((auction) => (
+            <CommandItem key={auction.id}>
+              <Hash className="w-4 h-4 mr-2" />
+              <span>{auction.title}</span>
+            </CommandItem>
+          ))}
         </CommandList>
       </CommandDialog>
     </>

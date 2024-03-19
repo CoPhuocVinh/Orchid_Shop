@@ -117,7 +117,6 @@ export const WalletModal = () => {
 
       if (paymentUrl) {
         window.location.href = paymentUrl;
-        openPaymentSuccessModal();
       } else {
         toast.error("Vui lòng nhập số tiền lớn hơn 10,000VNĐ để thanh toán.");
       }
@@ -277,15 +276,6 @@ export const WalletModal = () => {
       break;
   }
 
-  const [paymentSuccessModalOpen, setPaymentSuccessModalOpen] = useState(false);
-
-  const openPaymentSuccessModal = () => {
-    setPaymentSuccessModalOpen(true);
-  };
-
-  const closePaymentSuccessModal = () => {
-    setPaymentSuccessModalOpen(false);
-  };
   return (
     <>
       <Dialog open={isOpenModal} onOpenChange={onClose}>
@@ -317,33 +307,6 @@ export const WalletModal = () => {
                 }
               >
                 {actionLabel}
-              </Button>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog
-        open={paymentSuccessModalOpen}
-        onOpenChange={closePaymentSuccessModal}
-      >
-        <DialogContent className="bg-white text-black p-0 overflow-hidden">
-          <DialogHeader className="pt-2 px-6">
-            <DialogTitle className="text-2xl text-center font-bold">
-              Thanh toán thành công
-            </DialogTitle>
-          </DialogHeader>
-          <DialogFooter className="bg-gray-100 px-6 py-4">
-            <div className="flex items-center justify-end space-x-4  w-full">
-              <Button
-                type="button"
-                onClick={() => {
-                  closePaymentSuccessModal();
-                  // Thực hiện chuyển hướng về trang chủ
-                  window.location.href = "/";
-                }}
-              >
-                OK
               </Button>
             </div>
           </DialogFooter>
