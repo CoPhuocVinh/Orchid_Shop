@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import axios from "axios"; // Thêm dòng này để import axios
 
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
+
 import { useGetAddress } from "@/lib/react-query/queries";
 import Image from "next/image";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getOrderId } from "@/lib/actions";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface BodyOrderProps {
   orderPromisse: ReturnType<typeof getOrderId>;
@@ -50,7 +51,6 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
     setSelectedMethod(method);
   };
 
-  const handleButtonModal = () => {};
   const handleUpdateOrder = async () => {
     try {
       const orderId = orderData?.id;
@@ -70,14 +70,18 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
       console.log(response.data.status);
       console.log(response.data.payload);
 
+      const userId = session?.user.id;
+
       if (selectedMethod === "CARD" && response.data.status === "SUCCESS") {
         setIsPaymentSuccessful(true);
+        router.push("/");
       } else if (
         selectedMethod === "BANK" &&
         response.data.status === "SUCCESS"
       ) {
         router.push(response.data.payload);
         setIsPaymentSuccessful(true);
+        window.location.href = "/test-success";
       } else {
         setIsPaymentSuccessful(false);
       }
@@ -140,10 +144,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                       <div key={address.id} className="py-2">
                         <Alert className="flex flex-col">
                           <div className="flex justify-between items-center">
-                            <AlertTitle className="">
-                              {address.info_name}
-                            </AlertTitle>
-                            <span>-</span>
+                            <AlertTitle>{address.info_name}</AlertTitle>
                             <AlertTitle className="mr-auto">
                               {address.phone}
                             </AlertTitle>
@@ -206,7 +207,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                     <rect x="2" y="5" width="20" height="14" rx="2" />
                     <path d="M2 10h20" />
                   </svg>
-                  Card
+                  Wallet
                 </Button>
               </div>
               <div>
@@ -228,7 +229,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                     <rect x="2" y="5" width="20" height="14" rx="2" />
                     <path d="M2 10h20" />
                   </svg>
-                  BANK
+                  VNPay
                 </Button>
               </div>
             </div>
