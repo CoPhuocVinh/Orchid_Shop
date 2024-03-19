@@ -6,10 +6,12 @@ import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.models.Notification;
 import org.jio.orchidbe.models.auctions.Auction;
+import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
 import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
+import org.jio.orchidbe.repositorys.auctions.BidRepository;
 import org.jio.orchidbe.repositorys.notifis.NotificationRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.container.AuctionContainer;
@@ -50,6 +52,8 @@ public class ScheduleAuction {
     private UserRepository userRepository;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private BidRepository bidRepository;
     @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
     public void checkAuctionEndings() throws DataNotFoundException, ExecutionException, InterruptedException {
         LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
@@ -80,21 +84,45 @@ public class ScheduleAuction {
         for (Auction auction : remindingAuctions) {
 //            System.out.println("start time : ========= " + auction.getStartDate());
             List<User> users = userRepository.findByRole(UserRole.STAFF);
-
+            String msg = "Auction id: " + auction.getId() + " About to start at "
+                    + auction.getStartDate() + " , please check !!!";
             if (users.size() >0){
                 for (User user : users){
-                    Notification notification = Notification
-                            .builder()
-                            .title("Remind auction start")
-                            .msg("Auction id: " + auction.getId() + " About to start at "
-                                    + auction.getStartDate() + " , please check !!!")
-                            .user(user)
-                            .build();
-                    notifications.add(notification);
-                }
+                    if(notificationRepository.existsByMsgAndUser_Id(msg, user.getId())){
 
+                    }else {
+                        Notification notification = Notification
+                                .builder()
+                                .title("Remind auction start")
+                                .msg(msg)
+                                .user(user)
+                                .build();
+                        notifications.add(notification);
+                    }
+
+                }
             }
+
+            List<Bid> bids = bidRepository.findByAuction_Id(auction.getId());
+            if (bids.size() >0){
+                for (Bid bid : bids){
+                    if(notificationRepository.existsByMsgAndUser_Id(msg, bid.getUser().getId())){
+
+                    }else {
+                        Notification notification = Notification
+                                .builder()
+                                .title("Remind auction start")
+                                .msg(msg)
+                                .user(bid.getUser())
+                                .build();
+                        notifications.add(notification);
+                    }
+
+                }
+            }
+
             auctionContainer.removeAuctionRemind(auction);
+
 
         }
         notificationRepository.saveAll(notifications);

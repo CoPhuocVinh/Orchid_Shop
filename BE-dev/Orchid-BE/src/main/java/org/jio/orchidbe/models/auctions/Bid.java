@@ -18,7 +18,7 @@ import org.jio.orchidbe.models.users.User;
 @Table(name="tbl_bidding")
 public class Bid extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -84,7 +84,7 @@ public class GetAllAuctionResquest extends BaseFilterRequest<Auction> {
                         .get(Product.Fields.category).get(Category.Fields.type), searchTrim);
 
                 // Kết hợp hai điều kiện bằng phép "và"
-                Predicate combinedPredicate = cb.and(titlePredicate, categoryPredicate);
+                Predicate combinedPredicate = cb.or(titlePredicate, categoryPredicate);
 
                 // Thêm điều kiện đã kết hợp vào danh sách các điều kiện của truy vấn
                 predicates.add(combinedPredicate);

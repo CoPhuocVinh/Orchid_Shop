@@ -109,6 +109,8 @@ public class OrderService implements IOrderService {
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
+
+
         Order order = orderRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("Order not found with id: " + id)
         );
@@ -127,10 +129,16 @@ public class OrderService implements IOrderService {
         // Lấy phương thức thanh toán từ yêu cầu
         PaymentMethod paymentMethod = updateOrderRequest.getPaymentMethod();
 
+        Wallet userWallet = walletRepository.findByUser_Id(order.getUser().getId())
+                .orElseThrow(() ->
+                        new DataNotFoundException(
+                                "Cannot find wallet with user_id: " + order.getUser().getId()));
+
         String tranCode = GenerateCodeUtils.generateCode4Transaction(TypeTrans.RT, order.getProductCode(), order.getUser().getId());
         // Tạo một transaction mới
         Transaction transaction = Transaction.builder()
                 .order(order)
+                .wallet(userWallet)
                 .amount(order.getTotal()) // Giả sử giá trị thanh toán là tổng số tiền đơn hàng
                 .status(OrderStatus.PENDING) // Trạng thái của giao dịch là chờ xử lý ban đầu
                 .paymentMethod(paymentMethod)
