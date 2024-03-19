@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import axios from "axios"; // Thêm dòng này để import axios
 
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
+
 import { useGetAddress } from "@/lib/react-query/queries";
 import Image from "next/image";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getOrderId } from "@/lib/actions";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface BodyOrderProps {
   orderPromisse: ReturnType<typeof getOrderId>;
@@ -29,6 +30,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
   const [orderConfirmed, setOrderConfirmed] = useState(false); // Thêm state để quản lý hiển thị modal khi đơn hàng đã được xác nhận
 
   const handleAddressSelect = (address: any) => {
+    console.log(address.id);
     setSelectedAddress(address.id);
   };
 
@@ -50,7 +52,6 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
     setSelectedMethod(method);
   };
 
-  const handleButtonModal = () => {};
   const handleUpdateOrder = async () => {
     try {
       const orderId = orderData?.id;
@@ -60,6 +61,9 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
         userIn4Id: selectedAddress,
       };
       setIsWaiting(selectedMethod === "BANK"); // Đặt trạng thái "waiting" nếu chọn BANK
+      // Chuyển đổi payload thành JSON
+      const payloadJSON = JSON.stringify(payload);
+      console.log("Payload JSON:", payloadJSON);
 
       const response = await axios.put(
         `https://orchid.fams.io.vn/api/v1/orders/update-order/${orderId}`,
@@ -70,16 +74,34 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
       console.log(response.data.status);
       console.log(response.data.payload);
 
+      const userId = session?.user.id;
+
       if (selectedMethod === "CARD" && response.data.status === "SUCCESS") {
         setIsPaymentSuccessful(true);
-      } else if (
-        selectedMethod === "BANK" &&
-        response.data.status === "SUCCESS"
-      ) {
-        router.push(response.data.payload);
-        setIsPaymentSuccessful(true);
+        router.push("/");
       } else {
         setIsPaymentSuccessful(false);
+      }
+
+      if (selectedMethod === "BANK" && response.data.status === "SUCCESS") {
+        // Mở trang thanh toán VNPay
+        router.push(response.data.payload);
+
+        // Lắng nghe sự kiện thanh toán thành công hoặc thất bại từ trang thanh toán VNPay
+        window.addEventListener("message", (event) => {
+          console.log(event.data);
+
+          if (event.data === "SUCCESS") {
+            // Thanh toán thành công, redirect đến trang "test-success"
+            router.push("/test-success");
+          } else if (event.data === "failed") {
+            // Thanh toán thất bại, redirect đến trang "test-failed"
+            router.push("/test-failed");
+          }
+        });
+      } else {
+        setIsPaymentSuccessful(false);
+        setShowModal(true); // Mở modal
       }
 
       // Kiểm tra nếu đơn hàng đã được xác nhận
@@ -136,14 +158,11 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                 <h3 className="text-lg font-semibold mb-2">Select Address</h3>
                 {in4DetailResponseList?.data &&
                   sortAddresses(in4DetailResponseList.data).map(
-                    (address: any) => (
-                      <div key={address.id} className="py-2">
+                    (address: any, index: any) => (
+                      <div key={index} className="py-2">
                         <Alert className="flex flex-col">
                           <div className="flex justify-between items-center">
-                            <AlertTitle className="">
-                              {address.info_name}
-                            </AlertTitle>
-                            <span>-</span>
+                            <AlertTitle>{address.info_name}</AlertTitle>
                             <AlertTitle className="mr-auto">
                               {address.phone}
                             </AlertTitle>
@@ -206,7 +225,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                     <rect x="2" y="5" width="20" height="14" rx="2" />
                     <path d="M2 10h20" />
                   </svg>
-                  Card
+                  Wallet
                 </Button>
               </div>
               <div>
@@ -228,7 +247,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                     <rect x="2" y="5" width="20" height="14" rx="2" />
                     <path d="M2 10h20" />
                   </svg>
-                  BANK
+                  VNPay
                 </Button>
               </div>
             </div>
