@@ -79,10 +79,6 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
         response.data.payload.status === "CONFIRMED"
       ) {
         setIsPaymentSuccessful(true);
-
-        setTimeout(() => {
-          router.push("/");
-        }, 5000); // 5000 milliseconds = 5 giây
       } else if (
         selectedMethod === "BANK" &&
         response.data.status === "SUCCESS"
@@ -124,6 +120,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
 
   const handleCloseModal = () => {
     setShowModal(false);
+    router.push("/");
   };
   return (
     <div className="container mx-auto py-8">
@@ -282,12 +279,8 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                     ) : orderConfirmed ? (
                       <div className="flex items-center justify-center mb-4">
                         <p className="font-bold text-lg">Order has been paid</p>
-                        <button
-                          onClick={(e) => {
-                            router.push("/");
-                          }}
-                        >
-                          Back to home
+                        <button onClick={() => router.push("/")}>
+                          Back to home after 5s...
                         </button>
                       </div>
                     ) : (
@@ -306,11 +299,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                               strokeWidth={2}
                               d="M5 13l4 4L19 7"
                             />
-                            <button
-                              onClick={(e) => {
-                                router.push("/");
-                              }}
-                            >
+                            <button onClick={() => router.push("/")}>
                               Back to home after 5s...
                             </button>
                           </svg>
@@ -326,12 +315,8 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                               d="M10 18a1 1 0 100-2 1 1 0 000 2zM10 14a1 1 0 100-2 1 1 0 000 2zm0-8a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z"
                               clipRule="evenodd"
                             />
-                            <button
-                              onClick={(e) => {
-                                router.push("/");
-                              }}
-                            >
-                              Back to home
+                            <button onClick={() => router.push("/")}>
+                              Back to home after 5s...
                             </button>
                           </svg>
                         )}
@@ -347,7 +332,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                         className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                         onClick={handleCloseModal}
                       >
-                        OK
+                        Back to home after 5s...
                       </button>
                     </div>
                   </div>
