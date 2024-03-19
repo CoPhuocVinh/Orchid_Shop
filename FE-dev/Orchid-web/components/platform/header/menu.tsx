@@ -7,7 +7,7 @@ import Link from "next/link";
 import FormPopoverUser from "../popover-user-info";
 import UserAvatar from "../user-avatar";
 import { ShoppingBag, Wallet } from "lucide-react";
-
+import { Badge } from "@/components/ui/badge";
 const menuItems = [
   {
     id: 1,
@@ -27,6 +27,7 @@ const menuItems = [
 ];
 import { useModal } from "@/hooks/use-modal";
 import { useRouter } from "next/navigation";
+import NotificationDropdown from "./notificate-dropdown";
 
 export default function Menu() {
   const { data: session } = useSession();
@@ -51,7 +52,8 @@ export default function Menu() {
           </li>
         ))}
       </ul>
-
+      
+          {/* <NotificationDropdown/> */}
       {isAuthorized && (
         <button onClick={() => onOpen("walletModal", {})}>
           <div className=" hover:bg-slate-300 rounded-lg px-4 py-2 flex items-center cursor-pointer group">

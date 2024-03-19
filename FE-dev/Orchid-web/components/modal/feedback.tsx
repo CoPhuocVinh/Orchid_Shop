@@ -23,18 +23,23 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "../ui/textarea";
 import { toast } from "sonner";
-import { feedbackAuctionLive, updateStatusRejectAuction } from "@/lib/actions";
+import { feedbackAuctionLive } from "@/lib/actions";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 
 export const FeedBackModal = () => {
-  const { isOpen, onClose, type, data } = useModal();
+  const { isOpen, onClose, type } = useModal();
+
   const isOpenModal = isOpen && type === "feedBack";
   const { data: session } = useSession();
+
   const params = useParams();
   const router = useRouter();
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const ResonSchema = z.object({
-    content: z.string().min(1, "Vui lòng nhập feedback").max(100),
+    content: z.string().min(1, "Vui lòng nhập feedback").max(250),
   });
   const form = useForm<z.infer<typeof ResonSchema>>({
     resolver: zodResolver(ResonSchema),
@@ -45,6 +50,7 @@ export const FeedBackModal = () => {
 
   const onSubmit = async (values: z.infer<typeof ResonSchema>) => {
     try {
+      setIsLoading(true);
       await feedbackAuctionLive(
         session?.user.id.toString()!,
         params.auctionId.toString(),
@@ -56,6 +62,8 @@ export const FeedBackModal = () => {
       router.refresh();
     } catch (error) {
       toast.error("Có lỗi trong quá trình feedback");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -64,7 +72,7 @@ export const FeedBackModal = () => {
     onClose();
   };
 
-  const isLoading = form.formState.isLoading;
+  // const isLoading = form.formState.isLoading;
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>

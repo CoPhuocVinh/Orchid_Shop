@@ -313,6 +313,7 @@ export type DateTimePickerRef = {
   buttonRef: HTMLButtonElement | null;
   contentRef: HTMLDivElement | null;
   jsDate: Date | null;
+  setJsDatetime: (date: Date | null) => void; // Thêm phương thức setJsDatetime
   state: DatePickerState;
 };
 
@@ -337,6 +338,7 @@ const DateTimePicker = React.forwardRef<
     contentRef: contentRef.current,
     jsDate: jsDatetime,
     state,
+    setJsDatetime: setJsDatetime, // Truyền hàm setJsDatetime ra bên ngoài
   }));
   const {
     groupProps,
