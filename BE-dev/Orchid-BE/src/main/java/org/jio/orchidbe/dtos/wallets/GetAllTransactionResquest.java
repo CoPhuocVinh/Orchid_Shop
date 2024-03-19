@@ -69,19 +69,33 @@ public class GetAllTransactionResquest extends BaseFilterRequest<Transaction> {
                 predicates.add(root.join(Transaction.Fields.wallet).get(Wallet.Fields.id).in(walletId));
 
             }
-            if (userId != null && !userId.isBlank()) {
+      /*      if (userId != null && !userId.isBlank()) {
 
                 Predicate walletUser = cb.equal(root.join(Transaction.Fields.wallet).get(Wallet.Fields.user)
                         .get(User.Fields.id), Long.parseLong(userId));
-//                Predicate oderUser = cb.equal(root.join(Transaction.Fields.order).get(Order.Fields.user)
-//                        .get(User.Fields.id), Long.parseLong(userId));
+                Predicate oderUser = cb.equal(root.join(Transaction.Fields.order).get(Order.Fields.user)
+                        .get(User.Fields.id), Long.parseLong(userId));
 
-                Predicate combinedPredicate = cb.and(walletUser);
+                Predicate combinedPredicate = cb.or(walletUser,oderUser);
 
                 predicates.add(
                         combinedPredicate
                 );
+            }*/
+
+            if (userId != null && !userId.isBlank()) {
+                Predicate walletUser = cb.equal(root.get(Transaction.Fields.wallet)
+                        .get(Wallet.Fields.user)
+                        .get(User.Fields.id), Long.parseLong(userId));
+                Predicate orderUser = cb.equal(root.get(Transaction.Fields.order)
+                        .get(Order.Fields.user)
+                        .get(User.Fields.id), Long.parseLong(userId));
+
+                Predicate combinedPredicate = cb.or(walletUser, orderUser);
+
+                predicates.add(combinedPredicate);
             }
+
 
             // Add deleted=false criteria
             predicates.add(cb.equal(root.get(BaseEntity.Fields.deleted), false));
