@@ -15,7 +15,7 @@ interface TotalWidgetCardProps {
   id?: string;
   title: string;
   amount: string;
-  groth: string;
+
   memberImg: any;
   totalEarnImg: any;
 }
@@ -23,7 +23,7 @@ interface TotalWidgetCardProps {
 const TotalWidgetCard = ({
   title,
   amount,
-  groth,
+
   memberImg,
   totalEarnImg,
 }: TotalWidgetCardProps) => {
@@ -143,8 +143,8 @@ const TotalWidgetCard = ({
       </div>
       <div className="flex items-end justify-between">
         <div className="flex-1">
-          <p className="text-3xl font-bold leading-[48px] text-bgray-900 dark:text-white">
-            ${amount}
+          <p className="text-xl flex font-bold leading-[40px] text-bgray-900 dark:text-white">
+            Ordered: {amount}
           </p>
           <div className="flex items-center space-x-1">
             <span>
@@ -166,11 +166,9 @@ const TotalWidgetCard = ({
                 />
               </svg>
             </span>
-            <span className="text-sm font-medium text-success-300">
-              {groth}
-            </span>
+
             <span className="text-sm font-medium text-bgray-700 dark:text-bgray-50">
-              from last week
+              view log order
             </span>
           </div>
         </div>
