@@ -20,6 +20,7 @@ const TotalWidget = ({ transactionPromise }: TotalWidgetProps) => {
       .toUpperCase(),
     amount: item.amount,
   }));
+
   const codeToTitleIdMap = [
     { code: "RT", title: "Total withdraw", id: "totalEarn" },
     { code: "NT", title: "Total Recharge", id: "totalSpending" },

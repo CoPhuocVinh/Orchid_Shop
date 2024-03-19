@@ -9,18 +9,21 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 const FailPAGE = () => {
   const pathname = usePathname();
   console.log(pathname, "test trang page");
-
+  const router = useRouter();
   const [showDialog, setShowDialog] = useState(true);
 
   useEffect(() => {
     setShowDialog(true);
   }, []);
+  if (!showDialog) {
+    return null;
+  }
 
   return (
     <div className="relative h-screen flex items-center justify-center">
@@ -77,7 +80,7 @@ const FailPAGE = () => {
             {/* Căn giữa nội dung */}
             <Button
               onClick={() => {
-                window.location.href = "/";
+                router.push("/");
               }}
             >
               Trở về trang chủ
