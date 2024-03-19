@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.wallets.GetAllTransactionResquest;
+import org.jio.orchidbe.dtos.wallets.TransactionResponseWrapper;
 import org.jio.orchidbe.dtos.wallets.TransactionsResponse;
 import org.jio.orchidbe.requests.auctions.GetAllAuctionResquest;
 import org.jio.orchidbe.responses.GetAuctionResponse;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("${api.prefix}/transactions")
@@ -37,9 +40,12 @@ public class TransactionController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<?> getTransactions(@ModelAttribute GetAllTransactionResquest request){
         ApiResponse apiResponse = new ApiResponse();
+        HashMap<String, Object> megaData = new HashMap<>();
 
-        Page<TransactionsResponse> auctionPage = transactionService.getAll(request);
-        apiResponse.ok(auctionPage);
+        Double total = 0d;
+        TransactionResponseWrapper wrapper = transactionService.getAll(request,total);
+        megaData.put("total",wrapper.getTotal());
+        apiResponse.ok(wrapper.getTransactionPage(), megaData);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

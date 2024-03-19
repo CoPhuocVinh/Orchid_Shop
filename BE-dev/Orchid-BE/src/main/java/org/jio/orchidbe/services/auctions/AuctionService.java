@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.jio.orchidbe.components.FirestoreChangeListener;
 import org.jio.orchidbe.constants.BaseConstants;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 
@@ -100,6 +101,9 @@ public class AuctionService implements IAuctionService {
     private IFirebaseService firebaseService;
     @Autowired
     private FirebaseInitialization firebaseInitialization;
+
+    @Autowired
+    private FirestoreChangeListener firestoreChangeListener;
 
     @Transactional
     @Override
@@ -394,6 +398,7 @@ public class AuctionService implements IAuctionService {
 
             if (auction == null) {
                 firebaseService.delete(key,BaseConstants.COLLECTION_AUCTION);
+
                  auction = auctionRepository.findById(id).orElseThrow(
                         () -> new DataNotFoundException("Not found user_controller.")
                 );

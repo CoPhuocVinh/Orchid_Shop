@@ -8,8 +8,9 @@ package org.jio.orchidbe.services.wallets;/*  Welcome to Jio word
 */
 
 import org.jio.orchidbe.dtos.wallets.GetAllTransactionResquest;
-import org.jio.orchidbe.dtos.wallets.TransactionsResponse;
+import org.jio.orchidbe.dtos.wallets.TransactionResponseWrapper;
 import org.jio.orchidbe.mappers.wallets.TransactionMapper;
+import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.repositorys.wallets.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,22 @@ public class TransactionService implements ITransactionService{
     @Autowired
     private TransactionMapper transactionMapper;
     @Override
-    public Page<TransactionsResponse> getAll(GetAllTransactionResquest request) {
+    public TransactionResponseWrapper getAll(GetAllTransactionResquest request, Double total) {
         try{
-            return transactionRepository.findAll(request.getSpecification(),request.getPageable()).map(transactionMapper::toResponse);
+            Page<Transaction> transactions = transactionRepository.findAll(request.getSpecification(),request.getPageable());
+
+            if (transactions.getTotalElements() > 0){
+                // Tính tổng số lượng của các giao dịch
+                 total = transactions.stream()
+                        .mapToDouble(Transaction::getAmount)
+                        .sum();
+            }
+            TransactionResponseWrapper transactionResponseWrapper = TransactionResponseWrapper
+                    .builder()
+                    .transactionPage(transactions.map(transactionMapper::toResponse))
+                    .total(total)
+                    .build();
+            return transactionResponseWrapper;
 
         }catch (Exception e){
             e.printStackTrace();
