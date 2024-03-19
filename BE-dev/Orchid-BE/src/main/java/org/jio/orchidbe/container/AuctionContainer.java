@@ -1,7 +1,7 @@
 package org.jio.orchidbe.container;
 
 import org.jio.orchidbe.exceptions.DataNotFoundException;
-import  org.jio.orchidbe.enums.Status;
+import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
 import org.jio.orchidbe.models.Notification;
@@ -9,6 +9,7 @@ import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.users.User;
 import org.jio.orchidbe.models.users.user_enum.UserRole;
+import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
 import org.jio.orchidbe.repositorys.auctions.BidRepository;
 import org.jio.orchidbe.repositorys.notifis.NotificationRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
@@ -46,6 +47,9 @@ public class AuctionContainer {
     private BidRepository bidRepository;
     @Autowired
     private BiddingMapper biddingMapper;
+    @Autowired
+    private AuctionRepository auctionRepository;
+
     public AuctionContainer() {
         this.auctions = new ArrayList<>();
         this.waitingAuctions = new ArrayList<>();
@@ -55,7 +59,7 @@ public class AuctionContainer {
     }
 
     public void addAuction(Auction auction) throws ExecutionException, InterruptedException {
-        if (!auction.getStatus().equals(Status.END)){
+        if (!auction.getStatus().equals(Status.END)) {
             auctions.add(auction);
             updateAuctionLists(auction);
         }
@@ -71,7 +75,7 @@ public class AuctionContainer {
         return null;
     }
 
-    public Auction getAuctionOnStatusById(Long id,Status status) throws DataNotFoundException {
+    public Auction getAuctionOnStatusById(Long id, Status status) throws DataNotFoundException {
         switch (status) {
             case WAITING:
                 for (Auction auction : waitingAuctions) {
@@ -110,6 +114,7 @@ public class AuctionContainer {
         throw new DataNotFoundException(
                 "Cannot find auction with id: " + id);
     }
+
     public void removeAuctionFromList(Auction auction, Status statusToRemoveFrom) {
 
         switch (statusToRemoveFrom) {
@@ -132,22 +137,31 @@ public class AuctionContainer {
                 break;
         }
     }
+
     private void updateAuctionLists(Auction auction) throws ExecutionException, InterruptedException {
         List<Notification> notifications = new ArrayList<>();
+
         switch (auction.getStatus()) {
             case WAITING:
                 waitingAuctions.add(auction);
                 List<User> users = userRepository.findByRole(UserRole.ADMIN);
 
-                if (users.size() >0){
-                    for (User user : users){
-                        Notification notification = Notification
-                                .builder()
-                                .title("New auction create")
-                                .msg("Auction id: " + auction.getId() + " created, Please consider")
-                                .user(user)
-                                .build();
-                        notifications.add(notification);
+                if (users.size() > 0) {
+                    for (User user : users) {
+
+                        String msg = "Auction id: " + auction.getId() + " created, Please consider";
+                        if (notificationRepository.existsByMsgAndUser_Id(msg, user.getId())) {
+
+                        } else {
+                            Notification notification = Notification
+                                    .builder()
+                                    .title("New auction create")
+                                    .msg(msg)
+                                    .user(user)
+                                    .build();
+                            notifications.add(notification);
+                        }
+
                     }
 
                 }
@@ -163,22 +177,27 @@ public class AuctionContainer {
 
                 AuctionDetailResponse response = auctionMapper.toResponseDetail(auction);
                 response.setBidList(bids.stream().map(biddingMapper::toResponse).toList());
-                firebaseAuctionService.savev2(response,response.getId(),COLLECTION_AUCTION);
+                firebaseAuctionService.savev2(response, response.getId(), COLLECTION_AUCTION);
 
-                if (bids.size() >0){
-                    for (Bid bid : bids){
-                        Notification notification = Notification
-                                .builder()
-                                .title("auction Started")
-                                .msg("Auction id: " + auction.getId() + " created, Please consider")
-                                .user(bid.getUser())
-                                .build();
-                        notifications.add(notification);
+                if (bids.size() > 0) {
+                    for (Bid bid : bids) {
+                        String msg = "Auction id: " + auction.getId() + " Started, Please consider";
+                        if (notificationRepository.existsByMsgAndUser_Id(msg, bid.getUser().getId())) {
+
+                        } else {
+                            Notification notification = Notification
+                                    .builder()
+                                    .title("auction Started")
+                                    .msg(msg)
+                                    .user(bid.getUser())
+                                    .build();
+                            notifications.add(notification);
+                        }
+
                     }
 
                 }
                 notificationRepository.saveAll(notifications);
-
 
 
                 break;
@@ -220,9 +239,11 @@ public class AuctionContainer {
         }
     }
 
-    public void removeAuctionRemind(Auction auction){
+    public void removeAuctionRemind(Auction auction) throws DataNotFoundException {
         remindAuctions.remove(auction);
+
     }
+
     public List<Auction> getAuctions() {
         return auctions;
     }
@@ -230,6 +251,7 @@ public class AuctionContainer {
     public List<Auction> getWaitingAuctions() {
         return waitingAuctions;
     }
+
     public List<Auction> getRemindAuctions() {
         return remindAuctions;
     }

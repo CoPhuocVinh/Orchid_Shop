@@ -20,4 +20,6 @@ import org.springframework.stereotype.Repository;
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
     Page<Notification> findAll(Specification<Notification> specification, Pageable pageable);
 
+    Boolean existsByMsgAndUser_Id(String msg, Long userId);
+
 }

@@ -162,13 +162,17 @@ public class AuctionService implements IAuctionService {
                     orderContainer.addOrder(order);
                     orderRepository.save(order);
 
-                    Notification notification = Notification
-                            .builder()
-                            .title("auction Ended")
-                            .msg("Auction id: " + auction.getId() + " Ended, And You is Top1, Please check your order to get the result")
-                            .user(bid.getUser())
-                            .build();
-                    notifications.add(notification);
+                    String msg = "Auction id: " + auction.getId() + " Ended, And You is Top1, Please check your order to get the result";
+                    if(!notificationRepository.existsByMsgAndUser_Id(msg,bid.getUser().getId())){
+                        Notification notification = Notification
+                                .builder()
+                                .title("auction Ended")
+                                .msg(msg)
+                                .user(bid.getUser())
+                                .build();
+                        notifications.add(notification);
+                    }
+
                 }
 
             }
@@ -195,7 +199,7 @@ public class AuctionService implements IAuctionService {
 
         List<Bid> bids = bidRepository.findByAuctionIdAndTop1False(auction.getId());
         List<Transaction> transactions = new ArrayList<>();
-
+        String msg = "Auction id: " + auction.getId() + " Ended, Thank you for participating";
         for (Bid bidFalse : bids) {
             String tranCode = GenerateCodeUtils.generateCode4Transaction(TypeTrans.HT, auction.getProductCode(), bidFalse.getUser().getId());
             // Tạo một transaction mới
@@ -223,13 +227,17 @@ public class AuctionService implements IAuctionService {
             transaction.setStatus(OrderStatus.CONFIRMED);
 
             transactions.add(transaction);
-            Notification notification = Notification
-                    .builder()
-                    .title("auction Ended")
-                    .msg("Auction id: " + auction.getId() + " Ended, Thank you for participating")
-                    .user(bidFalse.getUser())
-                    .build();
-            notifications.add(notification);
+
+            if (!notificationRepository.existsByMsgAndUser_Id(msg,bidFalse.getUser().getId())){
+                Notification notification = Notification
+                        .builder()
+                        .title("auction Ended")
+                        .msg(msg)
+                        .user(bidFalse.getUser())
+                        .build();
+                notifications.add(notification);
+            }
+
         }
         notificationRepository.saveAll(notifications);
         transactionRepository.saveAll(transactions);
@@ -371,6 +379,9 @@ public class AuctionService implements IAuctionService {
                 productRepository.save(product);
                 auction.setStatus(Status.END);
             }
+
+
+
 
             auctionRepository.save(auction);
 

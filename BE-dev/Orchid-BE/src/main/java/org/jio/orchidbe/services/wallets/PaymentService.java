@@ -185,7 +185,7 @@ public class PaymentService implements IPaymentService{
                         if (!existingOrder.getStatus().equals(OrderStatus.CONFIRMED)) {
                             // check total of bank == total of database (order)
 
-                            if (existingOrder.getTotal() == total) {
+                            if (existingOrder.getTotal().equals(total) ) {
                                 existingOrder.setStatus(OrderStatus.CONFIRMED);
 
                                 existingTrans.setResource(bankTranNo);

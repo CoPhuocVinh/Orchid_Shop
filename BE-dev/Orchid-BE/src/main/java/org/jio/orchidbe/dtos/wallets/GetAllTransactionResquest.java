@@ -7,6 +7,7 @@ package org.jio.orchidbe.dtos.wallets;/*  Welcome to Jio word
     Jio: I wish you always happy with coding <3
 */
 
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -69,31 +70,20 @@ public class GetAllTransactionResquest extends BaseFilterRequest<Transaction> {
                 predicates.add(root.join(Transaction.Fields.wallet).get(Wallet.Fields.id).in(walletId));
 
             }
-      /*      if (userId != null && !userId.isBlank()) {
+            if (userId != null && !userId.isBlank()) {
 
                 Predicate walletUser = cb.equal(root.join(Transaction.Fields.wallet).get(Wallet.Fields.user)
                         .get(User.Fields.id), Long.parseLong(userId));
-                Predicate oderUser = cb.equal(root.join(Transaction.Fields.order).get(Order.Fields.user)
-                        .get(User.Fields.id), Long.parseLong(userId));
 
-                Predicate combinedPredicate = cb.or(walletUser,oderUser);
+//                Predicate oderUser = cb.equal(root.join(Transaction.Fields.order).get(Order.Fields.user)
+//                        .get(User.Fields.id), Long.parseLong(userId));
+//
+//                Predicate combinedPredicate = cb.or(walletUser,oderUser);
 
                 predicates.add(
-                        combinedPredicate
+                        walletUser
                 );
-            }*/
 
-            if (userId != null && !userId.isBlank()) {
-                Predicate walletUser = cb.equal(root.get(Transaction.Fields.wallet)
-                        .get(Wallet.Fields.user)
-                        .get(User.Fields.id), Long.parseLong(userId));
-                Predicate orderUser = cb.equal(root.get(Transaction.Fields.order)
-                        .get(Order.Fields.user)
-                        .get(User.Fields.id), Long.parseLong(userId));
-
-                Predicate combinedPredicate = cb.or(walletUser, orderUser);
-
-                predicates.add(combinedPredicate);
             }
 
 

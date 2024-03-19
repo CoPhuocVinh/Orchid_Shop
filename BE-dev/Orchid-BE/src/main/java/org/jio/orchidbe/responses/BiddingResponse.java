@@ -16,4 +16,5 @@ public class BiddingResponse {
     private boolean top1;
     private Long auctionID;
     private Long userID;
+    private String userName;
 }
