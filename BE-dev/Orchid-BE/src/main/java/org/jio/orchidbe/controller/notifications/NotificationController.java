@@ -38,7 +38,7 @@ public class NotificationController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PutMapping("update-feedback/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity updateReply(@PathVariable("id") Long id,
                                       @RequestBody UpdateNotificationRequest updateNotificationRequest,
                                       BindingResult bindingResult) throws ChangeSetPersister.NotFoundException, DataNotFoundException, BadRequestException {

@@ -17,5 +17,7 @@ public class FeedbackResponse {
     private Long id;
     private String content;
     private Long auctionID;
+    private String img;
+    private String name;
     private Long userID;
 }

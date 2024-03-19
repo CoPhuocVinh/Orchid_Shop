@@ -16,6 +16,8 @@ public interface FeedbackMapper {
 
     @Mapping(source = "feedbacks.auction.id", target = "auctionID")
     @Mapping(source = "feedbacks.user.id", target = "userID")
+    @Mapping(source = "user.name", target = "name")
+    @Mapping(source = "user.img", target = "img")
     FeedbackResponse toResponse(Feedbacks feedbacks);
 
 
