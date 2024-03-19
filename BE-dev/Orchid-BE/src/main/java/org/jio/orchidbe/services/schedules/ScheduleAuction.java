@@ -75,12 +75,12 @@ public class ScheduleAuction {
         LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
         List<Auction> remindingAuctions = getAuctionsRemindingAfter(currentTime, Status.COMING);
+        List<Notification> notifications = new ArrayList<>();
 
         for (Auction auction : remindingAuctions) {
 //            System.out.println("start time : ========= " + auction.getStartDate());
-
             List<User> users = userRepository.findByRole(UserRole.STAFF);
-            List<Notification> notifications = new ArrayList<>();
+
             if (users.size() >0){
                 for (User user : users){
                     Notification notification = Notification
@@ -94,9 +94,10 @@ public class ScheduleAuction {
                 }
 
             }
-            notificationRepository.saveAll(notifications);
-        }
+            auctionContainer.removeAuctionRemind(auction);
 
+        }
+        notificationRepository.saveAll(notifications);
 
         for (Auction auction : pendingAuctions) {
 //            System.out.println("start time : ========= " + auction.getStartDate());
@@ -125,7 +126,7 @@ public class ScheduleAuction {
     }
 
     private List<Auction> getAuctionsRemindingAfter(LocalDateTime startTime, Status status) {
-        return auctionContainer.getComingAuctions().stream()
+        return auctionContainer.getRemindAuctions().stream()
                 .filter(auction -> startTime.isAfter(auction.getRemindAt()))
                 .collect(Collectors.toList());
     }
