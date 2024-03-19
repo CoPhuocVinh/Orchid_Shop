@@ -75,15 +75,29 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
       if (selectedMethod === "CARD" && response.data.status === "SUCCESS") {
         setIsPaymentSuccessful(true);
         router.push("/");
-      } else if (
-        selectedMethod === "BANK" &&
-        response.data.status === "SUCCESS"
-      ) {
-        router.push(response.data.payload);
-        setIsPaymentSuccessful(true);
-        window.location.href = "/test-success";
       } else {
         setIsPaymentSuccessful(false);
+      }
+
+      if (selectedMethod === "BANK" && response.data.status === "SUCCESS") {
+        // Mở trang thanh toán VNPay
+        router.push(response.data.payload);
+
+        // Lắng nghe sự kiện thanh toán thành công hoặc thất bại từ trang thanh toán VNPay
+        window.addEventListener("message", (event) => {
+          console.log(event.data);
+
+          if (event.data === "SUCCESS") {
+            // Thanh toán thành công, redirect đến trang "test-success"
+            router.push("/test-success");
+          } else if (event.data === "failed") {
+            // Thanh toán thất bại, redirect đến trang "test-failed"
+            router.push("/test-failed");
+          }
+        });
+      } else {
+        setIsPaymentSuccessful(false);
+        setShowModal(true); // Mở modal
       }
 
       // Kiểm tra nếu đơn hàng đã được xác nhận
