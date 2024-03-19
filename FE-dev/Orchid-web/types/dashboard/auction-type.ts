@@ -47,6 +47,16 @@ export type IAuctionCreateField = {
 };
 
 
+export type IFeedBack = {
+  id: number,
+  content: string,
+  auctionID: number,
+  img: string,
+  name: string,
+  userID: number
+}
+
+
 export enum AuctionStatus {
   LIVE = 'LIVE',
   COMING = 'COMING',

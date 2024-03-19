@@ -8,7 +8,8 @@ export type ModalType =
   | "confirmOrder"
   | "viewInfoOrder"
   | "confirmAuction"
-  | "rejectAuction";
+  | "rejectAuction"
+  | "feedBack";
 
 export interface ModalData {
   auction?: IAuction;

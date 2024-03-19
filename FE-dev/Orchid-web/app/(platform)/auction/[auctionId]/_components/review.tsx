@@ -12,13 +12,32 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useModal } from "@/hooks/use-modal";
+import { getFeedBackAuction } from "@/lib/actions";
+import { useSession } from "next-auth/react";
 
-export default function ReviewBlock({ reviewsData }: any) {
+interface ReviewBlockProps {
+  feedBackPromise: ReturnType<typeof getFeedBackAuction>;
+  reviewsData: any;
+}
+
+export default function ReviewBlock({
+  reviewsData,
+  feedBackPromise,
+}: ReviewBlockProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const { data } = React.use(feedBackPromise);
 
+  const { data: session } = useSession();
+
+  const isReview = data.some(
+    (item) => item.userID.toString() === session?.user.id.toString()
+  );
+
+  const { onOpen } = useModal();
   const reviewsPerPage = 5;
-  const totalPages = Math.ceil(reviewsData.reviews.length / reviewsPerPage);
+  const totalPages = Math.ceil(data.length / reviewsPerPage);
 
   const firstReviewRef = useRef<HTMLDivElement>(null);
   const handlePageChange = (
@@ -31,10 +50,7 @@ export default function ReviewBlock({ reviewsData }: any) {
 
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = reviewsData.reviews.slice(
-    indexOfFirstReview,
-    indexOfLastReview
-  );
+  const currentReviews = data.slice(indexOfFirstReview, indexOfLastReview);
 
   useEffect(() => {
     if (firstReviewRef.current) {
@@ -52,6 +68,8 @@ export default function ReviewBlock({ reviewsData }: any) {
         <Button
           size="lg"
           variant="outline"
+          onClick={() => onOpen("feedBack", {})}
+          disabled={isReview}
           className="hidden !border-gray-dark !px-4 !py-[10px] !text-sm !font-bold !leading-[18px] text-gray-dark hover:bg-gray-1000 hover:text-white md:block md:border-gray md:!text-base lg:!px-[30px] lg:!py-[14px]"
         >
           Add Review
@@ -66,12 +84,12 @@ export default function ReviewBlock({ reviewsData }: any) {
           >
             <ReviewCard
               key={`review-${index}`}
-              avatar={item.avatar}
+              avatar={item.img}
               name={item.name}
-              date={item.date}
-              location={item.location}
-              rating={item.rating}
-              review={item.review}
+              // date={item.date}
+              // location={item.location}
+              // rating={item.rating}
+              review={item.content}
             />
           </div>
         ))}

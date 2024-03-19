@@ -51,9 +51,9 @@ export default function DestinationCard({
               </div>
             </div>
           </div>
-          <span className="inline-flex items-center mt-5 translate-x-12">
-            <span className="mr-2 mb-1 text-white text-sm absolute ">Code</span>
-            <p className="absolute ml-10 text-base mb-1 leading-7 text-white text-shadow-md font-sans font-bold opacity-75">
+          <span className="flex items-center justify-center mt-5 space-x-2 ml-10 ">
+            <span className=" text-white text-sm  ">Code:</span>
+            <p className="  text-base mb-1 leading-7 text-white text-shadow-md font-sans font-bold opacity-75">
               {productCode}
             </p>
           </span>

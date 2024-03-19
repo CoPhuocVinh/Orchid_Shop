@@ -5,6 +5,7 @@ import {
   AuctionStatus,
   IAuction,
   IAuctionCreateField,
+  IFeedBack,
 } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { fetchListData, fetchListDataWithSearchParam } from "@/lib/generics";
@@ -173,4 +174,38 @@ export async function registerAttendAuction(userId: string, auctionId: string) {
       return { success: false, error: "An unexpected error occurred" };
     }
   }
+}
+
+export async function feedbackAuctionLive(
+  userId: string,
+  auctionId: string,
+  content: string
+) {
+  const url = `/feedbacks/create`;
+  const values = { userID: userId, auctionID: auctionId, content: content };
+  console.log(values)
+  try {
+    const res = await api.post(url, values);
+
+    if (res.status === 200) {
+      console.log("feedback successful");
+      revalidatePath(`/auction/${auctionId}`);
+      return { success: true, successFull: "Gửi đấu feedback thành công" };
+    } else {
+      const errorMessage = res.data.error.errorMessage;
+      return { success: false, error: errorMessage };
+    }
+  } catch (error) {
+    console.error("An unexpected error occurred:", error);
+    return { success: false, error: "An unexpected error occurred" };
+  }
+}
+
+
+export async function getFeedBackAuction(
+  params: string
+): Promise<{ data: IFeedBack[] }> {
+  const url = `/feedbacks/list?auctionID=${params}`;
+
+  return await fetchListData(url);
 }

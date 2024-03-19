@@ -1,10 +1,10 @@
 import React from "react";
-import { reviewsData } from '@/data/user-working-data/reviews'
+import { reviewsData } from "@/data/user-working-data/reviews";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LeftSideAuction from "@/components/platform/auction/left-side-auction";
 import RelatedListingBlock from "@/components/platform/auction/related-listings-block";
 import BreadCrumb from "@/components/platform/bread-crumb";
-import { getAuctionByID } from "@/lib/actions";
+import { getAuctionByID, getFeedBackAuction } from "@/lib/actions";
 import Bidding from "./_components/bidding";
 import BiddingHistory from "./_components/bidding-history";
 import ListingDetails from "./_components/listing-detail-block";
@@ -13,6 +13,7 @@ import ReviewBlock from "./_components/review";
 
 const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
   const auction = await getAuctionByID(params.auctionId);
+  const feedback = getFeedBackAuction(params.auctionId);
   const isLive = auction.data?.status === "LIVE";
   return (
     <>
@@ -70,7 +71,9 @@ const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
       </div>
 
       <div className="container mx-auto px-4 md:px-12">
-      <ReviewBlock reviewsData={reviewsData} />
+        <React.Suspense fallback={<div>...Loading</div>}>
+          <ReviewBlock reviewsData={reviewsData} feedBackPromise={feedback} />
+        </React.Suspense>
       </div>
       <div className="container mx-auto px-4 md:px-12">
         <RelatedListingBlock />
