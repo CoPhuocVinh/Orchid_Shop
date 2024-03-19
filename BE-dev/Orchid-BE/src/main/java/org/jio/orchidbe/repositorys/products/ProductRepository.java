@@ -18,6 +18,11 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product,Long>, JpaSpecificationExecutor<Product> {
 
     long countByCategory_Id(long categoryId);
+    Long countByActived(boolean actived);
+
+    Long countByCategoryType(String categoryType);
+
+    Long countByCategoryTypeAndActived(String categoryType, boolean actived);
 
     boolean existsByProductName(String productName);
 

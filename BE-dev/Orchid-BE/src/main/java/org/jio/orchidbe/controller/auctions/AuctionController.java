@@ -8,7 +8,10 @@ import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.constants.BaseConstants;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
+import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
+import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
+import org.jio.orchidbe.requests.StatusDTOResquest;
 import org.jio.orchidbe.requests.auctions.*;
 import org.jio.orchidbe.container.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
@@ -32,10 +35,26 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("${api.prefix}/auctions")
 @RequiredArgsConstructor
 public class AuctionController {
-    private final AuctionContainer auctionContainer;
+    private final AuctionRepository auctionRepository;
     private final IAuctionService auctionService;
     private final ValidatorUtil validatorUtil;
     private final IFirebaseService firebaseService;
+
+    @PostMapping("/count")
+    public Long countAuctionsByStatus(@RequestBody(required = false) StatusDTOResquest auctionStatusDTO) {
+        if (auctionStatusDTO == null || auctionStatusDTO.getStatus() == null) {
+            // Trường hợp không có trạng thái được cung cấp, đếm toàn bộ phiên đấu giá
+            return auctionRepository.count();
+        } else {
+            // Trường hợp có trạng thái được cung cấp, đếm theo trạng thái
+            try {
+                return auctionRepository.countByStatus(auctionStatusDTO.getStatus());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid status provided");
+            }
+        }
+    }
+
 
     @PostMapping("create")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -161,6 +180,8 @@ public class AuctionController {
         apiResponse.ok(response);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+
 
 
 }

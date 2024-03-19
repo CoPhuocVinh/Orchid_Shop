@@ -18,6 +18,8 @@ import org.jio.orchidbe.dtos.users.UserDTORequest;
 import org.jio.orchidbe.dtos.users.UserDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.models.products.Product;
+import org.jio.orchidbe.repositorys.products.ProductRepository;
+import org.jio.orchidbe.requests.ProductDTOResquest;
 import org.jio.orchidbe.services.products.IProductService;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,34 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final IProductService productService;
     private final ValidatorUtil validatorUtil;
+    private final ProductRepository productRepository;
+
+
+    @PostMapping("/count")
+    public Long countProductsByCategoryTypeAndActived(@RequestBody(required = false) ProductDTOResquest request) {
+        if (request == null || (request.getType() == null && !request.isActived())) {
+            // Nếu request body là null hoặc không có trường nào được cung cấp, đếm tất cả sản phẩm có trạng thái hoạt động là true
+            return productRepository.countByActived(true);
+        } else {
+            // Nếu có request body được cung cấp
+            String categoryType = request.getType();
+            boolean actived = request.isActived();
+
+            if (categoryType != null && !categoryType.isEmpty() && actived) {
+                // Nếu cung cấp cả type và actived, đếm số lượng sản phẩm theo loại danh mục và trạng thái hoạt động
+                return productRepository.countByCategoryTypeAndActived(categoryType, actived);
+            } else if (categoryType != null && !categoryType.isEmpty()) {
+                // Nếu chỉ cung cấp type, đếm tất cả sản phẩm có type như request và mang active cả true và false
+                return productRepository.countByCategoryType(categoryType);
+            } else if (actived) {
+                // Nếu chỉ cung cấp actived, đếm tất cả sản phẩm có actived như request
+                return productRepository.countByActived(actived);
+            } else {
+                throw new IllegalArgumentException("Invalid request");
+            }
+        }
+    }
+
     @PostMapping("")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<?> createProduct(
