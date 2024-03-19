@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateBidRequest {
 
-    @Max(value = Float.MAX_EXPONENT, message = "Quantity must be less than or equal to 1000")
+
     private Double biddingPrice;
     private Long auctionID;
     private Long userID;

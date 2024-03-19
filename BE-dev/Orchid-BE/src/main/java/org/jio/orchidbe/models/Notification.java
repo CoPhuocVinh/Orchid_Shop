@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jio.orchidbe.listener.NotificationListener;
 import org.jio.orchidbe.models.users.User;
 
 @AllArgsConstructor
@@ -14,6 +15,7 @@ import org.jio.orchidbe.models.users.User;
 @NoArgsConstructor
 @Entity
 @Table(name="tbl_notifications")
+@EntityListeners(NotificationListener.class)
 public class Notification extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,6 +34,5 @@ public class Notification extends BaseEntity{
 
     @Column(name = "readed", nullable = false)
     private boolean readed = false;
-
 
 }

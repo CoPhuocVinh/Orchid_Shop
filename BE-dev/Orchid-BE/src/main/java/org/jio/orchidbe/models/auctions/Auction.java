@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
+import org.jio.orchidbe.listener.AuctionListener;
 import org.jio.orchidbe.models.BaseEntity;
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.models.products.Product;
@@ -22,6 +23,7 @@ import java.util.List;
 @FieldNameConstants
 @Entity
 @Table(name="tbl_auctions")
+@EntityListeners(AuctionListener.class)
 public class Auction extends BaseEntity {
 
     @Id

@@ -70,7 +70,17 @@ public class GetAllTransactionResquest extends BaseFilterRequest<Transaction> {
 
             }
             if (userId != null && !userId.isBlank()) {
-                predicates.add(cb.equal(root.join(Transaction.Fields.wallet).get(Wallet.Fields.user).get(User.Fields.id), Long.parseLong(userId)));
+
+                Predicate walletUser = cb.equal(root.join(Transaction.Fields.wallet).get(Wallet.Fields.user)
+                        .get(User.Fields.id), Long.parseLong(userId));
+                Predicate oderUser = cb.equal(root.join(Transaction.Fields.order).get(Order.Fields.user)
+                        .get(User.Fields.id), Long.parseLong(userId));
+
+                Predicate combinedPredicate = cb.or(oderUser, walletUser);
+
+                predicates.add(
+                        combinedPredicate
+                );
             }
 
             // Add deleted=false criteria

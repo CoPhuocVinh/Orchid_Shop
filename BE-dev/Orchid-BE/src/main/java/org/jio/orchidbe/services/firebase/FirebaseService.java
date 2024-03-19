@@ -60,7 +60,7 @@ public class FirebaseService<T> implements IFirebaseService<T> {
         try {
             //Firestore dbFirestore = FirestoreClient.getFirestore();
             Firestore dbFirestore = FirestoreClient.getFirestore();
-            ApiFuture<WriteResult> collectionApiFuture = dbFirestore.collection(COLLECTION_AUCTION).document(String.valueOf(id )).set(saveObj);
+            ApiFuture<WriteResult> collectionApiFuture = dbFirestore.collection(collectionName).document(String.valueOf(id )).set(saveObj);
             return collectionApiFuture.get().getUpdateTime().toString();
         }catch (Exception e){
             e.printStackTrace();

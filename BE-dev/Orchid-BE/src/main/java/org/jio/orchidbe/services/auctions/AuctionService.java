@@ -17,6 +17,7 @@ import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.firebase.FirebaseInitialization;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
 
+import org.jio.orchidbe.models.Notification;
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.models.orders.PaymentMethod;
@@ -25,6 +26,7 @@ import org.jio.orchidbe.models.users.UserInfo;
 import org.jio.orchidbe.models.wallets.Transaction;
 import org.jio.orchidbe.models.wallets.Wallet;
 import org.jio.orchidbe.repositorys.auctions.BidRepository;
+import org.jio.orchidbe.repositorys.notifis.NotificationRepository;
 import org.jio.orchidbe.repositorys.orders.OrderRepository;
 import org.jio.orchidbe.repositorys.users.UserInfoRepository;
 import org.jio.orchidbe.repositorys.users.UserRepository;
@@ -106,11 +108,12 @@ public class AuctionService implements IAuctionService {
 
     @Autowired
     private FirestoreChangeListener firestoreChangeListener;
-
+    @Autowired
+    private NotificationRepository notificationRepository;
     @Transactional
     @Override
     public void endAuction(Auction auction) throws DataNotFoundException, ExecutionException, InterruptedException {
-
+        List<Notification> notifications = new ArrayList<>();
         Bid bid = bidRepository.findByAuctionIdAndTop1(auction.getId(), true);
         if (bid != null) {
             if (auction.getStatus() == Status.LIVE) {
@@ -158,6 +161,14 @@ public class AuctionService implements IAuctionService {
                     // Thêm order vào container và lưu order
                     orderContainer.addOrder(order);
                     orderRepository.save(order);
+
+                    Notification notification = Notification
+                            .builder()
+                            .title("auction Ended")
+                            .msg("Auction id: " + auction.getId() + " Ended, And You is Top1, Please check your order to get the result")
+                            .user(bid.getUser())
+                            .build();
+                    notifications.add(notification);
                 }
 
             }
@@ -210,9 +221,17 @@ public class AuctionService implements IAuctionService {
             walletUser.setBalance(walletUser.getBalance() + auction.getStartPrice());
 
             transaction.setStatus(OrderStatus.CONFIRMED);
-            transactions.add(transaction);
-        }
 
+            transactions.add(transaction);
+            Notification notification = Notification
+                    .builder()
+                    .title("auction Ended")
+                    .msg("Auction id: " + auction.getId() + " Ended, Thank you for participating")
+                    .user(bidFalse.getUser())
+                    .build();
+            notifications.add(notification);
+        }
+        notificationRepository.saveAll(notifications);
         transactionRepository.saveAll(transactions);
         auctionRepository.save(auction);
 

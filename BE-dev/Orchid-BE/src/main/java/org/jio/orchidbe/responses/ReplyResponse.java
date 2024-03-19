@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jio.orchidbe.models.FBStatus;
+import org.jio.orchidbe.enums.FBStatus;
 
 @AllArgsConstructor
 @NoArgsConstructor

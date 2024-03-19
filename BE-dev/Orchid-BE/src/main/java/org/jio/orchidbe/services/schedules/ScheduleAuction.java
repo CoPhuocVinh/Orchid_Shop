@@ -4,11 +4,16 @@ import lombok.extern.log4j.Log4j2;
 import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.mappers.auctions.AuctionMapper;
+import org.jio.orchidbe.models.Notification;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.products.Product;
+import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.models.users.user_enum.UserRole;
 import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
+import org.jio.orchidbe.repositorys.notifis.NotificationRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
 import org.jio.orchidbe.container.AuctionContainer;
+import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.services.auctions.IAuctionService;
 import org.jio.orchidbe.services.firebase.IFirebaseService;
@@ -17,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -40,6 +46,10 @@ public class ScheduleAuction {
     private AuctionMapper auctionMapper;
     @Autowired
     private IFirebaseService<AuctionDetailResponse> firebaseAuctionService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
     @Scheduled(fixedDelay = 10000) // Kiểm tra mỗi 60 giây
     public void checkAuctionEndings() throws DataNotFoundException, ExecutionException, InterruptedException {
         LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
@@ -65,6 +75,27 @@ public class ScheduleAuction {
         LocalDateTime currentTime = convertCurrentToLocalDateTimeWithZone();
         List<Auction> pendingAuctions = getPendingAuctionsStartingAfter(currentTime, Status.COMING);
         List<Auction> remindingAuctions = getAuctionsRemindingAfter(currentTime, Status.COMING);
+
+        for (Auction auction : remindingAuctions) {
+//            System.out.println("start time : ========= " + auction.getStartDate());
+
+            List<User> users = userRepository.findByRole(UserRole.STAFF);
+            List<Notification> notifications = new ArrayList<>();
+            if (users.size() >0){
+                for (User user : users){
+                    Notification notification = Notification
+                            .builder()
+                            .title("Remind auction start")
+                            .msg("Auction id: " + auction.getId() + " About to start at "
+                                    + auction.getStartDate() + " , please check !!!")
+                            .user(user)
+                            .build();
+                    notifications.add(notification);
+                }
+
+            }
+            notificationRepository.saveAll(notifications);
+        }
 
 
         for (Auction auction : pendingAuctions) {

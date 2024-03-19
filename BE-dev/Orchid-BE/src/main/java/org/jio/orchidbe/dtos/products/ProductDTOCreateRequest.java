@@ -27,7 +27,7 @@ public class ProductDTOCreateRequest {
     @Max(value = Integer.MAX_VALUE, message = "Quantity must be less than or equal to 1000")
     private int quantity;
 
-    @Size(min = 80, max = 500, message = "description must be between 80 and 500 characters")
+    @Size(min = 80, max = 1000, message = "description must be between 80 and 500 characters")
     private String description;
 
     @JsonProperty("category_id")

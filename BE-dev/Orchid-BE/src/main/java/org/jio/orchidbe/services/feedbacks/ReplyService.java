@@ -4,7 +4,7 @@ import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.feedbacks.ReplyMapper;
-import org.jio.orchidbe.models.FBStatus;
+import org.jio.orchidbe.enums.FBStatus;
 import org.jio.orchidbe.models.feedbacks.Feedbacks;
 import org.jio.orchidbe.models.feedbacks.Replys;
 import org.jio.orchidbe.repositorys.feedbacks.FeedbackRepository;

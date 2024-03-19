@@ -8,10 +8,12 @@ package org.jio.orchidbe.repositorys.users;/*  Welcome to Jio word
 */
 
 import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.models.users.user_enum.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,4 +22,6 @@ public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificati
     Optional<User> findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    List<User> findByRole(UserRole role);
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.jio.orchidbe.models.BaseEntity;
-import org.jio.orchidbe.models.FBStatus;
+import org.jio.orchidbe.enums.FBStatus;
 import org.jio.orchidbe.models.users.User;
 
 @AllArgsConstructor

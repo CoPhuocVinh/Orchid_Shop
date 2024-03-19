@@ -4,9 +4,14 @@ import org.jio.orchidbe.exceptions.DataNotFoundException;
 import  org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.mappers.auctions.AuctionMapper;
 import org.jio.orchidbe.mappers.bids.BiddingMapper;
+import org.jio.orchidbe.models.Notification;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
+import org.jio.orchidbe.models.users.User;
+import org.jio.orchidbe.models.users.user_enum.UserRole;
 import org.jio.orchidbe.repositorys.auctions.BidRepository;
+import org.jio.orchidbe.repositorys.notifis.NotificationRepository;
+import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.services.firebase.IFirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,11 @@ public class AuctionContainer {
     private List<Auction> waitingAuctions;
     private List<Auction> comingAuctions;
     private List<Auction> liveAuctions;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
     @Autowired
     private AuctionMapper auctionMapper;
     @Autowired
@@ -121,9 +131,25 @@ public class AuctionContainer {
         }
     }
     private void updateAuctionLists(Auction auction) throws ExecutionException, InterruptedException {
+        List<Notification> notifications = new ArrayList<>();
         switch (auction.getStatus()) {
             case WAITING:
                 waitingAuctions.add(auction);
+                List<User> users = userRepository.findByRole(UserRole.ADMIN);
+
+                if (users.size() >0){
+                    for (User user : users){
+                        Notification notification = Notification
+                                .builder()
+                                .title("New auction create")
+                                .msg("Auction id: " + auction.getId() + " created, Please consider")
+                                .user(user)
+                                .build();
+                        notifications.add(notification);
+                    }
+
+                }
+                notificationRepository.saveAll(notifications);
                 break;
             case COMING:
                 comingAuctions.add(auction);
@@ -135,6 +161,23 @@ public class AuctionContainer {
                 AuctionDetailResponse response = auctionMapper.toResponseDetail(auction);
                 response.setBidList(bids.stream().map(biddingMapper::toResponse).toList());
                 firebaseAuctionService.savev2(response,response.getId(),COLLECTION_AUCTION);
+
+                if (bids.size() >0){
+                    for (Bid bid : bids){
+                        Notification notification = Notification
+                                .builder()
+                                .title("auction Started")
+                                .msg("Auction id: " + auction.getId() + " created, Please consider")
+                                .user(bid.getUser())
+                                .build();
+                        notifications.add(notification);
+                    }
+
+                }
+                notificationRepository.saveAll(notifications);
+
+
+
                 break;
             default:
                 break;

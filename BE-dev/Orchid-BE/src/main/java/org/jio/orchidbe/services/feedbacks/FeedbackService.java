@@ -5,7 +5,7 @@ import org.jio.orchidbe.enums.Status;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.exceptions.OptimisticException;
 import org.jio.orchidbe.mappers.feedbacks.FeedbackMapper;
-import org.jio.orchidbe.models.FBStatus;
+import org.jio.orchidbe.enums.FBStatus;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.feedbacks.Feedbacks;
