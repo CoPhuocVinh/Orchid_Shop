@@ -33,6 +33,7 @@ public class AuctionContainer {
     private List<Auction> comingAuctions;
     private List<Auction> liveAuctions;
 
+    private List<Auction> remindAuctions;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -50,6 +51,7 @@ public class AuctionContainer {
         this.waitingAuctions = new ArrayList<>();
         this.comingAuctions = new ArrayList<>();
         this.liveAuctions = new ArrayList<>();
+        this.remindAuctions = new ArrayList<>();
     }
 
     public void addAuction(Auction auction) throws ExecutionException, InterruptedException {
@@ -152,6 +154,7 @@ public class AuctionContainer {
                 notificationRepository.saveAll(notifications);
                 break;
             case COMING:
+                remindAuctions.add(auction);
                 comingAuctions.add(auction);
                 break;
             case LIVE:
@@ -216,12 +219,19 @@ public class AuctionContainer {
                 break;
         }
     }
+
+    public void removeAuctionRemind(Auction auction){
+        remindAuctions.remove(auction);
+    }
     public List<Auction> getAuctions() {
         return auctions;
     }
 
     public List<Auction> getWaitingAuctions() {
         return waitingAuctions;
+    }
+    public List<Auction> getRemindAuctions() {
+        return remindAuctions;
     }
 
     public List<Auction> getComingAuctions() {

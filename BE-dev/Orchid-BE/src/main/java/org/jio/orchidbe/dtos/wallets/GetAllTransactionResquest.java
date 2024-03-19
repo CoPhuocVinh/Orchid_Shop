@@ -73,10 +73,10 @@ public class GetAllTransactionResquest extends BaseFilterRequest<Transaction> {
 
                 Predicate walletUser = cb.equal(root.join(Transaction.Fields.wallet).get(Wallet.Fields.user)
                         .get(User.Fields.id), Long.parseLong(userId));
-                Predicate oderUser = cb.equal(root.join(Transaction.Fields.order).get(Order.Fields.user)
-                        .get(User.Fields.id), Long.parseLong(userId));
+//                Predicate oderUser = cb.equal(root.join(Transaction.Fields.order).get(Order.Fields.user)
+//                        .get(User.Fields.id), Long.parseLong(userId));
 
-                Predicate combinedPredicate = cb.or(oderUser, walletUser);
+                Predicate combinedPredicate = cb.and(walletUser);
 
                 predicates.add(
                         combinedPredicate
