@@ -72,6 +72,12 @@ function LeftSide() {
       toast.error("Có lỗi xảy ra rồi");
     }
   };
+
+  const handleLoginProvider = async () => {
+    await signIn("google", { callbackUrl })
+      // .then(() => toast.success("Login success"))
+      // .catch(() => toast.error("Login fail"));
+  };
   const isLoading = form.formState.isSubmitting;
   return (
     <div className="lg:w-1/2 px-5 xl:pl-12 pt-10">
@@ -129,7 +135,7 @@ function LeftSide() {
                 fill="#EB4335"
               />
             </svg>
-            <span> Sign In with Google </span>{" "}
+            <button onClick={handleLoginProvider}> Sign In with Google </button>{" "}
           </a>
           <a
             href="#"

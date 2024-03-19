@@ -61,7 +61,7 @@ export default function ReviewBlock({
   return (
     <Section
       id="reviews"
-      title="35 reviews"
+      title={`${data.length} reviews`}
       className="scroll-mt-20 py-5 xl:py-7"
       titleClassName="text-xl md:!text-[22px] 2xl:!text-2xl hidden md:block"
       rightElement={

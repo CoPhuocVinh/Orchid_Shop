@@ -361,7 +361,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                     <Input
                       type="number"
                       disabled={isLoading || notPermissionAlowEdit}
-                      placeholder="vd: 100..."
+                      placeholder="Nhập khối lượng"
                       {...field}
                       value={field.value || ""}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
@@ -380,7 +380,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="vd: 100..."
+                      placeholder="Nhập giá bắt đầu"
                       disabled={
                         isLoading ||
                         notPermissionAlowEdit ||
@@ -406,7 +406,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="vd: 100..."
+                      placeholder="Nhập bước nhảy giá"
                       disabled={
                         isLoading ||
                         notPermissionAlowEdit ||
