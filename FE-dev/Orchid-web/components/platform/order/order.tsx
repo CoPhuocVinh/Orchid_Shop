@@ -30,6 +30,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
   const [orderConfirmed, setOrderConfirmed] = useState(false); // Thêm state để quản lý hiển thị modal khi đơn hàng đã được xác nhận
 
   const handleAddressSelect = (address: any) => {
+    console.log(address.id);
     setSelectedAddress(address.id);
   };
 
@@ -60,6 +61,9 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
         userIn4Id: selectedAddress,
       };
       setIsWaiting(selectedMethod === "BANK"); // Đặt trạng thái "waiting" nếu chọn BANK
+      // Chuyển đổi payload thành JSON
+      const payloadJSON = JSON.stringify(payload);
+      console.log("Payload JSON:", payloadJSON);
 
       const response = await axios.put(
         `https://orchid.fams.io.vn/api/v1/orders/update-order/${orderId}`,
@@ -154,8 +158,8 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                 <h3 className="text-lg font-semibold mb-2">Select Address</h3>
                 {in4DetailResponseList?.data &&
                   sortAddresses(in4DetailResponseList.data).map(
-                    (address: any) => (
-                      <div key={address.id} className="py-2">
+                    (address: any, index: any) => (
+                      <div key={index} className="py-2">
                         <Alert className="flex flex-col">
                           <div className="flex justify-between items-center">
                             <AlertTitle>{address.info_name}</AlertTitle>
