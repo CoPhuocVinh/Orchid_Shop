@@ -25,8 +25,8 @@ import org.jio.orchidbe.requests.orders.ConfirmedOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
-import org.jio.orchidbe.responses.AuctionContainer;
-import org.jio.orchidbe.responses.OrderContainer;
+import org.jio.orchidbe.container.AuctionContainer;
+import org.jio.orchidbe.container.OrderContainer;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.jio.orchidbe.services.wallets.IPaymentService;
 import org.jio.orchidbe.utils.GenerateCodeUtils;
@@ -83,47 +83,6 @@ public class OrderService implements IOrderService {
             orderContainer.addOrder(order);
         }
     }
-
-
-////    @Override
-//
-//public OrderResponse createOrder(Long auctionID) throws DataNotFoundException, BadRequestException {
-//    // Retrieve the auction from the database
-//    Optional<Auction> auctionOptional = auctionRepository.findById(auctionID);
-//    Auction auction = auctionOptional.get();
-//    // Create a new order entity
-//    Order order = new Order();
-//    LocalDateTime currentTime = LocalDateTime.now();
-//    LocalDateTime expireTime = currentTime.plusHours(24);
-//
-//    // Retrieve user information from the order
-//    Bid bid = bidRepository.findByAuction_Id(auctionID);
-//
-//    User user = userRepository.findById(bid.getUser().getId())
-//            .orElseThrow(() -> new DataNotFoundException("User not found with ID: " + bid.getUser().getId()));
-//    Order finalOrder1 = order;
-//    UserInfo userInfo = userInfoRepository.findById(bid.getUser().getId())
-//            .orElseThrow(() -> new DataNotFoundException("User information not found with ID: " + bid.getUser().getId()));
-//
-//    // Set order details
-//    order.setPhone(userInfo.getPhone());
-//    order.setExpiredAt(expireTime);
-//    order.setAddress(userInfo.getAddress());
-//    order.setProductCode(auction.getProductCode());
-//    order.setProductName(auction.getProductName());
-//    order.setUser(user);
-//    order.setAuction(auction);
-//    order.setStatus(OrderStatus.PENDING);
-//    orderContainer.addOrder(order);
-//
-//    // Save the order to the database
-//    order = orderRepository.save(order);
-//
-//    // Map the order entity to a response DTO and return it
-//    return orderMapper.toResponse(order);
-//}
-//
-
 
     @Override
     public Page<OrderResponse> getAllOrders(GetAllOrderRequest getAllOrderRequest) {

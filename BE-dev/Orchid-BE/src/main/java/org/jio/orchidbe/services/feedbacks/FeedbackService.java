@@ -9,8 +9,6 @@ import org.jio.orchidbe.models.FBStatus;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.models.feedbacks.Feedbacks;
-import org.jio.orchidbe.models.products.Product;
-import org.jio.orchidbe.models.users.User;
 
 
 import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
@@ -21,7 +19,7 @@ import org.jio.orchidbe.repositorys.users.UserRepository;
 import org.jio.orchidbe.requests.feedbacks.CreateFeedbackRequest;
 import org.jio.orchidbe.requests.feedbacks.GetAllFeedbackRequest;
 import org.jio.orchidbe.requests.feedbacks.UpdateFeedbackRequest;
-import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.container.AuctionContainer;
 import org.jio.orchidbe.responses.FeedbackResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;

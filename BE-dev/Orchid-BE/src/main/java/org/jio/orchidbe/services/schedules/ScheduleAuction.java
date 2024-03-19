@@ -8,7 +8,7 @@ import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
-import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.container.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.services.auctions.IAuctionService;
 import org.jio.orchidbe.services.firebase.IFirebaseService;

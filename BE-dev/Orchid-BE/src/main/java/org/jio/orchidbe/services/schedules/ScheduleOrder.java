@@ -8,7 +8,7 @@ import org.jio.orchidbe.models.products.Product;
 import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
 import org.jio.orchidbe.repositorys.orders.OrderRepository;
 import org.jio.orchidbe.repositorys.products.ProductRepository;
-import org.jio.orchidbe.responses.OrderContainer;
+import org.jio.orchidbe.container.OrderContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

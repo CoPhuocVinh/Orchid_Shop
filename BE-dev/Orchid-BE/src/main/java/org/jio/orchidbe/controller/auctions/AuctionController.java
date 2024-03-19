@@ -10,7 +10,7 @@ import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.requests.auctions.*;
-import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.container.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.GetAuctionResponse;

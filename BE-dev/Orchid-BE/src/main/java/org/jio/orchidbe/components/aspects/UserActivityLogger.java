@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.repositorys.auctions.AuctionRepository;
-import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.container.AuctionContainer;
 import org.jio.orchidbe.responses.AuctionResponse;
 import org.jio.orchidbe.responses.BiddingResponse;
 import org.springframework.beans.factory.annotation.Autowired;

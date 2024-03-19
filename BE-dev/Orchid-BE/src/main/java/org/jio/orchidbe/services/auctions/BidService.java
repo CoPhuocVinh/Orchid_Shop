@@ -17,7 +17,7 @@ import org.jio.orchidbe.requests.bids.CreateBidRequest;
 import org.jio.orchidbe.requests.bids.GetAllBidRequest;
 import org.jio.orchidbe.requests.bids.UpdateBiddingRequest;
 
-import org.jio.orchidbe.responses.AuctionContainer;
+import org.jio.orchidbe.container.AuctionContainer;
 
 import org.jio.orchidbe.responses.BiddingResponse;
 import org.jio.orchidbe.utils.ValidatorUtil;

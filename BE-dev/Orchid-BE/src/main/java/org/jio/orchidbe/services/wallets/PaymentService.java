@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jio.orchidbe.configs.PaymentConfig;
 import org.jio.orchidbe.constants.BaseConstants;
+import org.jio.orchidbe.container.TransactionContainer;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.models.orders.Order;
@@ -34,6 +35,9 @@ public class PaymentService implements IPaymentService{
     private TransactionRepository transactionRepository;
     @Autowired
     private WalletRepository walletRepository;
+
+    @Autowired
+    private TransactionContainer transactionContainer;
 
     @Override
     public String createPayment(Double total, String context, Long id) throws UnsupportedEncodingException {
@@ -108,6 +112,8 @@ public class PaymentService implements IPaymentService{
         String vnp_SecureHash = PaymentConfig.hmacSHA512(PaymentConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = PaymentConfig.vnp_PayUrl + "?" + queryUrl;
+
+        transactionContainer.transactions.put(id,later);
         return paymentUrl;
     }
 

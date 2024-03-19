@@ -1,4 +1,4 @@
-package org.jio.orchidbe.responses;
+package org.jio.orchidbe.container;
 
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import  org.jio.orchidbe.enums.Status;
@@ -7,6 +7,7 @@ import org.jio.orchidbe.mappers.bids.BiddingMapper;
 import org.jio.orchidbe.models.auctions.Auction;
 import org.jio.orchidbe.models.auctions.Bid;
 import org.jio.orchidbe.repositorys.auctions.BidRepository;
+import org.jio.orchidbe.responses.AuctionDetailResponse;
 import org.jio.orchidbe.services.firebase.IFirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

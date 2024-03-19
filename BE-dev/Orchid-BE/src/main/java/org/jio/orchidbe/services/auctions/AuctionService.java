@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.components.FirestoreChangeListener;
 import org.jio.orchidbe.constants.BaseConstants;
+import org.jio.orchidbe.container.AuctionContainer;
+import org.jio.orchidbe.container.OrderContainer;
 import org.jio.orchidbe.dtos.auctions.RegisterAuctionDTO;
 
 import org.jio.orchidbe.enums.OrderStatus;
@@ -435,10 +437,13 @@ public class AuctionService implements IAuctionService {
                             .generateCode4Transaction(TypeTrans.RT, auction.getProductCode(), dto.getUserId());
                     //Double depositPrice = auction.getDepositPrice() != null ? Double.valueOf(auction.getDepositPrice()) : 0;
                     Double startPrice = auction.getStartPrice() != null ? Double.valueOf(auction.getStartPrice()) : 0;
-
+                    String resource = "wallet-" + tranCode;
+                    String content = "register auctionId" + auction.getId();
                     Transaction transaction = Transaction.builder()
                             .wallet(wallet)
+                            .resource(resource)
                             .amount(startPrice)
+                            .content(content)
                             .status(OrderStatus.CONFIRMED)
                             .paymentMethod(PaymentMethod.CARD)
                             .transactionCode(tranCode)

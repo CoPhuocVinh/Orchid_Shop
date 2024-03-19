@@ -6,17 +6,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.jio.orchidbe.dtos.api_response.ApiResponse;
-import org.jio.orchidbe.dtos.products.ProductDTORequest;
-import org.jio.orchidbe.dtos.products.ProductDetailDTOResponse;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
 import org.jio.orchidbe.mappers.orders.OrderMapper;
-import org.jio.orchidbe.models.orders.Order;
 import org.jio.orchidbe.requests.orders.ConfirmedOrderRequest;
 import org.jio.orchidbe.requests.orders.GetAllOrderRequest;
 import org.jio.orchidbe.requests.orders.StatusOrderRequest;
 import org.jio.orchidbe.requests.orders.UpdateOrderRequest;
-import org.jio.orchidbe.responses.AuctionDetailResponse;
-import org.jio.orchidbe.responses.OrderContainer;
+import org.jio.orchidbe.container.OrderContainer;
 import org.jio.orchidbe.responses.OrderResponse;
 import org.jio.orchidbe.services.orders.IOrderService;
 import org.jio.orchidbe.utils.ValidatorUtil;
@@ -26,8 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/orders")

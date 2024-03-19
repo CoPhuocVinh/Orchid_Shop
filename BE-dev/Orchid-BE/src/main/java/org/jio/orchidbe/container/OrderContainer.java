@@ -1,4 +1,4 @@
-package org.jio.orchidbe.responses;
+package org.jio.orchidbe.container;
 
 import org.jio.orchidbe.enums.OrderStatus;
 import org.jio.orchidbe.exceptions.DataNotFoundException;
