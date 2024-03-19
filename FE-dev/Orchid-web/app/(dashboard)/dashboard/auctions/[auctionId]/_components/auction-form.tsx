@@ -127,7 +127,9 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
         await updateAuctionDetail(params.auctionId as string, value);
       } else {
         await createAuction(value);
+
         form.reset();
+  
       }
 
       toast.success(toastMessage);
@@ -359,8 +361,9 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                     <Input
                       type="number"
                       disabled={isLoading || notPermissionAlowEdit}
-                      placeholder="0"
+                      placeholder="vd: 100..."
                       {...field}
+                      value={field.value || ""}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
                     />
                   </FormControl>
@@ -377,13 +380,16 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
+                      placeholder="vd: 100..."
                       disabled={
                         isLoading ||
                         notPermissionAlowEdit ||
                         comingNotPermissionEdit
                       }
-                      placeholder="0"
-                      {...field}
+                      
+                      {...field} 
+                      value={field.value || ""}
+
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
                     />
                   </FormControl>
@@ -400,13 +406,15 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
+                      placeholder="vd: 100..."
                       disabled={
                         isLoading ||
                         notPermissionAlowEdit ||
                         comingNotPermissionEdit
                       }
-                      placeholder="0"
+                      
                       {...field}
+                      value={field.value || ""}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
                     />
                   </FormControl>

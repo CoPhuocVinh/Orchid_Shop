@@ -229,14 +229,7 @@ export const WalletModal = () => {
                     )}
                   />
 
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    variant="action"
-                    className="py-3.5 flex items-center justify-center text-white font-bold bg-success-300 hover:bg-success-400 transition-all rounded-lg w-full"
-                  >
-                    Nạp tiền
-                  </Button>
+
                 </form>
               </Form>
             </div>

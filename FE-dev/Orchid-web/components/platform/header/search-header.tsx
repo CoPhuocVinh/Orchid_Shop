@@ -4,31 +4,24 @@ import { Hash, Search } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
 import { useEffect, useState } from "react";
 import { IAuction } from "@/types/dashboard";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export const ServerSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [auctions, setAuctions] = useState<IAuction[]>([]);
   const [filteredAuctions, setFilteredAuctions] = useState<IAuction[]>([]);
-  const searchParams = useSearchParams();
-  const initialSearch = searchParams.get("search") || "";
-
-  useEffect(() => {
-    setSearchQuery(initialSearch);
-  }, [initialSearch]);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://orchid.fams.io.vn/api/v1/auctions/list?search=${searchQuery}`
+          `https://orchid.fams.io.vn/api/v1/auctions/list?page=1&per_page=100&status=LIVE.COMING`
         );
         const data = await response.json();
         setAuctions(data.payload.content);
@@ -38,12 +31,10 @@ export const ServerSearch = () => {
     };
 
     fetchData();
-  }, [searchQuery]);
+  }, []);
 
   useEffect(() => {
-    const filtered = auctions.filter((auction) =>
-      auction.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filtered = auctions.filter((auction) => auction.title);
     setFilteredAuctions(filtered);
   }, [auctions, searchQuery]);
 
@@ -59,7 +50,7 @@ export const ServerSearch = () => {
 
     document.addEventListener("keydown", down);
 
-    return () => removeEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
   }, []);
 
   return (
@@ -79,7 +70,7 @@ export const ServerSearch = () => {
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
-          placeholder="KAO ĐANG TO DO cái này nhé ....."
+          placeholder="Tìm kiếm"
           value={searchQuery}
           onValueChange={setSearchQuery}
         />
@@ -89,8 +80,13 @@ export const ServerSearch = () => {
 
           {filteredAuctions.map((auction) => (
             <CommandItem key={auction.id}>
-              <Hash className="w-4 h-4 mr-2" />
-              <span>{auction.title}</span>
+              <button
+                onClick={() => router.push(`auction/${auction.id}`)}
+                className="flex "
+              >
+                <Hash className="w-4 h-4 mr-2" />
+                <span>{auction.title}</span>
+              </button>
             </CommandItem>
           ))}
         </CommandList>
@@ -98,3 +94,5 @@ export const ServerSearch = () => {
     </>
   );
 };
+
+export default ServerSearch;

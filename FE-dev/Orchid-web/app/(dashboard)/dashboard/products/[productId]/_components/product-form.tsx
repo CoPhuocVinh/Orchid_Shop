@@ -212,8 +212,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <Input
                       type="number"
                       disabled={isLoading}
-                      placeholder="0"
+                      placeholder="vd: 100"
                       {...field}
+                      value={field.value || ""}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
                     />
                   </FormControl>

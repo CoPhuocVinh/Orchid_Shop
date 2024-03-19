@@ -92,7 +92,7 @@ const UsersPage = ({ searchParams }: IndexPageProps) => {
           </TabsContent>
         </Tabs>
       </div>
-      <RightSidebar />
+      {/* <RightSidebar /> */}
     </>
   );
 };
