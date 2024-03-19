@@ -62,8 +62,8 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
       };
       setIsWaiting(selectedMethod === "BANK"); // Đặt trạng thái "waiting" nếu chọn BANK
       // Chuyển đổi payload thành JSON
-      const payloadJSON = JSON.stringify(payload);
-      console.log("Payload JSON:", payloadJSON);
+      // const payloadJSON = JSON.stringify(payload);
+      // console.log("Payload JSON:", payloadJSON);
 
       const response = await axios.put(
         `https://orchid.fams.io.vn/api/v1/orders/update-order/${orderId}`,
@@ -74,16 +74,19 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
       console.log(response.data.status);
       console.log(response.data.payload);
 
-      const userId = session?.user.id;
-
-      if (selectedMethod === "CARD" && response.data.status === "SUCCESS") {
+      if (
+        selectedMethod === "CARD" &&
+        response.data.payload.status === "CONFIRMED"
+      ) {
         setIsPaymentSuccessful(true);
-        router.push("/");
-      } else {
-        setIsPaymentSuccessful(false);
-      }
 
-      if (selectedMethod === "BANK" && response.data.status === "SUCCESS") {
+        setTimeout(() => {
+          router.push("/");
+        }, 5000); // 5000 milliseconds = 5 giây
+      } else if (
+        selectedMethod === "BANK" &&
+        response.data.status === "SUCCESS"
+      ) {
         // Mở trang thanh toán VNPay
         router.push(response.data.payload);
 
@@ -99,18 +102,17 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
             router.push("/test-failed");
           }
         });
+      } else if (
+        (selectedMethod === "CARD" && response.data.status === "CONFIRMED") ||
+        (selectedMethod === "BANK" && response.data.status === "CONFIRMED")
+      ) {
+        setOrderConfirmed(true);
       } else {
         setIsPaymentSuccessful(false);
         setShowModal(true); // Mở modal
       }
 
       // Kiểm tra nếu đơn hàng đã được xác nhận
-      if (
-        (selectedMethod === "CARD" && response.data.status === "CONFIRMED") ||
-        (selectedMethod === "BANK" && response.data.status === "CONFIRMED")
-      ) {
-        setOrderConfirmed(true);
-      }
 
       setShowModal(true); // Mở modal
     } catch (error) {
@@ -159,7 +161,7 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                 {in4DetailResponseList?.data &&
                   sortAddresses(in4DetailResponseList.data).map(
                     (address: any, index: any) => (
-                      <div key={index} className="py-2">
+                      <div key={address.id} className="py-2">
                         <Alert className="flex flex-col">
                           <div className="flex justify-between items-center">
                             <AlertTitle>{address.info_name}</AlertTitle>
@@ -280,6 +282,13 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                     ) : orderConfirmed ? (
                       <div className="flex items-center justify-center mb-4">
                         <p className="font-bold text-lg">Order has been paid</p>
+                        <button
+                          onClick={(e) => {
+                            router.push("/");
+                          }}
+                        >
+                          Back to home
+                        </button>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center mb-4">
@@ -297,6 +306,13 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                               strokeWidth={2}
                               d="M5 13l4 4L19 7"
                             />
+                            <button
+                              onClick={(e) => {
+                                router.push("/");
+                              }}
+                            >
+                              Back to home after 5s...
+                            </button>
                           </svg>
                         ) : (
                           <svg
@@ -310,6 +326,13 @@ function BodyOrder({ orderPromisse }: BodyOrderProps) {
                               d="M10 18a1 1 0 100-2 1 1 0 000 2zM10 14a1 1 0 100-2 1 1 0 000 2zm0-8a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z"
                               clipRule="evenodd"
                             />
+                            <button
+                              onClick={(e) => {
+                                router.push("/");
+                              }}
+                            >
+                              Back to home
+                            </button>
                           </svg>
                         )}
                         <p className="font-bold text-lg">
