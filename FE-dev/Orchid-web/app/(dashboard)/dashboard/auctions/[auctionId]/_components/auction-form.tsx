@@ -1,6 +1,6 @@
 "use client";
 import * as z from "zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -38,7 +38,10 @@ import {
 } from "@/lib/actions";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Heading } from "@/components/dashboard-heading";
-import { DateTimePicker } from "@/components/date-time-picker/date-time-picker";
+import {
+  DateTimePicker,
+  DateTimePickerRef,
+} from "@/components/date-time-picker/date-time-picker";
 import { adjustTimeZoneOffset } from "@/hooks/use-countdown-time";
 import { auctionSchema } from "@/lib/schemas";
 
@@ -56,6 +59,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
   const params = useParams();
   const router = useRouter();
 
+  const dateTimePickerRef = useRef<DateTimePickerRef>(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -127,9 +131,8 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
         await updateAuctionDetail(params.auctionId as string, value);
       } else {
         await createAuction(value);
-
+        dateTimePickerRef.current?.setJsDatetime(null);
         form.reset();
-  
       }
 
       toast.success(toastMessage);
@@ -214,6 +217,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormLabel htmlFor="datetime">Ngày bắt đầu</FormLabel>
                   <FormControl>
                     <DateTimePicker
+                      ref={dateTimePickerRef}
                       granularity="minute"
                       jsDate={field.value ? new Date(field.value) : null}
                       onJsDateChange={field.onChange}
@@ -236,6 +240,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormLabel htmlFor="datetime">Ngày kết thúc</FormLabel>
                   <FormControl>
                     <DateTimePicker
+                      ref={dateTimePickerRef}
                       granularity="minute"
                       jsDate={field.value ? new Date(field.value) : null}
                       onJsDateChange={field.onChange}
@@ -266,6 +271,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormLabel htmlFor="datetime">Ngày remindAt</FormLabel>
                   <FormControl>
                     <DateTimePicker
+                      ref={dateTimePickerRef}
                       granularity="minute"
                       jsDate={field.value ? new Date(field.value) : null}
                       onJsDateChange={field.onChange}
@@ -296,7 +302,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input
-                     autoComplete="off"
+                      autoComplete="off"
                       disabled={isLoading || notPermissionAlowEdit}
                       placeholder="vd: đấu giá lan..."
                       {...field}
@@ -386,10 +392,8 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                         notPermissionAlowEdit ||
                         comingNotPermissionEdit
                       }
-                      
-                      {...field} 
+                      {...field}
                       value={field.value || ""}
-
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
                     />
                   </FormControl>
@@ -412,7 +416,6 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                         notPermissionAlowEdit ||
                         comingNotPermissionEdit
                       }
-                      
                       {...field}
                       value={field.value || ""}
                       className="bg-zinc-200/50 dark:bg-zinc-700/50 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
