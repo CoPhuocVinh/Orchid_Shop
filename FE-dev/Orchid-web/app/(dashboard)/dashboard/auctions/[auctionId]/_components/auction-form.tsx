@@ -131,7 +131,7 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
         await updateAuctionDetail(params.auctionId as string, value);
       } else {
         await createAuction(value);
-        dateTimePickerRef.current?.setJsDatetime(null);
+        router.push("/dashboard/auctions");
         form.reset();
       }
 
@@ -217,7 +217,6 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormLabel htmlFor="datetime">Ngày bắt đầu</FormLabel>
                   <FormControl>
                     <DateTimePicker
-                      ref={dateTimePickerRef}
                       granularity="minute"
                       jsDate={field.value ? new Date(field.value) : null}
                       onJsDateChange={field.onChange}
@@ -240,7 +239,6 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormLabel htmlFor="datetime">Ngày kết thúc</FormLabel>
                   <FormControl>
                     <DateTimePicker
-                      ref={dateTimePickerRef}
                       granularity="minute"
                       jsDate={field.value ? new Date(field.value) : null}
                       onJsDateChange={field.onChange}
@@ -271,7 +269,6 @@ export const AuctionForm: React.FC<AuctionFormProps> = ({
                   <FormLabel htmlFor="datetime">Ngày remindAt</FormLabel>
                   <FormControl>
                     <DateTimePicker
-                      ref={dateTimePickerRef}
                       granularity="minute"
                       jsDate={field.value ? new Date(field.value) : null}
                       onJsDateChange={field.onChange}
