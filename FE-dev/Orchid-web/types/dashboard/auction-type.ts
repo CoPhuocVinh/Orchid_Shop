@@ -5,7 +5,8 @@ export type IBidList = {
   biddingPrice: number,
   top1: boolean,
   userID: number,
-  auctionID: number
+  auctionID: number;
+  userName: string;
 }
 
 

@@ -51,7 +51,7 @@ const Bidding = ({ auctionId }: BiddingProps) => {
                   <div className="flex-grow flex justify-between">
                     <div className="flex flex-col">
                       <span className="font-semibold">
-                        User ID: {bidder.userID}
+                      User Name: {bidder.userName}
                       </span>
                       <span className="text-gray-600">
                         Ratings: {bidder.ratings}

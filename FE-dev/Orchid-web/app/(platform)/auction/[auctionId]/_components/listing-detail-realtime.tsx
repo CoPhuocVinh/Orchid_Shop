@@ -42,8 +42,8 @@ export default function ListingDetailsRealTime({ auctionId}: ListingDetailsProps
       unsubscribe();
     };
   }, [auctionId]);
-  const minimumPrice = auctionData?.depositPrice || 0;
-  const biddingPrice = auctionData?.biddingPrice || minimumPrice;
+  const minimumPrice = auctionData?.startPrice || 0;
+  const biddingPrice = auctionData?.biddingPrice || minimumPrice 
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
   const { onOpen } = useModal();
@@ -170,11 +170,11 @@ export default function ListingDetailsRealTime({ auctionId}: ListingDetailsProps
 
             <div className="mt-4 relative">
               <Button
-                onClick={() =>  handleBidding(biddingPrice + minimumPrice)}
+                onClick={() =>  handleBidding(biddingPrice + auctionData?.depositPrice!)}
                 disabled={!canBid || isLoading}
                 className="bg-gray-300 absolute top-[-56px] left-[140px] text-gray-700 py-2 px-4 rounded-lg hover:bg-green-400 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Raise (${minimumPrice})
+                Raise (${auctionData?.depositPrice})
               </Button>
             </div>
           </div>
