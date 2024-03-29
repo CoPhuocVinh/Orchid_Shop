@@ -3,7 +3,7 @@
 import { useTimeout } from "@/hooks/use-timeout";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
-import BlockLoader from "@/components/loader/block_loader";
+import BlockLoader from "@/components/loader/block-loader";
 import {
   Swiper,
   SwiperSlide,

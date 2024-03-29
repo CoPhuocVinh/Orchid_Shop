@@ -5,7 +5,7 @@ import logoWhite from "/public/static/images/logo/logo-white.svg";
 import Link from "next/link";
 import Image from "next/image";
 
-import RightSide from "@/components/dashboard/signin/RightSide";
+import RightSide from "@/components/signin/right-side";
 import SignUpForm from "./_components/sign-up-form";
 
 function SignUp() {

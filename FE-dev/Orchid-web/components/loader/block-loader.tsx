@@ -1,6 +1,6 @@
 'use client';
 
-import ContentLoader from "./content_loader";
+import ContentLoader from "./content-loader";
 
 
 interface BlockTypes {

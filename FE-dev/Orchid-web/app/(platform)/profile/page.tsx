@@ -1,5 +1,5 @@
 import React from "react";
-import Nav_Menu from "@/components/platform/profile/nav-profile";
+import NavMenu from "@/components/platform/profile/nav-profile";
 import { SearchParams } from "@/types/table";
 export interface IndexPageProps {
   searchParams: SearchParams;
@@ -7,7 +7,7 @@ export interface IndexPageProps {
 function ProfilePage({ searchParams }: IndexPageProps) {
   return (
     <>
-      <Nav_Menu searchParams={searchParams}/>
+      <NavMenu searchParams={searchParams}/>
     </>
   );
 }

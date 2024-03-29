@@ -1,4 +1,3 @@
-import Wallet from "@/components/dashboard/wallet/page";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { Shell } from "@/components/shell";
 import { getTransactions } from "@/lib/actions/transaction";

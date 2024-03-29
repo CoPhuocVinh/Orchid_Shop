@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 
-import Sidebar from "@/components/dashboard/sidebar/Sidebar";
-import SidebarV2 from "@/components/dashboard/sidebar/SidebarV2";
+import Sidebar from "@/components/dashboard/sidebar/sidebar";
+import SidebarV2 from "@/components/dashboard/sidebar/sidebarV2";
 import Overlay from "@/components/dashboard/overlay/page";
 import HeaderTwo from "@/components/dashboard/header/header-two";
 import HeaderOne from "@/components/dashboard/header/header-one";

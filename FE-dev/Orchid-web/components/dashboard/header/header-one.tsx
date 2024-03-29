@@ -1,15 +1,12 @@
 "use client";
 import { useState } from "react";
-import SearchBar from "../forms/search-bar";
 import ToggleBtn from "./toggle-btn";
 import Author from "./author";
 import NotificationPopup from "./notification-popup";
-import MassagePopup from "./massage-popup";
-import StorePopUp from "./store-popup";
+
 import ProfilePopup from "./profile-popup";
 import { ToggleMode } from "@/components/toggle-mode";
 import { useSession } from "next-auth/react";
-// import { ToggleMode } from "@/components/Toggle-mode";
 
 interface Popup {
   [key: string]: boolean;
@@ -74,12 +71,11 @@ const HeaderOne = ({ handleSidebar }: HeaderOneProps) => {
           </h3>
         </div>
         {/* search-bar */}
-        <SearchBar />
         {/* quick access */}
         <div className="quick-access-wrapper relative">
           <div className="flex items-center space-x-[43px]">
             <div className="hidden items-center space-x-5 xl:flex">
-              {/* <ModeToggler /> */}
+      
               <ToggleMode />
               <ToggleBtn
                 name="notification"

@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession } from "next-auth/react";
-import PersonalInfoFrom from "../forms/personal-info-form";
+import PersonalInfoFrom from "../../forms/personal-info-form";
 import { format } from "date-fns";
 import vi from 'date-fns/locale/vi'
 import React from "react";

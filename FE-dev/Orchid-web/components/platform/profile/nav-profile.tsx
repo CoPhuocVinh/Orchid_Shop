@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import Grid_DashBoard_table from "./dashboard-profile";
 import Grid_My_Profile from "./my-profile";
-import Grid_Order_Data_Table from "./table-orders";
 import Grid_Address_Default from "./my-address";
 import { SearchParams } from "@/types/table";
 import { getOrdersByUserId } from "@/lib/actions";
@@ -23,10 +22,10 @@ import { TransactionTable } from "./profile-transaction/transaction-table";
 export interface IndexPageProps {
   searchParams: SearchParams;
 }
-async function Nav_Menu({ searchParams }: IndexPageProps) {
+async function NavMenu({ searchParams }: IndexPageProps) {
   const session = await auth();
   const orders = getOrdersByUserId(searchParams, session?.user.id!);
-  const transactions = getTransactionByUserId(searchParams, session?.user.id!)
+  const transactions = getTransactionByUserId(searchParams, session?.user.id!);
   return (
     <div className="flex flex-row">
       <div className="container mx-auto mt-12 h-full w-88">
@@ -131,7 +130,9 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
                             }
                           >
                             <div className="overflow-x-auto">
-                              <TransactionTable transactionPromise={transactions} />
+                              <TransactionTable
+                                transactionPromise={transactions}
+                              />
                             </div>
                           </React.Suspense>
                         </Shell>
@@ -148,4 +149,4 @@ async function Nav_Menu({ searchParams }: IndexPageProps) {
   );
 }
 
-export default Nav_Menu;
+export default NavMenu;

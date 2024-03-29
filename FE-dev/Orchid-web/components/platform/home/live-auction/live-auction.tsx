@@ -3,7 +3,7 @@
 import {destinations} from '@/data/user-working-data/destinations'
 import { useTimeout } from '@/hooks/use-timeout';
 import Section from '@/components/platform/section';
-import BlockLoader from '@/components/loader/block_loader';
+import BlockLoader from '@/components/loader/block-loader';
 import DestinationCarousel from './live-auction-carousel';
 import { useGetAuctionsWithStatus } from '@/lib/react-query/queries';
 import { AuctionStatus } from '@/types/dashboard';

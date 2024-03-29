@@ -1,5 +1,3 @@
-import HistoryTable from "@/components/dashboard/listTab/HistoryTable";
-import Wallet from "@/components/dashboard/wallet/page";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { Shell } from "@/components/shell";
 import { getOrders } from "@/lib/actions";

@@ -10,11 +10,11 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import FormPopoverUser from "../popover-user-info";
 import UserAvatar from "../user-avatar";
-import FormPopover from "@/components/form/form-popover";
+import FormPopover from "@/components/forms/form-popover";
 import { ShoppingBag, Wallet } from "lucide-react";
 
 import { useGetWallet } from "@/lib/react-query/queries";
-import { WalletSkeleton } from "@/components/loader/wallet_loader";
+import { WalletSkeleton } from "@/components/loader/wallet-loader";
 import Image from "next/image";
 import { useModal } from "@/hooks/use-modal";
 import { useRouter } from "next/navigation";

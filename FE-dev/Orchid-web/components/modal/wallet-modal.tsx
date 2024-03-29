@@ -32,7 +32,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { useGetWallet } from "@/lib/react-query/queries";
-import { WalletSkeleton } from "../loader/wallet_loader";
+import { WalletSkeleton } from "../loader/wallet-loader";
 import TestPageSuccess from "@/app/test-success/page";
 
 enum STEPS {

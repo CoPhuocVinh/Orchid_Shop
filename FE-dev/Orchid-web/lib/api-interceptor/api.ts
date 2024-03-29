@@ -7,6 +7,7 @@ import { auth } from "../auth";
 // const baseURL = process.env.API_URL;
 // const baseURL = "http://128.199.185.211:8099/api/v1";
 const baseURL = "https://orchid.fams.io.vn/api/v1/";
+// const baseURL = process.env.BASE_URL
 
 export const api = axios.create({
   baseURL,

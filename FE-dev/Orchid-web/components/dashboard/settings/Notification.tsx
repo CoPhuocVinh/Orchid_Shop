@@ -1,7 +1,7 @@
 "use client";
 import ProtoTypes from "prop-types";
 import { useState } from "react";
-import NotificationItem from "./NotificationItem";
+import NotificationItem from "./notification-item";
 import ico from "/public/static/images/icons/follower.svg";
 import Image from "next/image";
 interface ActiveNotification {

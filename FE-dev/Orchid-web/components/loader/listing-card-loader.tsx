@@ -1,6 +1,6 @@
 'use client';
 
-import ContentLoader from '@/components/loader/content_loader';
+import ContentLoader from '@/components/loader/content-loader';
 
 interface CardBlockLoaderTypes {
   className?: string;
