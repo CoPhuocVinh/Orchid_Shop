@@ -48,13 +48,13 @@ export default function AuctionHeader() {
   const { onOpen } = useModal();
 
   const router = useRouter();
-  const { data: wallet, isLoading: walletLoading } = useGetWallet(
-    session?.user.id!
-  );
+  // const { data: wallet, isLoading: walletLoading } = useGetWallet(
+  //   session?.user.id!
+  // );
 
   const headerRef = useRef(null);
   addScrollingClass(headerRef);
-  if (walletLoading) return <WalletSkeleton />;
+  // if (walletLoading) return <WalletSkeleton />;
 
   return (
     <header

@@ -1,5 +1,5 @@
 import { revalidatePath } from "next/cache";
-import { api } from "../api-interceptor/api";
+import { api, axiosAuth } from "../api-interceptor/api";
 import { IWallet } from "@/types/dashboard";
 
 export async function getWalletByUserId(
@@ -11,7 +11,7 @@ export async function getWalletByUserId(
   const url = `/wallets/get-balance-by-userId/${params}`;
 
   try {
-    const res = await api.get(url);
+    const res = await axiosAuth.get(url);
 
 
     return { data: res.data.payload };
@@ -29,7 +29,7 @@ export async function addMoneyToWallet(
   const url = `/wallets/recharge-wallet-by-userId/${userId}`;
 
   try {
-    const res = await api.post(url, {recharge: price});
+    const res = await axiosAuth.post(url, {recharge: price});
 
   
     if (res.status === 200 && res.data.status === "SUCCESS") {

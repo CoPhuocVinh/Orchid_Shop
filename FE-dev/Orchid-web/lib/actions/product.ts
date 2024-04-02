@@ -4,8 +4,7 @@ import { IProduct, IProductCreate } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { fetchListDataWithSearchParam } from "@/lib/generics";
 import { api, axiosAuth } from "../api-interceptor/api";
-import { auth } from "../auth";
-import setupAxiosAuth from "../api-interceptor/axios-server";
+
 
 export async function getProducts(
   searchParams: SearchParams
@@ -84,8 +83,7 @@ export async function updateProductDetail(
 
 export async function updateStatusProduct({ id, status }: {id: number, status: string}) {
   try {
-
-    const res = await api.put(`/products/${id}`, { actived : status });
+    const res = await axiosAuth.put(`/products/${id}`, { actived : status });
 
     revalidatePath("/dashboard/products");
   } catch (error) {
@@ -96,10 +94,8 @@ export async function updateStatusProduct({ id, status }: {id: number, status: s
 export async function createProduct(data: IProductCreate): Promise<void> {
   noStore();
   const url = `/products`;
-  const session = await auth();
-  setupAxiosAuth(session);
+  
 
-  console.log(axiosAuth)
   try {
     await axiosAuth.post(url, data);
 

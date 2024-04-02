@@ -36,7 +36,7 @@ export const authOptions = {
       async authorize(credentials, req) {
         
         try {
-          const res = await fetch("https://orchid.fams.io.vn/api/v1/auth/login", {
+          const res = await fetch("https://orchid-be.azurewebsites.net/api/v1/auth/login", {
               method: "POST",
               headers: {
                   "Content-Type": "application/json",
