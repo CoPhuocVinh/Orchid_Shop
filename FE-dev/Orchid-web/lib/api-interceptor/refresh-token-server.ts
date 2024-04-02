@@ -1,13 +1,14 @@
 import { Session } from "next-auth";
-import { api } from "./api";
+import { api, axiosAuth } from "./api";
 
 const refreshToken = async (session: Session | null) => {
-  console.log(session);
+  console.log("go here 4", session?.user.refresh_token);
   try {
     // Gửi yêu cầu refresh token đến máy chủ
-    const refreshTokenResponse = await api.post("/auth/refreshToken", {
+    const refreshTokenResponse = await axiosAuth.post("/auth/refreshToken", {
       refreshToken: session?.user.refresh_token,
     });
+    console.log("go here 5");
 
     //  const updateRefreshToken = await update({
     //     user: {
@@ -19,12 +20,12 @@ const refreshToken = async (session: Session | null) => {
 
     const newAccessToken = refreshTokenResponse.data.metadata.access_token;
     // console.log(newAccessToken);
-    return newAccessToken;
 
+    return newAccessToken;
     // return sessionUpdate;
   } catch (error) {
     console.error("Failed to refresh token:", error);
-    throw error;
+
   }
 };
 

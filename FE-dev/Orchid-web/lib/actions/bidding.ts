@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
-import { api } from "../api-interceptor/api";
+import { api, axiosAuth } from "../api-interceptor/api";
 import axios from "axios";
 
 
@@ -9,7 +9,7 @@ export async function biddingAuction(userId: string, auctionId: string, biddingP
     const url = `/biddings/bid`;
   
     try {
-      const res = await api.post(url, {userID: userId, auctionID: auctionId, biddingPrice: biddingPrice});
+      const res = await axiosAuth.post(url, {userID: userId, auctionID: auctionId, biddingPrice: biddingPrice});
   
       if (res.status === 200) {
         console.log('Tăng giá thành công');

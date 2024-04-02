@@ -12,18 +12,16 @@ import Image from "next/image";
 
 import { ServerSearch } from "./search-header";
 
-
 export default function TransparentHeader() {
   const headerRef = useRef(null);
   addScrollingClass(headerRef);
   const { data: session } = useSession();
 
-
   const isAuthorized = session?.user;
   return (
     <header
       ref={headerRef}
-      className="transparent-header fixed left-0 top-0 z-40 flex w-full justify-between bg-white px-4 py-3.5 sm:bg-transparent sm:px-6 lg:py-6 2xl:px-7 3xl:px-8 4xl:px-16 4xl:py-9"
+      className="transparent-header fixed left-0 top-0 z-40 flex w-full justify-between bg-white pr-0 pl-4 md:px-4 py-3.5 sm:bg-transparent sm:px-6 lg:py-6 2xl:px-7 3xl:px-8 4xl:px-16 4xl:py-9"
     >
       <div className="flex items-center">
         <Link href="/">
@@ -32,9 +30,7 @@ export default function TransparentHeader() {
         <span className="text-lg ml-2 font-bold">Orchid</span>
       </div>
       <div className="hidden md:flex md:w-[400px] overflow-x-auto ">
-        <ServerSearch
-
-        />
+        <ServerSearch />
       </div>
       <div className="flex items-center">
         <div className="md:hidden">

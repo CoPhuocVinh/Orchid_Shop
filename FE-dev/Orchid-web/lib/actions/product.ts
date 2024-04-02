@@ -22,7 +22,7 @@ export async function getProductByIDToCreate(
   const url = `/products/${params}`;
 
   try {
-    const res = await api.get(url);
+    const res = await axiosAuth.get(url);
 
     return { data: res.data.payload };
   } catch (error) {
@@ -38,7 +38,7 @@ export async function getProductByID(
   const url = `/products/${params}`;
 
   try {
-    const res = await api.get(url);
+    const res = await axiosAuth.get(url);
 
     return { data: res.data.payload };
   } catch (error) {
@@ -53,7 +53,7 @@ export async function deleteProductByID(params: string): Promise<void> {
   const url = `/products/${params}`;
 
   try {
-    await api.delete(url);
+    await axiosAuth.delete(url);
 
     revalidatePath("/dashboard/products");
   } catch (error) {
@@ -72,7 +72,7 @@ export async function updateProductDetail(
   const url = `/products/${params}`;
 
   try {
-    await api.put(url, data);
+    await axiosAuth.put(url, data);
 
     revalidatePath(`/dashboard/products/${params}`);
   } catch (error) {
@@ -110,7 +110,7 @@ export async function checkProductNameExits(
   productName: string
 ): Promise<boolean> {
   try {
-    const res = await api.get(`/products?productName=${productName}`);
+    const res = await axiosAuth.get(`/products?productName=${productName}`);
 
     return res.data.payload.content.length > 0;
   } catch (error) {

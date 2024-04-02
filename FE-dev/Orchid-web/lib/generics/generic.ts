@@ -20,7 +20,7 @@ export async function fetchListDataWithSearchParam<T>(
   try {
     const response: AxiosResponse<{
       payload: { content: T[]; totalPages: number };
-    }> = await api.get(url, { params: searchParams });
+    }> = await axiosAuth.get(url, { params: searchParams });
 
     const { content, totalPages } = response.data.payload;
 
@@ -37,7 +37,7 @@ export async function fetchListData<T>(
   try {
     const response: AxiosResponse<{
       payload: { content: T[]};
-    }> = await api.get(url);
+    }> = await axiosAuth.get(url);
 
     const { content} = response.data.payload;
 

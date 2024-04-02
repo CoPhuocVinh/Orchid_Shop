@@ -27,7 +27,6 @@ const menuItems = [
 ];
 import { useModal } from "@/hooks/use-modal";
 import { useRouter } from "next/navigation";
-import NotificationDropdown from "./notificate-dropdown";
 
 export default function Menu() {
   const { data: session } = useSession();
@@ -35,7 +34,7 @@ export default function Menu() {
   const { onOpen } = useModal();
 
   const router = useRouter();
-  const isAuthorized = session?.user;
+  const isAuthorized = session?.user.name;
   // const isCustomer = session?.user.role === "CUSTOMER";
 
   return (
@@ -56,7 +55,7 @@ export default function Menu() {
           {/* <NotificationDropdown/> */}
       {isAuthorized && (
         <button onClick={() => onOpen("walletModal", {})}>
-          <div className=" hover:bg-slate-300 rounded-lg px-4 py-2 flex items-center cursor-pointer group">
+          <div className=" hover:bg-slate-300 rounded-lg px-4 py-2 md:flex items-center cursor-pointer group hidden">
             <div className="mr-2">
               <Wallet className="text-black hover:text-red-600 group-hover:text-red-600" />
             </div>
@@ -66,7 +65,7 @@ export default function Menu() {
       )}
       {isAuthorized && (
         <button onClick={() => onOpen("orderSheetModal", {})}>
-          <div className="hover:bg-slate-300 rounded-lg px-4 py-2 flex items-center cursor-pointer group">
+          <div className="hover:bg-slate-300 rounded-lg px-4 py-2 md:flex items-center cursor-pointer group hidden">
             <div className="mr-2">
               <ShoppingBag className="text-black group-hover:text-green-600" />
             </div>
@@ -81,7 +80,7 @@ export default function Menu() {
             <FormPopoverUser align="start" side="bottom" sideOffset={18}>
               <Button
                 size="icon"
-                className="rounded-full flex justify-center md:block h-auto p-0"
+                className="rounded-full hidden justify-center md:block h-auto p-0 "
               >
                 <UserAvatar />
               </Button>
@@ -89,7 +88,7 @@ export default function Menu() {
           </div>
         ) : (
           <Button
-            className="ml-5 rounded-lg px-6 py-2 text-sm capitalize md:text-base 4xl:px-8 4xl:py-2.5"
+            className="ml-5 hidden md:block rounded-lg px-6 py-2 text-sm capitalize md:text-base 4xl:px-8 4xl:py-2.5"
             variant="outline"
           >
             <Link href="/signin">Log in</Link>

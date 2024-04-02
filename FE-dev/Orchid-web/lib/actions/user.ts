@@ -4,9 +4,9 @@ import { fetchListDataWithSearchParam } from "@/lib/generics";
 import { IAdress, IUser } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
-import { api } from "../api-interceptor/api";
+import { api, axiosAuth } from "../api-interceptor/api";
 
-let BASE_URL = "https://orchid.fams.io.vn/api/v1"
+
 
 export async function getUserWithRoleCustomer(
   searchParams: SearchParams
@@ -44,7 +44,7 @@ export async function updateUserInfo(
   const url = `/users/${params}`;
 
   try {
-    const response = await api.put(url, data);
+    const response = await axiosAuth.put(url, data);
     return { success: true };
   } catch (error) {
     console.log(error);
@@ -61,7 +61,7 @@ export async function getUserAddressInfo(
   const url = `/userInfo/getByUserId/${params}`;
 
   try {
-    const res = await api.get(url);
+    const res = await axiosAuth.get(url);
 
     const data = res.data.payload.in4DetailResponseList
 
@@ -84,7 +84,7 @@ export async function createUserAddressInfo(
   const url = `/userInfo/CreateUserIn4ByUserId/${params}`;
 
   try {
-     await api.post(url,data);
+     await axiosAuth.post(url,data);
 
      revalidatePath("/profile");
   

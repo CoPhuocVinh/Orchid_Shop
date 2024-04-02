@@ -36,18 +36,20 @@ axiosAuth.interceptors.response.use(
   (response) => response,
   async (error) => {
     const session = await auth();
-
     const prevRequest = error?.config;
     if (error?.response?.status === 401 && !prevRequest?.sent) {
       prevRequest.sent = true;
-
+      
+      console.log("go here 1", typeof session)
       const updatedSession = await refreshToken(session);
+      console.log("go here 2")
 
       const sessionChange = await update({
         user: {
           access_token: updatedSession,
         },
       });
+      console.log("go here 3")
 
       prevRequest.headers[
         "Authorization"

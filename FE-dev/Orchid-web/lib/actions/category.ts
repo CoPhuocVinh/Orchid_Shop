@@ -1,7 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { ICategory } from "@/types/dashboard";
 
-import { api } from "../api-interceptor/api";
+import { api, axiosAuth } from "../api-interceptor/api";
 
 export async function getCategories(): Promise<{
   data: ICategory[];
@@ -10,7 +10,7 @@ export async function getCategories(): Promise<{
   const url = `/categories`;
 
   try {
-    const res = await api.get(url);
+    const res = await axiosAuth.get(url);
 
     const data = res.data.payload.content
 

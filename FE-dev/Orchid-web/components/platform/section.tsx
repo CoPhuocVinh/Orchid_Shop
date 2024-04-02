@@ -37,7 +37,7 @@ export default function Section({
               <p className={descriptionClassName}>{description}</p>
             )}
           </div>
-          {rightElement && <div>{rightElement}</div>}
+          {rightElement && <div className="hidden md:block">{rightElement}</div>}
         </header>
       )}
       {children}

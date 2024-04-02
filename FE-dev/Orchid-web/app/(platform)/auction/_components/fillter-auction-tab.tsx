@@ -27,7 +27,7 @@ interface FilterTypes {
   setFilterData: React.Dispatch<React.SetStateAction<IAuction[] | undefined>>;
 }
 
-function Fillter_Auction_Tab({
+function FillterAuctionTab({
   className,
   liveAuction,
   auctionLoading,
@@ -304,4 +304,4 @@ function Fillter_Auction_Tab({
   );
 }
 
-export default Fillter_Auction_Tab;
+export default FillterAuctionTab;

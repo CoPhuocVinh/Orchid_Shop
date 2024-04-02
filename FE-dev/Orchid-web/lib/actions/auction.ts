@@ -1,16 +1,12 @@
 "use server";
 
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
-import {
-  AuctionStatus,
-  IAuction,
-  IAuctionCreateField,
-  IFeedBack,
-} from "@/types/dashboard";
+import { IAuction, IAuctionCreateField, IFeedBack } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { fetchListData, fetchListDataWithSearchParam } from "@/lib/generics";
-import { api } from "../api-interceptor/api";
+
 import axios from "axios";
+import { axiosAuth } from "../api-interceptor/api";
 
 export async function getAuctions(): Promise<{ data: IAuction[] }> {
   noStore();
@@ -35,7 +31,7 @@ export async function getAuctionByID(
   const url = `/auctions/${params}`;
 
   try {
-    const res = await api.get(url);
+    const res = await axiosAuth.get(url);
 
     return { data: res.data.payload };
   } catch (error) {
@@ -58,7 +54,9 @@ interface AuctionStatusUpdate {
 }
 export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
   try {
-    const res = await api.put(`/auctions/update-auction/${id}`, { status });
+    const res = await axiosAuth.put(`/auctions/update-auction/${id}`, {
+      status,
+    });
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {
@@ -67,7 +65,7 @@ export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
 }
 export async function updateStatusAcceptAuction({ id, approved }: any) {
   try {
-    const res = await api.put(`/auctions/update-auction/${id}`, {
+    const res = await axiosAuth.put(`/auctions/update-auction/${id}`, {
       approved: approved,
     });
 
@@ -84,7 +82,7 @@ export async function updateStatusRejectAuction({
   try {
     // const reasonReject = "Buổi đấu giá ko đạt yêu cầu"
 
-    const res = await api.put(`/auctions/update-auction/${id}`, {
+    const res = await axiosAuth.put(`/auctions/update-auction/${id}`, {
       rejected: rejected,
       reasonReject: reasonReject,
     });
@@ -97,7 +95,7 @@ export async function updateStatusRejectAuction({
 
 export async function deleteAuction(params: string) {
   try {
-    await api.delete(`/auctions/${params}`);
+    await axiosAuth.delete(`/auctions/${params}`);
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {
@@ -113,7 +111,7 @@ export async function updateAuctionDetail(
   const url = `/auctions/update-auction/${params}`;
 
   try {
-    await api.put(url, data);
+    await axiosAuth.put(url, data);
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {
@@ -127,7 +125,7 @@ export async function createAuction(data: IAuctionCreateField): Promise<void> {
   const url = `/auctions/create`;
 
   try {
-    await api.post(url, data);
+    await axiosAuth.post(url, data);
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {
@@ -140,7 +138,7 @@ export async function registerAttendAuction(userId: string, auctionId: string) {
   const url = `/auctions/register-by-auctionId/${auctionId}`;
 
   try {
-    const res = await api.post(url, userId);
+    const res = await axiosAuth.post(url, userId);
 
     if (res.status === 200) {
       console.log("Registration successful");
@@ -183,9 +181,9 @@ export async function feedbackAuctionLive(
 ) {
   const url = `/feedbacks/create`;
   const values = { userID: userId, auctionID: auctionId, content: content };
-  console.log(values)
+  console.log(values);
   try {
-    const res = await api.post(url, values);
+    const res = await axiosAuth.post(url, values);
 
     if (res.status === 200) {
       console.log("feedback successful");
@@ -200,7 +198,6 @@ export async function feedbackAuctionLive(
     return { success: false, error: "An unexpected error occurred" };
   }
 }
-
 
 export async function getFeedBackAuction(
   params: string

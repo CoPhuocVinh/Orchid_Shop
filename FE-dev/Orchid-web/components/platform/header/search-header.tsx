@@ -21,7 +21,7 @@ export const ServerSearch = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://orchid.fams.io.vn/api/v1/auctions/list?page=1&per_page=100&status=LIVE.COMING`
+          `https://orchid-be.azurewebsites.net/api/v1/auctions/list?page=1&per_page=100&status=LIVE.COMING`
         );
         const data = await response.json();
         setAuctions(data.payload.content);

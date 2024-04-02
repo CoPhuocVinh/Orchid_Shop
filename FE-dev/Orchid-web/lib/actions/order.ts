@@ -4,7 +4,7 @@ import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { SearchParams } from "@/types/table";
 import { fetchListDataWithSearchParam } from "@/lib/generics";
 import { IOrder } from "@/types/dashboard";
-import { api } from "../api-interceptor/api";
+import { api, axiosAuth } from "../api-interceptor/api";
 
 export async function getOrders(
   searchParams: SearchParams
@@ -42,7 +42,7 @@ export async function getOrderId(
 
 export async function confirmOrderDelivery({ orderId, confirmed }: any) {
   try {
-    const res = await api.put(`/orders/${orderId}`, { confirmed: confirmed });
+    const res = await axiosAuth.put(`/orders/${orderId}`, { confirmed: confirmed });
 
     revalidatePath("/dashboard/orders");
   } catch (error) {
