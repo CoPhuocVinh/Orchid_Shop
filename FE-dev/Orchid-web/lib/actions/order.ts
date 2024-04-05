@@ -2,40 +2,34 @@
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 
 import { SearchParams } from "@/types/table";
-import { fetchListDataWithSearchParam } from "@/lib/generics";
+import { ApiListResponse, ApiSingleResponse, fetchListData, fetchSingleData } from "@/lib/generics";
 import { IOrder } from "@/types/dashboard";
-import { api, axiosAuth } from "../api-interceptor/api";
+import { api, axiosAuth } from "@/lib/api-interceptor/api";
 
 export async function getOrders(
   searchParams: SearchParams
-): Promise<{ data: IOrder[]; pageCount: number }> {
+): Promise<ApiListResponse<IOrder>> {
   noStore();
   const url = `/orders/list`;
 
-  return await fetchListDataWithSearchParam(url, searchParams);
+  return await fetchListData(url, searchParams);
 }
 export async function getOrdersByUserId(
   searchParams: SearchParams,
   userId: string
-): Promise<{ data: IOrder[]; pageCount: number }> {
+): Promise<ApiListResponse<IOrder>> {
   noStore();
   const url = `/orders/list?userId=${userId}`;
 
-  return await fetchListDataWithSearchParam(url, searchParams);
+  return await fetchListData(url, searchParams);
 }
 export async function getOrderId(
   params: string
-): Promise<{ data: IOrder | null }> {
+): Promise<ApiSingleResponse<IOrder>> {
   noStore();
   const url = `/orders/${params}`;
 
-  try {
-    const res = await api.get(url);
-
-    return { data: res.data.payload };
-  } catch (error) {
-    return { data: null };
-  }
+  return await fetchSingleData(url);
 
   // return await fetchDataByID(url);
 }

@@ -2,58 +2,38 @@
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { IProduct, IProductCreate } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
-import { fetchListDataWithSearchParam } from "@/lib/generics";
-import { api, axiosAuth } from "../api-interceptor/api";
-
+import { ApiListResponse, ApiSingleResponse, fetchListData, fetchSingleData } from "@/lib/generics";
+import { axiosAuth } from "@/lib/api-interceptor/api";
+import { PRODUCTS_URLS } from "./action-key";
 
 export async function getProducts(
   searchParams: SearchParams
-): Promise<{ data: IProduct[]; pageCount: number }> {
+): Promise<ApiListResponse<IProduct>> {
   noStore();
-  const url = `/products`;
 
-  return await fetchListDataWithSearchParam(url, searchParams);
+  return await fetchListData(PRODUCTS_URLS.GET_PRODUCTS, searchParams);
 }
 
 export async function getProductByIDToCreate(
   params: string
-): Promise<{ data: IProductCreate | null }> {
+): Promise<ApiSingleResponse<IProductCreate>> {
   noStore();
-  const url = `/products/${params}`;
 
-  try {
-    const res = await axiosAuth.get(url);
-
-    return { data: res.data.payload };
-  } catch (error) {
-    return { data: null };
-  }
-
-  // return await fetchDataByID(url);
+  return await fetchSingleData(PRODUCTS_URLS.GET_PRODUCT_BY_ID(params));
 }
 export async function getProductByID(
   params: string
-): Promise<{ data: IProduct | null }> {
+): Promise<ApiSingleResponse<IProduct>> {
   noStore();
-  const url = `/products/${params}`;
 
-  try {
-    const res = await axiosAuth.get(url);
-
-    return { data: res.data.payload };
-  } catch (error) {
-    return { data: null };
-  }
-
-  // return await fetchDataByID(url);
+  return await fetchSingleData(PRODUCTS_URLS.GET_PRODUCT_BY_ID(params));
 }
 
 export async function deleteProductByID(params: string): Promise<void> {
   noStore();
-  const url = `/products/${params}`;
 
   try {
-    await axiosAuth.delete(url);
+    await axiosAuth.delete(PRODUCTS_URLS.GET_PRODUCT_BY_ID(params));
 
     revalidatePath("/dashboard/products");
   } catch (error) {
@@ -69,10 +49,9 @@ export async function updateProductDetail(
   data: IProductCreate
 ): Promise<void> {
   noStore();
-  const url = `/products/${params}`;
 
   try {
-    await axiosAuth.put(url, data);
+    await axiosAuth.put(PRODUCTS_URLS.GET_PRODUCT_BY_ID(params), data);
 
     revalidatePath(`/dashboard/products/${params}`);
   } catch (error) {
@@ -81,9 +60,17 @@ export async function updateProductDetail(
   }
 }
 
-export async function updateStatusProduct({ id, status }: {id: number, status: string}) {
+export async function updateStatusProduct({
+  id,
+  status,
+}: {
+  id: number;
+  status: string;
+}) {
   try {
-    const res = await axiosAuth.put(`/products/${id}`, { actived : status });
+    await axiosAuth.put(PRODUCTS_URLS.GET_PRODUCT_BY_ID(id), {
+      actived: status,
+    });
 
     revalidatePath("/dashboard/products");
   } catch (error) {
@@ -93,11 +80,9 @@ export async function updateStatusProduct({ id, status }: {id: number, status: s
 
 export async function createProduct(data: IProductCreate): Promise<void> {
   noStore();
-  const url = `/products`;
-  
 
   try {
-    await axiosAuth.post(url, data);
+    await axiosAuth.post(PRODUCTS_URLS.GET_PRODUCTS, data);
 
     revalidatePath("/dashboard/products");
   } catch (error) {

@@ -1,22 +1,20 @@
-'use server'
+"use server";
 
 import { AxiosResponse } from "axios";
-import  { api, axiosAuth } from "@/lib/api-interceptor/api";
-
-interface ApiResponse<T> {
+import { axiosAuth } from "@/lib/api-interceptor/api";
+export interface ApiListResponse<T> {
   data: T[];
-  pageCount: number;
+  pageCount?: number;
 }
 
-interface ApiResponseNoParams<T> {
-  data: T[];
+export interface ApiSingleResponse<T> {
+  data: T | null;
 }
 
-
-export async function fetchListDataWithSearchParam<T>(
+export async function fetchListData<T>(
   url: string,
-  searchParams: Record<string, any>
-): Promise<ApiResponse<T>> {
+  searchParams?: Record<string, any>
+): Promise<ApiListResponse<T>> {
   try {
     const response: AxiosResponse<{
       payload: { content: T[]; totalPages: number };
@@ -31,20 +29,18 @@ export async function fetchListDataWithSearchParam<T>(
   }
 }
 
-export async function fetchListData<T>(
+export async function fetchSingleData<T>(
   url: string,
-): Promise<ApiResponseNoParams<T>> {
+): Promise<ApiSingleResponse<T>> {
   try {
-    const response: AxiosResponse<{
-      payload: { content: T[]};
-    }> = await axiosAuth.get(url);
+    const response: AxiosResponse<{ payload: T}> =
+      await axiosAuth.get(url);
 
-    const { content} = response.data.payload;
+    const { payload } = response.data;
 
-    return { data: content };
+    return { data: payload };
   } catch (error) {
     console.log("ERROR to fetching", error);
-    return { data: [] };
+    return { data: null };
   }
 }
-

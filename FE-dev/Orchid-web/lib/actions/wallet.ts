@@ -1,25 +1,17 @@
 import { revalidatePath } from "next/cache";
-import { api, axiosAuth } from "../api-interceptor/api";
+import { axiosAuth } from "@/lib/api-interceptor/api";
 import { IWallet } from "@/types/dashboard";
+import { ApiSingleResponse, fetchSingleData } from "@/lib/generics";
 
 export async function getWalletByUserId(
   params: string
-): Promise<{ data: IWallet | null }> {
+): Promise<ApiSingleResponse<IWallet>> {
   if (!params) {
     return { data: null };
   }
   const url = `/wallets/get-balance-by-userId/${params}`;
+  return await fetchSingleData(url);
 
-  try {
-    const res = await axiosAuth.get(url);
-
-
-    return { data: res.data.payload };
-  } catch (error) {
-    return { data: null };
-  }
-
-  // return await fetchDataByID(url);
 }
 
 export async function addMoneyToWallet(

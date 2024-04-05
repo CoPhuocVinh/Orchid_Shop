@@ -25,7 +25,7 @@ import { useDebounce } from "./use-debounce";
 interface useDataTableProps<TData, TValue> {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
-  pageCount: number;
+  pageCount?: number;
   searchableColumns?: DataTableSearchableColumn<TData>[];
   filterableColumns?: DataTableFilterableColumn<TData>[];
 }

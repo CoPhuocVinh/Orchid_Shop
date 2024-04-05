@@ -58,15 +58,15 @@ const TestFucntionPage = ({ searchParams }: IndexPageProps) => {
 
   //   fetchPro();
   // }, []);
-  console.log(searchParams);
-  const { data, isLoading } = useQuery<{ data: IProduct[]; pageCount: number }>(
-    {
-      queryKey: [QUERY_KEYS.GET_PRODUCTS],
-      queryFn: () => getProducts(searchParams),
-    }
-  );
-  if (isLoading) return <div>...Loading</div>;
-  console.log(data);
+  // console.log(searchParams);
+  // const { data, isLoading } = useQuery<{ data: IProduct[]; pageCount: number }>(
+  //   {
+  //     queryKey: [QUERY_KEYS.GET_PRODUCTS],
+  //     queryFn: () => getProducts(searchParams),
+  //   }
+  // );
+  // if (isLoading) return <div>...Loading</div>;
+  // console.log(data);
 
 
  

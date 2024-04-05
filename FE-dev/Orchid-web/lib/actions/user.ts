@@ -1,40 +1,28 @@
-'use server'
+"use server";
 
-import { fetchListDataWithSearchParam } from "@/lib/generics";
+import { ApiListResponse, fetchListData } from "@/lib/generics";
 import { IAdress, IUser } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
-import { api, axiosAuth } from "../api-interceptor/api";
-
-
+import { api, axiosAuth } from "@/lib/api-interceptor/api";
 
 export async function getUserWithRoleCustomer(
   searchParams: SearchParams
-): Promise<{ data: IUser[]; pageCount: number }> {
+): Promise<ApiListResponse<IUser>> {
   const url = `/users?role=CUSTOMER`;
-  noStore()
-  try {
-    return await fetchListDataWithSearchParam(url, searchParams);
-  } catch (error) {
-    console.error('Failed to fetch data', error);
-    throw error;
-  }
+
+  noStore();
+  return await fetchListData(url, searchParams);
 }
 
 export async function getUserWithRoleStaff(
   searchParams: SearchParams
-): Promise<{ data: IUser[]; pageCount: number }> {
+): Promise<ApiListResponse<IUser>> {
   const url = `/users?role=STAFF`;
-  noStore()
+  noStore();
 
-  try {
-    return await fetchListDataWithSearchParam(url, searchParams);
-  } catch (error) {
-    console.error('Failed to fetch data', error);
-    throw error;
-  }
+  return await fetchListData(url, searchParams);
 }
-
 
 export async function updateUserInfo(
   params: string,
@@ -52,45 +40,36 @@ export async function updateUserInfo(
   }
 }
 
-
 export async function getUserAddressInfo(
   params: string
- 
-): Promise<{ data: any}> {
+): Promise<{ data: any }> {
   noStore();
   const url = `/userInfo/getByUserId/${params}`;
 
   try {
     const res = await axiosAuth.get(url);
 
-    const data = res.data.payload.in4DetailResponseList
-
+    const data = res.data.payload.in4DetailResponseList;
 
     return { data: data };
   } catch (error) {
     console.log(error);
     return { data: [] };
-    
   }
 }
-
 
 export async function createUserAddressInfo(
   params: string,
   data: IAdress
- 
 ): Promise<void> {
-
   const url = `/userInfo/CreateUserIn4ByUserId/${params}`;
 
   try {
-     await axiosAuth.post(url,data);
+    await axiosAuth.post(url, data);
 
-     revalidatePath("/profile");
-  
+    revalidatePath("/profile");
   } catch (error) {
     console.log(error);
     throw error;
-    
   }
 }
