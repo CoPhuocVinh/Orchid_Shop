@@ -1,3 +1,5 @@
+'use server'
+
 import { revalidatePath } from "next/cache";
 import { axiosAuth } from "@/lib/api-interceptor/api";
 import { IWallet } from "@/types/dashboard";
@@ -20,10 +22,12 @@ export async function addMoneyToWallet(
 ): Promise<string | null> {
   const url = `/wallets/recharge-wallet-by-userId/${userId}`;
 
-  try {
+
+try {
+
     const res = await axiosAuth.post(url, {recharge: price});
 
-  
+
     if (res.status === 200 && res.data.status === "SUCCESS") {
       return res.data.payload;
       

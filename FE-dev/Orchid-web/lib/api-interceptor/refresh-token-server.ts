@@ -2,13 +2,13 @@ import { Session } from "next-auth";
 import { api, axiosAuth } from "./api";
 
 const refreshToken = async (session: Session | null) => {
-  console.log("go here 4", session?.user.refresh_token);
+
   try {
     // Gửi yêu cầu refresh token đến máy chủ
     const refreshTokenResponse = await axiosAuth.post("/auth/refreshToken", {
       refreshToken: session?.user.refresh_token,
     });
-    console.log("go here 5");
+
 
     //  const updateRefreshToken = await update({
     //     user: {

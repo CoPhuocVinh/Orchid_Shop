@@ -30,7 +30,7 @@ export default function TransparentHeader() {
         <span className="text-lg ml-2 font-bold">Orchid</span>
       </div>
       <div className="hidden md:flex md:w-[400px] overflow-x-auto ">
-        <ServerSearch />
+        {/* <ServerSearch /> */}
       </div>
       <div className="flex items-center">
         <div className="md:hidden">

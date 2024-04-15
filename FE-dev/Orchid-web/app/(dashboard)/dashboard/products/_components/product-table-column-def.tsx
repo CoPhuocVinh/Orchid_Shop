@@ -171,7 +171,7 @@ export function fetchProductsTableColumnDefs(
                         {
                           loading: "Update...",
                           success: () => "Product update successfully.",
-                          error: () => "Dellete error",
+                          error: (err) => `Update error: ${err.message}`,
                         }
                       );
                     });

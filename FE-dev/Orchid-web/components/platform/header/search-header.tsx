@@ -21,7 +21,9 @@ export const ServerSearch = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://orchid-be.azurewebsites.net/api/v1/auctions/list?page=1&per_page=100&status=LIVE.COMING`
+          `https://orchid-be.azurewebsites.net/api/v1/auctions/list?page=1&per_page=100&status=LIVE.COMING&search=${encodeURIComponent(
+            searchQuery
+          )}`
         );
         const data = await response.json();
         setAuctions(data.payload.content);
@@ -31,7 +33,7 @@ export const ServerSearch = () => {
     };
 
     fetchData();
-  }, []);
+  }, [auctions, searchQuery]);
 
   useEffect(() => {
     const filtered = auctions.filter((auction) => auction.title);
@@ -73,6 +75,7 @@ export const ServerSearch = () => {
           placeholder="Tìm kiếm"
           value={searchQuery}
           onValueChange={setSearchQuery}
+          onSubmit={() => {}}
         />
 
         <CommandList>

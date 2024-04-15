@@ -84,7 +84,7 @@ export default function ReviewBlock({
           >
             <ReviewCard
               key={`review-${index}`}
-              avatar={item.img}
+              avatar={item.img ? item.img : "/images/avatar.jpg"}
               name={item.name}
               // date={item.date}
               // location={item.location}

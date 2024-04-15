@@ -15,6 +15,9 @@ const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
   const auction = await getAuctionByID(params.auctionId);
   const feedback = getFeedBackAuction(params.auctionId);
   const isLive = auction.data?.status === "LIVE";
+
+  // loading => client 
+  // wating 
   return (
     <>
       <BreadCrumb
@@ -72,7 +75,9 @@ const AuctionIdPage = async ({ params }: { params: { auctionId: string } }) => {
 
       <div className="container mx-auto px-4 md:px-12">
         <React.Suspense fallback={<div>...Loading</div>}>
-          <ReviewBlock reviewsData={reviewsData} feedBackPromise={feedback} />
+          <ReviewBlock reviewsData={reviewsData} 
+          
+          feedBackPromise={feedback} />
         </React.Suspense>
       </div>
       <div className="container mx-auto px-4 md:px-12">

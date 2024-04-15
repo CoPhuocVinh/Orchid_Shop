@@ -62,6 +62,8 @@ export async function createUserAddressInfo(
   params: string,
   data: IAdress
 ): Promise<void> {
+  noStore();
+
   const url = `/userInfo/CreateUserIn4ByUserId/${params}`;
 
   try {

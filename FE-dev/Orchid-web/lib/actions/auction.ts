@@ -57,9 +57,11 @@ export async function updateStatusAuction({ id, status }: AuctionStatusUpdate) {
 }
 export async function updateStatusAcceptAuction({ id, approved }: any) {
   try {
-    await axiosAuth.put(AUCTION_URLS.UPDATE_AUCTIONS(id), {
+   const res = await axiosAuth.put(AUCTION_URLS.UPDATE_AUCTIONS(id), {
       approved: approved,
     });
+
+    console.log(res)
 
     revalidatePath("/dashboard/auctions");
   } catch (error) {

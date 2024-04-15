@@ -52,7 +52,7 @@ export type IFeedBack = {
   id: number,
   content: string,
   auctionID: number,
-  img: string,
+  img?: string,
   name: string,
   userID: number
 }

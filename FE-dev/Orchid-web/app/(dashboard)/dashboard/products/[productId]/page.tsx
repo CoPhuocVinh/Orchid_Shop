@@ -4,8 +4,14 @@ import { getProductByID } from "@/lib/actions";
 import { ICategoryForm } from "@/types/dashboard";
 
 const ProductPage = async ({ params }: { params: { productId: string } }) => {
-  const product = await getProductByID(params.productId);
-  const categories = await getCategories();
+  // const product = await getProductByID(params.productId);
+  // const categories = await getCategories();
+
+  // optimize
+  const [product, categories] = await Promise.all([
+    getProductByID(params.productId),
+    getCategories(),
+  ]);
 
   const fotmatCategories: ICategoryForm[] = categories.data.map((item) => ({
     category_id: item.id,

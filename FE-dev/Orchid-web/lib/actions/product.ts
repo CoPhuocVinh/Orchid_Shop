@@ -2,7 +2,12 @@
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { IProduct, IProductCreate } from "@/types/dashboard";
 import { SearchParams } from "@/types/table";
-import { ApiListResponse, ApiSingleResponse, fetchListData, fetchSingleData } from "@/lib/generics";
+import {
+  ApiListResponse,
+  ApiSingleResponse,
+  fetchListData,
+  fetchSingleData,
+} from "@/lib/generics";
 import { axiosAuth } from "@/lib/api-interceptor/api";
 import { PRODUCTS_URLS } from "./action-key";
 
@@ -75,6 +80,7 @@ export async function updateStatusProduct({
     revalidatePath("/dashboard/products");
   } catch (error) {
     console.log("FALI");
+    throw error;
   }
 }
 

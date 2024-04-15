@@ -109,6 +109,7 @@ export const WalletModal = () => {
     }
 
     const price = form.getValues("price");
+    console.log(price)
 
     try {
       const paymentUrl = await addMoneyToWallet(userId!, price);

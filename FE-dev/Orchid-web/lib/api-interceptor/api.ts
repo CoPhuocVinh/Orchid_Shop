@@ -18,6 +18,7 @@ export const api = axios.create({
 export const axiosAuth = axios.create({
   baseURL: baseURL,
   headers: { "Content-Type": "application/json" },
+  withCredentials: false
 });
 
 axiosAuth.interceptors.request.use(
@@ -40,16 +41,16 @@ axiosAuth.interceptors.response.use(
     if (error?.response?.status === 401 && !prevRequest?.sent) {
       prevRequest.sent = true;
       
-      console.log("go here 1", typeof session)
+
       const updatedSession = await refreshToken(session);
-      console.log("go here 2")
+
 
       const sessionChange = await update({
         user: {
           access_token: updatedSession,
         },
       });
-      console.log("go here 3")
+
 
       prevRequest.headers[
         "Authorization"
